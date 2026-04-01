@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — AtendIA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/signup.css">
+  <style>
+    /* Ajustes específicos para login para centrar el formulario */
+    .signup-right {
+      justify-content: center;
+    }
+    .signup-step {
+      display: block !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .step-header h1 {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="signup-layout">
+
+  <!-- LEFT SIDE - Visual -->
+  <div class="signup-left">
+    <a href="index.html" class="back-logo">Atend<span>IA</span></a>
+
+    <div class="left-content">
+      <div class="showcase-card">
+        <div class="showcase-header">
+          <div class="showcase-dot green"></div>
+          <div class="showcase-dot yellow"></div>
+          <div class="showcase-dot red"></div>
+          <span>Panel de AtendIA</span>
+        </div>
+        <div class="showcase-body">
+          <div class="showcase-stat">
+            <span class="showcase-num">247</span>
+            <span class="showcase-label">Mensajes atendidos hoy</span>
+          </div>
+          <div class="showcase-messages" style="margin-top: 20px;">
+            <div class="showcase-msg bot">¡Hola de nuevo! Todo bajo control, he tomado 5 reservas hoy. 📅</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDE - Form -->
+  <div class="signup-right">
+
+    <div class="signup-step active">
+      <div class="step-header">
+        <h1>Bienvenido de vuelta 👋</h1>
+        <p>Inicia sesión en tu panel de control</p>
+      </div>
+
+      <div class="form-fields" style="margin-top: 32px;">
+        <div class="field-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" class="field-input" placeholder="tu@email.com" />
+        </div>
+        <div class="field-group">
+          <label>Contraseña</label>
+          <input type="password" id="loginPass" class="field-input" placeholder="••••••••" />
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top: 32px;">
+        <button class="btn-next" style="width: 100%;" onclick="window.location.href='app.html'">
+          Entrar al panel →
+        </button>
+      </div>
+      
+      <p class="note-bottom" style="margin-top: 24px; text-align: center;">
+        ¿No tienes cuenta? <a href="signup.html" style="color: white;">Empieza gratis</a>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
