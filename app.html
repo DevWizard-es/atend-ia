@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel — AtendIA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">Atend<span>IA</span></div>
+
+  <nav class="sidebar-nav">
+    <a href="#" class="nav-item active" data-section="dashboard">
+      <span class="nav-icon">📊</span> Dashboard
+    </a>
+    <a href="#" class="nav-item" data-section="agent">
+      <span class="nav-icon">🤖</span> Mi Agente IA
+    </a>
+    <a href="#" class="nav-item" data-section="menu">
+      <span class="nav-icon">📋</span> Menú / Catálogo
+    </a>
+    <a href="#" class="nav-item" data-section="reservations">
+      <span class="nav-icon">📅</span> Reservas
+    </a>
+    <a href="#" class="nav-item" data-section="channels">
+      <span class="nav-icon">💬</span> Canales
+    </a>
+    <a href="#" class="nav-item" data-section="biolink">
+      <span class="nav-icon">🔗</span> Bio Link
+    </a>
+    <a href="#" class="nav-item" data-section="analytics">
+      <span class="nav-icon">📈</span> Analytics
+    </a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="plan-badge-side">
+      <span>⚡ Plan Pro</span>
+      <a href="index.html#pricing">Gestionar</a>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar">🧑‍💼</div>
+      <div class="user-info">
+        <div class="user-name">Mi Negocio</div>
+        <div class="user-email">admin@minegocio.com</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <button class="menu-toggle" id="menuToggle">☰</button>
+    <div class="topbar-title" id="pageTitle">Dashboard</div>
+    <div class="topbar-right">
+      <div class="status-pill active">
+        <span class="status-dot"></span> Agente activo
+      </div>
+      <button class="topbar-btn">🔔</button>
+    </div>
+  </header>
+
+  <!-- ===== DASHBOARD SECTION ===== -->
+  <section class="section active" id="section-dashboard">
+    <div class="section-header">
+      <h1>Bienvenido de vuelta 👋</h1>
+      <p>Hoy tu agente ha atendido automáticamente a <strong>47 clientes</strong></p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon">💬</div>
+        <div class="kpi-value">247</div>
+        <div class="kpi-label">Mensajes hoy</div>
+        <div class="kpi-trend up">↑ 23% vs ayer</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">🛒</div>
+        <div class="kpi-value">38</div>
+        <div class="kpi-label">Pedidos tomados</div>
+        <div class="kpi-trend up">↑ 12%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">📅</div>
+        <div class="kpi-value">12</div>
+        <div class="kpi-label">Reservas</div>
+        <div class="kpi-trend up">↑ 5%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">⚡</div>
+        <div class="kpi-value">1.2s</div>
+        <div class="kpi-label">Tiempo de respuesta</div>
+        <div class="kpi-trend up">🟢 Excelente</div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="card">
+        <div class="card-header">
+          <h3>Conversaciones recientes</h3>
+          <a href="#" class="card-link">Ver todas</a>
+        </div>
+        <div class="conversation-list">
+          <div class="conv-item">
+            <div class="conv-avatar">👤</div>
+            <div class="conv-info">
+              <div class="conv-name">María García</div>
+              <div class="conv-last">Quiero reservar una mesa para 4...</div>
+            </div>
+            <div class="conv-meta">
+              <span class="conv-channel">📷 IG</span>
+              <span class="conv-time">2m</span>
+            </div>
+          </div>
+          <div class="conv-item">
+            <div class="conv-avatar">👤</div>
+            <div class="conv-info">
+              <div class="conv-name">Carlos López</div>
+              <div class="conv-last">¿Tenéis menú del día?</div>
+            </div>
+            <div class="conv-meta">
+              <span class="conv-channel">💬 WA</span>
+              <span class="conv-time">5m</span>
+            </div>
+          </div>
+          <div class="conv-item">
+            <div class="conv-avatar">👤</div>
+            <div class="conv-info">
+              <div class="conv-name">Ana Martínez</div>
+              <div class="conv-last">¿A qué hora cerráis?</div>
+            </div>
+            <div class="conv-meta">
+              <span class="conv-channel">📘 FB</span>
+              <span class="conv-time">12m</span>
+            </div>
+          </div>
+          <div class="conv-item">
+            <div class="conv-avatar">👤</div>
+            <div class="conv-info">
+              <div class="conv-name">Pedro Ruiz</div>
+              <div class="conv-last">Pedido: 2x Margarita, 1x Diavola</div>
+            </div>
+            <div class="conv-meta">
+              <span class="conv-channel">💬 WA</span>
+              <span class="conv-time">18m</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Canales activos</h3>
+        </div>
+        <div class="channels-status">
+          <div class="ch-status-item">
+            <span class="ch-emoji">💬</span>
+            <div class="ch-status-info">
+              <div class="ch-status-name">WhatsApp Business</div>
+              <div class="ch-status-num">+34 666 123 456</div>
+            </div>
+            <div class="ch-status-badge connected">Conectado</div>
+          </div>
+          <div class="ch-status-item">
+            <span class="ch-emoji">📷</span>
+            <div class="ch-status-info">
+              <div class="ch-status-name">Instagram DM</div>
+              <div class="ch-status-num">@minegocio</div>
+            </div>
+            <div class="ch-status-badge connected">Conectado</div>
+          </div>
+          <div class="ch-status-item">
+            <span class="ch-emoji">📘</span>
+            <div class="ch-status-info">
+              <div class="ch-status-name">Facebook Messenger</div>
+              <div class="ch-status-num">Mi Negocio</div>
+            </div>
+            <div class="ch-status-badge connected">Conectado</div>
+          </div>
+          <div class="ch-status-item">
+            <span class="ch-emoji">🌐</span>
+            <div class="ch-status-info">
+              <div class="ch-status-name">Chat en Web</div>
+              <div class="ch-status-num">minegocio.com</div>
+            </div>
+            <div class="ch-status-badge pending">Configura</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Próximas reservas</h3>
+        </div>
+        <div class="reservations-mini">
+          <div class="res-mini-item">
+            <div class="res-time">19:30</div>
+            <div class="res-detail">
+              <div class="res-name">María G.</div>
+              <div class="res-persons">2 personas · Mesa 3</div>
+            </div>
+            <div class="res-status confirmed">✓</div>
+          </div>
+          <div class="res-mini-item">
+            <div class="res-time">20:00</div>
+            <div class="res-detail">
+              <div class="res-name">Carlos L.</div>
+              <div class="res-persons">4 personas · Mesa 7</div>
+            </div>
+            <div class="res-status confirmed">✓</div>
+          </div>
+          <div class="res-mini-item">
+            <div class="res-time">21:30</div>
+            <div class="res-detail">
+              <div class="res-name">Ana M.</div>
+              <div class="res-persons">2 personas · Barra</div>
+            </div>
+            <div class="res-status pending-res">⏳</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Tu QR de menú</h3>
+        </div>
+        <div class="qr-section">
+          <div class="qr-display">
+            <div class="qr-code-big">
+              ▪▪▪▪▪▪▪<br>
+              ▪ ▪   ▪ ▪<br>
+              ▪ ▪▪▪ ▪ ▪<br>
+              ▪ ▪▪▪ ▪ ▪<br>
+              ▪ ▪   ▪ ▪<br>
+              ▪▪▪▪▪▪▪<br>
+            </div>
+          </div>
+          <div class="qr-actions">
+            <button class="btn-secondary">📥 Descargar PNG</button>
+            <button class="btn-secondary">🖨️ Imprimir</button>
+            <button class="btn-primary-sm">🔗 Ver menú online</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AGENT SECTION ===== -->
+  <section class="section" id="section-agent">
+    <div class="section-header">
+      <h1>🤖 Configuración del Agente IA</h1>
+      <p>Personaliza cómo responde tu asistente a los clientes</p>
+    </div>
+
+    <div class="form-grid">
+      <div class="card form-card">
+        <h3>Información del negocio</h3>
+        <div class="form-group">
+          <label>Nombre del negocio</label>
+          <input type="text" class="form-input" value="Mi Negocio" placeholder="Ej: Bar El Rincón">
+        </div>
+        <div class="form-group">
+          <label>Tipo de negocio</label>
+          <select class="form-input">
+            <option>🍽️ Restaurante</option>
+            <option>☕ Cafetería / Bar</option>
+            <option>🛍️ Tienda</option>
+            <option>💇 Peluquería / Estética</option>
+            <option>🏋️ Gimnasio</option>
+            <option>🏥 Clínica</option>
+            <option>🏨 Hotel</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Dirección</label>
+          <input type="text" class="form-input" placeholder="Calle y número, ciudad">
+        </div>
+        <div class="form-group">
+          <label>Horario</label>
+          <input type="text" class="form-input" placeholder="Ej: Lun-Vie 9:00-22:00, Sáb-Dom 10:00-23:00">
+        </div>
+        <div class="form-group">
+          <label>Teléfono de contacto</label>
+          <input type="text" class="form-input" placeholder="+34 666 123 456">
+        </div>
+      </div>
+
+      <div class="card form-card">
+        <h3>Personalidad del Agente</h3>
+        <div class="form-group">
+          <label>Nombre del agente</label>
+          <input type="text" class="form-input" value="Alex" placeholder="Ej: Martina, Carlos, AI...">
+        </div>
+        <div class="form-group">
+          <label>Tono de comunicación</label>
+          <div class="tone-selector">
+            <div class="tone-option selected">😊 Amigable</div>
+            <div class="tone-option">👔 Profesional</div>
+            <div class="tone-option">😎 Informal</div>
+            <div class="tone-option">✨ Elegante</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Instrucciones especiales</label>
+          <textarea class="form-input" rows="4" placeholder="Ej: Siempre ofrecer el plato del día, promocionar el menú de mediodía los martes..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Idiomas</label>
+          <div class="lang-chips">
+            <div class="chip active">🇪🇸 Español</div>
+            <div class="chip">🇬🇧 English</div>
+            <div class="chip">🇫🇷 Français</div>
+            <div class="chip add-chip">+ Añadir</div>
+          </div>
+        </div>
+
+        <div class="agent-toggle-section">
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Agente activo</div>
+              <div class="toggle-sub">El bot responde automáticamente</div>
+            </div>
+            <div class="switch active" id="agentToggle"></div>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Tomar pedidos</div>
+              <div class="toggle-sub">El agente puede anotar pedidos</div>
+            </div>
+            <div class="switch active"></div>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Gestionar reservas</div>
+              <div class="toggle-sub">El agente toma reservas automáticamente</div>
+            </div>
+            <div class="switch active"></div>
+          </div>
+        </div>
+
+        <button class="btn-primary-full">💾 Guardar cambios</button>
+      </div>
+    </div>
+
+    <!-- CHAT TEST -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Probar el agente</h3>
+        <span class="test-badge">Modo demo</span>
+      </div>
+      <div class="chat-test">
+        <div class="chat-messages" id="testMessages">
+          <div class="test-bubble bot">¡Hola! Soy Alex, el asistente de Mi Negocio. ¿En qué puedo ayudarte hoy? 😊</div>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" class="chat-input" id="testInput" placeholder="Escribe un mensaje de prueba..." />
+          <button class="send-btn" onclick="sendTestMessage()">Enviar →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MENU SECTION ===== -->
+  <section class="section" id="section-menu">
+    <div class="section-header">
+      <h1>📋 Menú / Catálogo</h1>
+      <p>Gestiona tu carta digital. Los cambios se aplican al instante.</p>
+    </div>
+
+    <div class="menu-toolbar">
+      <button class="btn-primary-sm" onclick="addCategory()">+ Añadir categoría</button>
+      <button class="btn-secondary-sm">📥 Importar CSV</button>
+      <button class="btn-secondary-sm">🖨️ Ver carta online</button>
+    </div>
+
+    <div class="menu-categories" id="menuCategories">
+
+      <div class="menu-category">
+        <div class="cat-header">
+          <input class="cat-name" value="🍕 Pizzas" />
+          <button class="cat-add" onclick="addProduct(this)">+ Añadir producto</button>
+          <button class="cat-delete">🗑️</button>
+        </div>
+        <div class="products-list">
+          <div class="product-row">
+            <input class="prod-name" value="Margarita" placeholder="Nombre">
+            <input class="prod-desc" value="Tomate, mozzarella, albahaca" placeholder="Descripción">
+            <input class="prod-price" value="8.00" placeholder="€" type="number">
+            <div class="prod-available">
+              <div class="switch active"></div>
+              <span>Disponible</span>
+            </div>
+            <button class="prod-delete">✕</button>
+          </div>
+          <div class="product-row">
+            <input class="prod-name" value="4 Quesos" placeholder="Nombre">
+            <input class="prod-desc" value="Gorgonzola, parmesano, mozzarella, brie" placeholder="Descripción">
+            <input class="prod-price" value="11.00" placeholder="€" type="number">
+            <div class="prod-available">
+              <div class="switch active"></div>
+              <span>Disponible</span>
+            </div>
+            <button class="prod-delete">✕</button>
+          </div>
+          <div class="product-row">
+            <input class="prod-name" value="Diavola" placeholder="Nombre">
+            <input class="prod-desc" value="Salami picante, aceitunas, jalapeños" placeholder="Descripción">
+            <input class="prod-price" value="12.00" placeholder="€" type="number">
+            <div class="prod-available">
+              <div class="switch active"></div>
+              <span>Disponible</span>
+            </div>
+            <button class="prod-delete">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-category">
+        <div class="cat-header">
+          <input class="cat-name" value="🥗 Ensaladas" />
+          <button class="cat-add" onclick="addProduct(this)">+ Añadir producto</button>
+          <button class="cat-delete">🗑️</button>
+        </div>
+        <div class="products-list">
+          <div class="product-row">
+            <input class="prod-name" value="César" placeholder="Nombre">
+            <input class="prod-desc" value="Lechuga romana, parmesano, crutones" placeholder="Descripción">
+            <input class="prod-price" value="7.50" placeholder="€" type="number">
+            <div class="prod-available">
+              <div class="switch active"></div>
+              <span>Disponible</span>
+            </div>
+            <button class="prod-delete">✕</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="btn-primary-full" style="margin-top:24px">💾 Guardar menú</button>
+  </section>
+
+  <!-- ===== RESERVATIONS SECTION ===== -->
+  <section class="section" id="section-reservations">
+    <div class="section-header">
+      <h1>📅 Reservas</h1>
+      <p>Todas las reservas tomadas automáticamente por tu agente</p>
+    </div>
+
+    <div class="reservations-view">
+      <div class="calendar-mini">
+        <div class="cal-header">
+          <button>‹</button>
+          <span>Abril 2025</span>
+          <button>›</button>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-day-label">L</div><div class="cal-day-label">M</div><div class="cal-day-label">X</div><div class="cal-day-label">J</div><div class="cal-day-label">V</div><div class="cal-day-label">S</div><div class="cal-day-label">D</div>
+          <div class="cal-day empty"></div><div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day has-res">3</div><div class="cal-day has-res">4</div><div class="cal-day has-res">5</div><div class="cal-day">6</div>
+          <div class="cal-day">7</div><div class="cal-day has-res">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day has-res">11</div><div class="cal-day has-res">12</div><div class="cal-day">13</div>
+          <div class="cal-day selected">14</div><div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div>
+          <div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div>
+          <div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day">30</div>
+        </div>
+      </div>
+
+      <div class="reservations-list-day">
+        <h3>Reservas — 14 de Abril</h3>
+        <div class="res-full-list">
+          <div class="res-full-item">
+            <div class="res-full-time">18:00</div>
+            <div class="res-full-info">
+              <div class="res-full-name">Laura Sánchez</div>
+              <div class="res-full-detail">2 personas · Mesa 2 · Instagram DM</div>
+            </div>
+            <div class="res-actions">
+              <button class="btn-confirm">✓ Confirmar</button>
+              <button class="btn-cancel-res">✕</button>
+            </div>
+          </div>
+          <div class="res-full-item confirmed">
+            <div class="res-full-time">19:30</div>
+            <div class="res-full-info">
+              <div class="res-full-name">María García</div>
+              <div class="res-full-detail">4 personas · Mesa 7 · WhatsApp</div>
+            </div>
+            <div class="res-actions">
+              <span class="confirmed-badge">✓ Confirmada</span>
+            </div>
+          </div>
+          <div class="res-full-item confirmed">
+            <div class="res-full-time">21:00</div>
+            <div class="res-full-info">
+              <div class="res-full-name">Carlos López</div>
+              <div class="res-full-detail">2 personas · Terraza · Facebook</div>
+            </div>
+            <div class="res-actions">
+              <span class="confirmed-badge">✓ Confirmada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BIO LINK SECTION ===== -->
+  <section class="section" id="section-biolink">
+    <div class="section-header">
+      <h1>🔗 Bio Link</h1>
+      <p>Tu página pública para la bio de Instagram. Compártela con tus clientes.</p>
+    </div>
+
+    <div class="biolink-builder">
+      <div class="biolink-editor">
+        <div class="card">
+          <h3>Personalizar</h3>
+          <div class="form-group">
+            <label>URL de tu página</label>
+            <div class="url-display">atend-ia.com/<input type="text" value="mi-negocio" class="url-slug"></div>
+          </div>
+          <div class="form-group">
+            <label>Nombre visible</label>
+            <input type="text" class="form-input" value="Mi Negocio" />
+          </div>
+          <div class="form-group">
+            <label>Descripción</label>
+            <input type="text" class="form-input" value="El mejor sitio de la ciudad 🍕" placeholder="Subtítulo corto" />
+          </div>
+          <div class="form-group">
+            <label>Color principal</label>
+            <div class="color-options">
+              <div class="color-opt selected" style="background:#7c3aed"></div>
+              <div class="color-opt" style="background:#06b6d4"></div>
+              <div class="color-opt" style="background:#10b981"></div>
+              <div class="color-opt" style="background:#f59e0b"></div>
+              <div class="color-opt" style="background:#ef4444"></div>
+              <div class="color-opt" style="background:#ec4899"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Botones activos</label>
+            <div class="button-toggles">
+              <div class="btn-toggle-row">
+                <div class="switch active"></div>
+                <span>💬 Chat con Agente IA</span>
+              </div>
+              <div class="btn-toggle-row">
+                <div class="switch active"></div>
+                <span>📋 Ver Menú / Catálogo</span>
+              </div>
+              <div class="btn-toggle-row">
+                <div class="switch active"></div>
+                <span>📅 Hacer Reserva</span>
+              </div>
+              <div class="btn-toggle-row">
+                <div class="switch active"></div>
+                <span>📍 Cómo llegar</span>
+              </div>
+              <div class="btn-toggle-row">
+                <div class="switch"></div>
+                <span>🛍️ Tienda online</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-primary-full">💾 Publicar cambios</button>
+        </div>
+      </div>
+
+      <div class="biolink-preview">
+        <div class="phone-frame">
+          <div class="phone-preview-content">
+            <div class="preview-avatar">🍕</div>
+            <div class="preview-name">Mi Negocio</div>
+            <div class="preview-desc">El mejor sitio de la ciudad 🍕</div>
+            <div class="preview-buttons">
+              <div class="preview-btn primary">💬 Chatear con nosotros</div>
+              <div class="preview-btn">📋 Ver menú</div>
+              <div class="preview-btn">📅 Reservar mesa</div>
+              <div class="preview-btn">📍 Cómo llegar</div>
+            </div>
+            <div class="preview-footer">Powered by AtendIA</div>
+          </div>
+        </div>
+        <button class="btn-secondary-sm" style="margin-top:16px">🔗 Copiar enlace</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sections placeholder for Channels and Analytics -->
+  <section class="section" id="section-channels">
+    <div class="section-header">
+      <h1>💬 Canales de Comunicación</h1>
+    </div>
+    <div class="channels-grid">
+      <div class="channel-card connected">
+        <div class="ch-card-icon">💬</div>
+        <div class="ch-card-name">WhatsApp Business</div>
+        <div class="ch-card-status connected-text">● Conectado</div>
+        <div class="ch-card-num">+34 666 123 456</div>
+        <button class="btn-secondary-sm">Gestionar</button>
+      </div>
+      <div class="channel-card connected">
+        <div class="ch-card-icon">📷</div>
+        <div class="ch-card-name">Instagram</div>
+        <div class="ch-card-status connected-text">● Conectado</div>
+        <div class="ch-card-num">@minegocio</div>
+        <button class="btn-secondary-sm">Gestionar</button>
+      </div>
+      <div class="channel-card connected">
+        <div class="ch-card-icon">📘</div>
+        <div class="ch-card-name">Facebook Messenger</div>
+        <div class="ch-card-status connected-text">● Conectado</div>
+        <div class="ch-card-num">Mi Negocio</div>
+        <button class="btn-secondary-sm">Gestionar</button>
+      </div>
+      <div class="channel-card">
+        <div class="ch-card-icon">🌐</div>
+        <div class="ch-card-name">Chat en tu Web</div>
+        <div class="ch-card-status">No configurado</div>
+        <div class="ch-card-num">Añade el código a tu web</div>
+        <button class="btn-primary-sm">Conectar</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="section-analytics">
+    <div class="section-header">
+      <h1>📈 Analytics</h1>
+      <p>Estadísticas de tu agente en los últimos 30 días</p>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-icon">💬</div><div class="kpi-value">4,821</div><div class="kpi-label">Mensajes totales</div><div class="kpi-trend up">↑ 34%</div></div>
+      <div class="kpi-card"><div class="kpi-icon">👥</div><div class="kpi-value">892</div><div class="kpi-label">Clientes únicos</div><div class="kpi-trend up">↑ 18%</div></div>
+      <div class="kpi-card"><div class="kpi-icon">🛒</div><div class="kpi-value">312</div><div class="kpi-label">Pedidos gestionados</div><div class="kpi-trend up">↑ 22%</div></div>
+      <div class="kpi-card"><div class="kpi-icon">😊</div><div class="kpi-value">97%</div><div class="kpi-label">Satisfacción</div><div class="kpi-trend up">🟢 Excelente</div></div>
+    </div>
+  </section>
+
+</main>
+
+<script src="js/app.js"></script>
+</body>
+</html>

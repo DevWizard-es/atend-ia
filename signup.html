@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empezar gratis — AtendIA</title>
+  <meta name="description" content="Crea tu cuenta en AtendIA y empieza a atender a tus clientes automáticamente hoy mismo.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/signup.css">
+</head>
+<body>
+
+<div class="signup-layout">
+
+  <!-- LEFT SIDE - Visual -->
+  <div class="signup-left">
+    <a href="index.html" class="back-logo">Atend<span>IA</span></a>
+
+    <div class="left-content">
+      <div class="showcase-card">
+        <div class="showcase-header">
+          <div class="showcase-dot green"></div>
+          <div class="showcase-dot yellow"></div>
+          <div class="showcase-dot red"></div>
+          <span>Panel de AtendIA</span>
+        </div>
+        <div class="showcase-body">
+          <div class="showcase-stat">
+            <span class="showcase-num">247</span>
+            <span class="showcase-label">Mensajes atendidos hoy</span>
+          </div>
+          <div class="showcase-divider"></div>
+          <div class="showcase-messages">
+            <div class="showcase-msg bot">¡Hola! Soy el asistente de tu negocio. ¿En qué te ayudo? 😊</div>
+            <div class="showcase-msg user">¿Tenéis menú del día?</div>
+            <div class="showcase-msg bot">¡Sí! Hoy tenemos ensalada César + merluza al horno por 12€. ¿Te reservo mesa? 🍽️</div>
+            <div class="showcase-msg user">Sí, para las 14:00</div>
+            <div class="showcase-msg bot">✅ ¡Perfecto! Mesa reservada para las 14:00. ¡Te esperamos!</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-mini">
+        <div class="test-stars">★★★★★</div>
+        <p>"En una semana el bot ya había tomado 40 reservas mientras yo atendía la barra. Increíble."</p>
+        <div class="test-author">
+          <span class="test-avatar">🧑‍🍳</span>
+          <div>
+            <strong>Marcos T.</strong>
+            <span>Restaurante El Puerto</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDE - Form / Plan picker -->
+  <div class="signup-right">
+
+    <!-- STEP 1: Choose plan -->
+    <div class="signup-step active" id="step1">
+      <div class="step-header">
+        <div class="step-nums">
+          <div class="step-num active">1</div>
+          <div class="step-line"></div>
+          <div class="step-num">2</div>
+          <div class="step-line"></div>
+          <div class="step-num">3</div>
+        </div>
+        <h1>Elige tu plan</h1>
+        <p>14 días gratis, sin tarjeta de crédito</p>
+      </div>
+
+      <div class="billing-toggle-mini">
+        <span class="active" id="s1Monthly">Mensual</span>
+        <div class="toggle-sm" id="toggleSm" onclick="toggleBilling()"></div>
+        <span id="s1Annual">Anual <span class="save-sm">-20%</span></span>
+      </div>
+
+      <div class="plans-mini">
+        <div class="plan-mini" onclick="selectPlan('starter')" id="plan-starter">
+          <div class="plan-mini-check" id="check-starter"></div>
+          <div class="plan-mini-info">
+            <div class="plan-mini-name">Starter</div>
+            <div class="plan-mini-feat">1 canal · Menú QR · 200 conv/mes</div>
+          </div>
+          <div class="plan-mini-price">
+            <span class="p-monthly">€19</span>
+            <span class="p-annual" style="display:none">€15</span>
+            <span>/mes</span>
+          </div>
+        </div>
+
+        <div class="plan-mini featured" onclick="selectPlan('pro')" id="plan-pro">
+          <div class="plan-popular">⭐ Más popular</div>
+          <div class="plan-mini-check checked" id="check-pro"></div>
+          <div class="plan-mini-info">
+            <div class="plan-mini-name">Pro</div>
+            <div class="plan-mini-feat">Todos los canales · Reservas · Ilimitado</div>
+          </div>
+          <div class="plan-mini-price">
+            <span class="p-monthly">€49</span>
+            <span class="p-annual" style="display:none">€39</span>
+            <span>/mes</span>
+          </div>
+        </div>
+
+        <div class="plan-mini" onclick="selectPlan('business')" id="plan-business">
+          <div class="plan-mini-check" id="check-business"></div>
+          <div class="plan-mini-info">
+            <div class="plan-mini-name">Business</div>
+            <div class="plan-mini-feat">5 locales · API · Manager dedicado</div>
+          </div>
+          <div class="plan-mini-price">
+            <span class="p-monthly">€99</span>
+            <span class="p-annual" style="display:none">€79</span>
+            <span>/mes</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-next" onclick="goStep(2)">
+        Continuar gratis →
+      </button>
+      <p class="note-bottom">✓ Sin tarjeta · ✓ Cancela cuando quieras · ✓ Soporte incluido</p>
+    </div>
+
+    <!-- STEP 2: Account info -->
+    <div class="signup-step" id="step2">
+      <div class="step-header">
+        <div class="step-nums">
+          <div class="step-num done">✓</div>
+          <div class="step-line done"></div>
+          <div class="step-num active">2</div>
+          <div class="step-line"></div>
+          <div class="step-num">3</div>
+        </div>
+        <h1>Tu cuenta</h1>
+        <p>Crea tu acceso a AtendIA</p>
+      </div>
+
+      <div class="form-fields">
+        <div class="field-row">
+          <div class="field-group">
+            <label>Nombre del negocio</label>
+            <input type="text" id="bizName" class="field-input" placeholder="Restaurante La Plaza" />
+          </div>
+          <div class="field-group">
+            <label>Tipo de negocio</label>
+            <select id="bizType" class="field-input">
+              <option>🍽️ Restaurante</option>
+              <option>☕ Bar / Cafetería</option>
+              <option>🛍️ Tienda</option>
+              <option>💇 Peluquería</option>
+              <option>🏋️ Gimnasio</option>
+              <option>🏥 Clínica</option>
+              <option>Otro</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Email</label>
+          <input type="email" id="userEmail" class="field-input" placeholder="tu@email.com" />
+        </div>
+        <div class="field-group">
+          <label>Contraseña</label>
+          <input type="password" id="userPass" class="field-input" placeholder="Mínimo 8 caracteres" />
+        </div>
+        <div class="field-group">
+          <label>Teléfono (opcional)</label>
+          <input type="tel" id="userPhone" class="field-input" placeholder="+34 666 000 000" />
+        </div>
+      </div>
+
+      <div class="terms-check">
+        <input type="checkbox" id="terms" />
+        <label for="terms">Acepto los <a href="#">Términos de servicio</a> y la <a href="#">Política de privacidad</a></label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-back" onclick="goStep(1)">← Atrás</button>
+        <button class="btn-next" onclick="goStep(3)">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Payment -->
+    <div class="signup-step" id="step3">
+      <div class="step-header">
+        <div class="step-nums">
+          <div class="step-num done">✓</div>
+          <div class="step-line done"></div>
+          <div class="step-num done">✓</div>
+          <div class="step-line done"></div>
+          <div class="step-num active">3</div>
+        </div>
+        <h1>¡Casi listo!</h1>
+        <p>Empieza gratis 14 días. Solo pagás si te convence.</p>
+      </div>
+
+      <div class="order-summary" id="orderSummary">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="trial-notice">
+        <div class="trial-icon">🎁</div>
+        <div>
+          <strong>14 días completamente gratis</strong>
+          <p>No se hará ningún cargo hasta el día 15. Cancelas antes si quieres, sin coste.</p>
+        </div>
+      </div>
+
+      <button class="btn-next btn-pay" id="payBtn" onclick="handlePayment()">
+        Empezar mi prueba gratis →
+      </button>
+
+      <div class="security-badges">
+        <span>🔒 Pago seguro con Stripe</span>
+        <span>✓ SSL cifrado</span>
+        <span>✓ Sin cargo hoy</span>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-back" onclick="goStep(2)">← Atrás</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/signup.js"></script>
+</body>
+</html>
