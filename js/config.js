@@ -1,4 +1,6 @@
 // ===== ATEND IA — CONFIGURACIÓN =====
+const API_URL = 'https://hostbot-server-meta.onrender.com/api';
+
 // ⚠️ MODO TEST: Estos son enlaces de prueba de Stripe.
 // Para cobrar de verdad: verifica tu empresa en dashboard.stripe.com y
 // cambia estos links por los de la cuenta activa (sin "test_" en la URL).

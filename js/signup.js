@@ -96,10 +96,36 @@ function showFieldError(fieldId, msg) {
   setTimeout(() => err.remove(), 3000);
 }
 
-function handlePayment() {
+async function handlePayment() {
   const btn = document.getElementById('payBtn');
-  btn.textContent = 'Redirigiendo a pago seguro...';
+  btn.textContent = 'Creando cuenta...';
   btn.disabled = true;
+
+  const email = document.getElementById('userEmail')?.value;
+  const pass = document.getElementById('userPass')?.value;
+  const bizName = document.getElementById('bizName')?.value;
+  const bizType = document.getElementById('bizType')?.value;
+
+  try {
+    const res = await fetch(API_URL + '/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass, bizName, bizType })
+    });
+    const data = await res.json();
+    if (!data.success) {
+      alert('Error: ' + data.error);
+      btn.textContent = 'Procesar pago seguro';
+      btn.disabled = false;
+      return;
+    }
+    localStorage.setItem('atend_token', data.token);
+  } catch(e) {
+    console.error(e);
+    alert('Aviso: Servidor backend en mantenimiento. Ingresando en modo local.');
+  }
+
+  btn.textContent = 'Redirigiendo a pago seguro...';
 
   // Get the right Stripe link
   const linkKey = `${selectedPlan}_${billingCycle}`;
@@ -111,22 +137,15 @@ function handlePayment() {
     stripeUrl = '';
   }
 
-  // If Stripe not configured yet, go to demo app
+  // Si no hay Stripe, entra al panel directo (útil para pruebas)
   if (!stripeUrl || stripeUrl.includes('XXXX')) {
     setTimeout(() => {
-      // Save basic config to localStorage for demo
-      const bizName = document.getElementById('bizName')?.value || 'Mi Negocio';
-      const bizType = document.getElementById('bizType')?.value || '🍽️ Restaurante';
-      localStorage.setItem('atend_biz_name', bizName);
-      localStorage.setItem('atend_biz_type', bizType);
-      localStorage.setItem('atend_plan', selectedPlan);
       window.location.href = 'app.html';
     }, 1200);
     return;
   }
 
   // Build Stripe URL with prefilled email
-  const email = document.getElementById('userEmail')?.value;
   const finalUrl = email ? `${stripeUrl}?prefilled_email=${encodeURIComponent(email)}` : stripeUrl;
 
   setTimeout(() => {

@@ -72,10 +72,46 @@
       </div>
 
       <div class="btn-row" style="margin-top: 32px;">
-        <button class="btn-next" style="width: 100%;" onclick="window.location.href='app.html'">
+        <button id="loginBtn" class="btn-next" style="width: 100%;" onclick="handleLogin()">
           Entrar al panel →
         </button>
       </div>
+
+      <script src="js/config.js"></script>
+      <script>
+        async function handleLogin() {
+          const btn = document.getElementById('loginBtn');
+          const email = document.getElementById('loginEmail').value.trim();
+          const pass = document.getElementById('loginPass').value.trim();
+          
+          if (!email || !pass) return alert('Por favor, rellena email y contraseña.');
+          
+          btn.textContent = 'Verificando...';
+          btn.disabled = true;
+          
+          try {
+            const res = await fetch(API_URL + '/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, password: pass })
+            });
+            const data = await res.json();
+            
+            if (!data.success) {
+              alert('Error: ' + data.error);
+              btn.textContent = 'Entrar al panel →';
+              btn.disabled = false;
+              return;
+            }
+            localStorage.setItem('atend_token', data.token);
+            window.location.href = 'app.html';
+          } catch(e) {
+            console.error(e);
+            alert('Aviso conectando con el servidor. Entrando en modo local.');
+            window.location.href = 'app.html';
+          }
+        }
+      </script>
       
       <p class="note-bottom" style="margin-top: 24px; text-align: center;">
         ¿No tienes cuenta? <a href="signup.html" style="color: white;">Empieza gratis</a>
