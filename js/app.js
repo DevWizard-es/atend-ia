@@ -34,6 +34,13 @@ async function fetchBizData() {
           b.classList.add('selected');
         }
       });
+
+      const switches = document.querySelectorAll('.agent-toggle-section .switch');
+      if (switches.length >= 3) {
+        switches[0].classList.toggle('active', !!d.agentConfig.active);
+        switches[1].classList.toggle('active', !!d.agentConfig.take_orders);
+        switches[2].classList.toggle('active', !!d.agentConfig.manage_reservations);
+      }
     }
   } catch(e) { console.error('Fetch Config Error', e); }
 }
@@ -48,7 +55,6 @@ async function fetchMenuData() {
 
     if (d.length > 0) {
       catContainer.innerHTML = ''; // Clear default mock menu
-      // Group by category
       const grouped = {};
       d.forEach(i => {
         grouped[i.category] = grouped[i.category] || [];
@@ -61,9 +67,107 @@ async function fetchMenuData() {
   } catch(e) { console.error('Menu Fetch Error', e); }
 }
 
+async function fetchBiolinkData() {
+  try {
+    const res = await fetch(API_URL + '/biolink', { headers: { 'Authorization': 'Bearer ' + token }});
+    const d = await res.json();
+    if (!d || d.error) return;
+
+    document.querySelector('.url-slug').value = d.slug || '';
+    const bioInputs = document.querySelectorAll('.biolink-editor .form-input');
+    if (bioInputs.length >= 2) {
+      bioInputs[0].value = d.display_name || '';
+      bioInputs[1].value = d.description || '';
+    }
+
+    // Set colors
+    const cOpts = document.querySelectorAll('.color-opt');
+    let matched = false;
+    cOpts.forEach(o => {
+      o.classList.remove('selected');
+      // Normalize hex for comparison or just raw check
+      if (d.color && o.style.background.replace(/\s/g,'').includes(d.color.replace(/\s/g,''))) {
+        o.classList.add('selected');
+        matched = true;
+      }
+    });
+    if (!matched && cOpts.length > 0) cOpts[0].classList.add('selected'); // default
+    
+    // Set map to preview
+    const chosenColor = document.querySelector('.color-opt.selected')?.style.background;
+    const previewPrimary = document.querySelector('.preview-btn.primary');
+    if (previewPrimary) previewPrimary.style.background = chosenColor || '';
+
+    // Set preview texts
+    document.querySelector('.preview-name').textContent = d.display_name || 'Mi Negocio';
+    document.querySelector('.preview-desc').textContent = d.description || '';
+
+    // Set buttons
+    const bSwitches = document.querySelectorAll('.button-toggles .switch');
+    if (bSwitches.length >= 5) {
+      bSwitches[0].classList.toggle('active', !!d.btn_chat);
+      bSwitches[1].classList.toggle('active', !!d.btn_menu);
+      bSwitches[2].classList.toggle('active', !!d.btn_res);
+      bSwitches[3].classList.toggle('active', !!d.btn_map);
+      bSwitches[4].classList.toggle('active', !!d.btn_shop);
+    }
+  } catch(e) { console.error('Biolink Fetch Error', e); }
+}
+
+async function fetchReservations() {
+  try {
+    const res = await fetch(API_URL + '/reservations', { headers: { 'Authorization': 'Bearer ' + token }});
+    const arr = await res.json();
+    if (!Array.isArray(arr)) return;
+
+    const listDiv = document.querySelector('.res-full-list');
+    if (!listDiv) return;
+    listDiv.innerHTML = ''; // reset
+
+    if (arr.length === 0) {
+      listDiv.innerHTML = '<p style="color:var(--text-muted)">Aún no tienes reservas.</p>';
+      return;
+    }
+
+    arr.forEach(r => {
+      const div = document.createElement('div');
+      div.className = `res-full-item ${r.status === 'confirmed' ? 'confirmed' : ''}`;
+      // Parse basic structure
+      div.innerHTML = `
+        <div class="res-full-time">${r.res_time || 'Sin hora'}</div>
+        <div class="res-full-info">
+          <div class="res-full-name">${r.customer_name}</div>
+          <div class="res-full-detail">${r.party_size || '-'} · ${r.channel || 'IA Bot'}</div>
+        </div>
+        <div class="res-actions" data-id="${r.id}">
+          ${r.status === 'confirmed' ? '<span class="confirmed-badge">✓ Confirmada</span>' : 
+            r.status === 'cancelled' ? '<span style="color:var(--red);font-size:0.8rem">✕ Cancelada</span>' : 
+            `<button class="btn-confirm" onclick="updateReservation(${r.id}, 'confirmed', this)">✓ Confirmar</button>
+             <button class="btn-cancel-res" onclick="updateReservation(${r.id}, 'cancelled', this)">✕</button>`}
+        </div>
+      `;
+      listDiv.appendChild(div);
+    });
+  } catch(e) { console.error('Reservations API Error', e); }
+}
+
+async function fetchChannels() {
+  try {
+    const res = await fetch(API_URL + '/channels', { headers: { 'Authorization': 'Bearer ' + token }});
+    const ch = await res.json();
+    if (!Array.isArray(ch)) return;
+    
+    // In a full implementation, you'd bind the UI badges based on this array
+    // Example: Facebook -> if found, add connected badge
+  } catch(e) { console.error(e); }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   fetchBizData();
   fetchMenuData();
+  fetchBiolinkData();
+  fetchReservations();
+  fetchChannels();
 });
 
 // ── UI Navigation & Utilities ──────────────────────────────────────────
@@ -130,6 +234,18 @@ document.querySelectorAll('.cal-day:not(.empty)').forEach(day => {
     document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
     day.classList.add('selected');
   });
+});
+
+// ── Live Previews ──────────────────────────────────────────
+const bioNameInput = document.querySelectorAll('.biolink-editor .form-input')[0];
+const bioDescInput = document.querySelectorAll('.biolink-editor .form-input')[1];
+bioNameInput?.addEventListener('input', e => {
+  const p = document.querySelector('.preview-name');
+  if (p) p.textContent = e.target.value || 'Mi Negocio';
+});
+bioDescInput?.addEventListener('input', e => {
+  const p = document.querySelector('.preview-desc');
+  if (p) p.textContent = e.target.value;
 });
 
 // ── AI Demo test ───────────────────────────────────────────────────────
@@ -244,6 +360,33 @@ function addCategoryDetailed(catName, items) {
 }
 
 // ── Saving State to Backend ──────────────────────────────────────────
+async function updateReservation(id, status, btnElement) {
+  const item = btnElement.closest('.res-full-item');
+  const orgHtml = btnElement.closest('.res-actions').innerHTML;
+  btnElement.closest('.res-actions').innerHTML = '<span style="font-size:0.8rem;color:var(--text-muted)">Procesando...</span>';
+
+  try {
+    const res = await fetch(`${API_URL}/reservations/${id}/status`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ status })
+    });
+    if (res.ok) {
+      if (status === 'confirmed') {
+        item.classList.add('confirmed');
+        item.querySelector('.res-actions').innerHTML = '<span class="confirmed-badge">✓ Confirmada</span>';
+      } else {
+        item.querySelector('.res-actions').innerHTML = '<span style="color:var(--red);font-size:0.8rem">✕ Cancelada</span>';
+      }
+    } else {
+      item.querySelector('.res-actions').innerHTML = orgHtml;
+    }
+  } catch(e) {
+    console.error(e);
+    item.querySelector('.res-actions').innerHTML = orgHtml;
+  }
+}
+
 document.querySelectorAll('.btn-primary-full').forEach(btn => {
   btn.addEventListener('click', async () => {
     const orig = btn.textContent;
@@ -251,7 +394,8 @@ document.querySelectorAll('.btn-primary-full').forEach(btn => {
     btn.disabled = true;
 
     const isMenu = orig.toLowerCase().includes('menú') || btn.closest('#section-menu');
-    const isAgent = orig.toLowerCase().includes('cambios') || btn.closest('#section-agent');
+    const isAgent = orig.toLowerCase().includes('cambios') && btn.closest('#section-agent');
+    const isBiolink = orig.toLowerCase().includes('publicar') || btn.closest('#section-biolink');
 
     try {
       if (isAgent) {
@@ -259,6 +403,11 @@ document.querySelectorAll('.btn-primary-full').forEach(btn => {
         const ta = document.querySelector('textarea.form-input');
         const toneEl = document.querySelector('.tone-option.selected');
         const tone = toneEl ? toneEl.textContent.trim().split(' ')[1] : 'Amigable';
+
+        const switches = document.querySelectorAll('.agent-toggle-section .switch');
+        const active = switches[0]?.classList.contains('active');
+        const takeO = switches[1]?.classList.contains('active');
+        const mngR = switches[2]?.classList.contains('active');
 
         await fetch(API_URL + '/config', {
           method: 'POST',
@@ -271,7 +420,10 @@ document.querySelectorAll('.btn-primary-full').forEach(btn => {
             bizPhone: inputs[4]?.value,
             agentName: inputs[5]?.value,
             tone: tone,
-            instructions: ta?.value
+            instructions: ta?.value,
+            active,
+            take_orders: takeO,
+            manage_reservations: mngR
           })
         });
       }
@@ -297,6 +449,37 @@ document.querySelectorAll('.btn-primary-full').forEach(btn => {
           body: JSON.stringify({ menu: menuItems })
         });
       }
+
+      if (isBiolink) {
+        const slug = document.querySelector('.url-slug').value;
+        const bInputs = document.querySelectorAll('.biolink-editor .form-input');
+        const color = document.querySelector('.color-opt.selected')?.style.background;
+        const bs = document.querySelectorAll('.button-toggles .switch');
+
+        const payload = {
+          slug: slug,
+          display_name: bInputs[0]?.value,
+          description: bInputs[1]?.value,
+          color: color,
+          btn_chat: bs[0]?.classList.contains('active'),
+          btn_menu: bs[1]?.classList.contains('active'),
+          btn_res: bs[2]?.classList.contains('active'),
+          btn_map: bs[3]?.classList.contains('active'),
+          btn_shop: bs[4]?.classList.contains('active')
+        };
+
+        const r = await fetch(API_URL + '/biolink', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify(payload)
+        });
+        const ans = await r.json();
+        if (!ans.success) {
+          alert('Error: ' + (ans.error || 'No se pudo guardar la bio url'));
+          throw new Error('Bio link fail');
+        }
+      }
+
     } catch(e) { console.error('Error guardando', e); }
 
     btn.textContent = '✓ Guardado!';
@@ -309,24 +492,38 @@ document.querySelectorAll('.btn-primary-full').forEach(btn => {
   });
 });
 
-// ── Interactions & Modals ────────────────────────────────────────────
-// Confirm/cancel reservation
-document.querySelectorAll('.btn-confirm').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const item = btn.closest('.res-full-item');
-    item.classList.add('confirmed');
-    btn.closest('.res-actions').innerHTML = '<span class="confirmed-badge">✓ Confirmada</span>';
+// Channel Mocks
+document.querySelectorAll('.channel-card .btn-primary-sm').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    btn.textContent = 'Verificando...';
+    setTimeout(async () => {
+      const card = btn.closest('.channel-card');
+      const name = card.querySelector('.ch-card-name').textContent.trim().toLowerCase();
+      // Enviar peticion fake channels
+      try {
+        await fetch(API_URL + '/channels', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ platform: name, identifier: '@conexion_usuario', status: 'connected' })
+        });
+      } catch(e){}
+
+      card.classList.add('connected');
+      card.querySelector('.ch-card-status').innerHTML = '● Conectado';
+      card.querySelector('.ch-card-status').classList.add('connected-text');
+      btn.textContent = 'Gestionar';
+      btn.className = 'btn-secondary-sm';
+    }, 1200);
   });
-});
-document.querySelectorAll('.btn-cancel-res').forEach(btn => {
-  btn.addEventListener('click', () => btn.closest('.res-full-item').remove());
 });
 
 // Copy biolink URL
 document.querySelector('.btn-secondary-sm')?.addEventListener('click', function(e) {
-  if (this.textContent.includes('Copiar')) {
+  if (this.textContent.includes('Copiar Enlace') || this.textContent.includes('Copiar enlace')) {
     const slug = document.querySelector('.url-slug')?.value || 'mi-negocio';
-    navigator.clipboard.writeText('https://atend-ia.com/' + slug).then(() => {
+    // URL would actually correspond to Netlify domain!
+    const publishUrl = window.location.origin + '/biolink.html?b=' + slug;
+    navigator.clipboard.writeText(publishUrl).then(() => {
       this.textContent = '✓ ¡Copiado!';
       setTimeout(() => this.textContent = '🔗 Copiar enlace', 2000);
     });
