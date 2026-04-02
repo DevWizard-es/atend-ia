@@ -114,6 +114,36 @@
       animation: spin 1s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Modal de reservas */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-card {
+      background: var(--card);
+      padding: 30px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 350px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .modal-card h2 { font-size: 1.2rem; margin-bottom: 20px; }
+    .form-group { margin-bottom: 15px; text-align: left; }
+    .form-group label { display: block; font-size: 0.85rem; margin-bottom: 5px; color: var(--text-dim); }
+    .form-input {
+      width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.3); color: white; font-family: inherit; font-size: 0.95rem;
+    }
+    .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
+    .btn-half { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; }
+    .btn-submit { background: var(--primary); color: white; }
+    .btn-cancel { background: rgba(255,255,255,0.1); color: white; }
   </style>
 </head>
 <body>
@@ -132,6 +162,32 @@
 
   <div class="footer">
     Powered by <a href="/">AtendIA</a>
+  </div>
+
+  <div class="modal-overlay" id="resModal">
+    <div class="modal-card">
+      <h2>Reservar Mesa</h2>
+      <div class="form-group">
+        <label>Nombre y Apellido</label>
+        <input type="text" id="r_name" class="form-input" placeholder="Ej: Carlos López">
+      </div>
+      <div class="form-group">
+        <label>Comensales</label>
+        <select id="r_size" class="form-input">
+          <option>1 persona</option><option selected>2 personas</option>
+          <option>3 personas</option><option>4 personas</option>
+          <option>5+ personas</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Fecha y Hora</label>
+        <input type="datetime-local" id="r_time" class="form-input">
+      </div>
+      <div class="modal-btns">
+        <button class="btn-half btn-cancel" onclick="document.getElementById('resModal').style.display='none'">Cancelar</button>
+        <button class="btn-half btn-submit" id="btnSubmitRes" onclick="submitReservation()">Reservar</button>
+      </div>
+    </div>
   </div>
 
   <script src="js/config.js"></script>
@@ -172,13 +228,13 @@
           cont.innerHTML += `<a href="#" class="bio-btn primary" onclick="alert('Iniciando chat con IA...')">💬 Chatear con nosotros</a>`;
         }
         if (data.btn_menu) {
-          cont.innerHTML += `<a href="#" class="bio-btn secondary" onclick="alert('Cargando menú...')">📋 Ver menú</a>`;
+          cont.innerHTML += `<a href="${API_URL.replace('/api','')}/menu/${slug}" class="bio-btn secondary">📋 Ver menú</a>`;
         }
         if (data.btn_res) {
-          cont.innerHTML += `<a href="#" class="bio-btn secondary" onclick="alert('Módulo de reservas...')">📅 Reservar mesa</a>`;
+          cont.innerHTML += `<div class="bio-btn secondary" onclick="document.getElementById('resModal').style.display='flex'">📅 Reservar mesa</div>`;
         }
         if (data.btn_map) {
-          cont.innerHTML += `<a href="#" class="bio-btn secondary" onclick="alert('Redirigiendo a Google Maps...')">📍 Cómo llegar</a>`;
+          cont.innerHTML += `<a href="https://maps.google.com/?q=${encodeURIComponent(data.display_name)}" target="_blank" class="bio-btn secondary">📍 Cómo llegar</a>`;
         }
         if (data.btn_shop) {
           cont.innerHTML += `<a href="#" class="bio-btn secondary" onclick="alert('Abriendo tienda online...')">🛍️ Comprar online</a>`;
@@ -191,6 +247,32 @@
 
       document.getElementById('loader').style.display = 'none';
       document.getElementById('content').style.display = 'flex';
+    }
+
+    async function submitReservation() {
+      const slug = new URLSearchParams(window.location.search).get('b');
+      const name = document.getElementById('r_name').value;
+      const size = document.getElementById('r_size').value;
+      let time = document.getElementById('r_time').value;
+      if (!name || !time) return alert('Por favor rellena el nombre y la hora');
+      time = new Date(time).toLocaleString('es-ES', { dateStyle:'short', timeStyle:'short'});
+
+      document.getElementById('btnSubmitRes').textContent = 'Enviando...';
+      try {
+        const res = await fetch(API_URL + '/public/reservations', {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ slug, name, size, time })
+        });
+        if (res.ok) {
+          alert('¡Reserva enviada! Te confirmaremos en breve.');
+          document.getElementById('resModal').style.display='none';
+        } else {
+          alert('Error al reservar.');
+        }
+      } catch(e) {
+        alert('Error de conexión.');
+      }
+      document.getElementById('btnSubmitRes').textContent = 'Reservar';
     }
 
     loadBiolink();

@@ -120,6 +120,23 @@ async function fetchBiolinkData() {
       bSwitches[3].classList.toggle('active', !!d.btn_map);
       bSwitches[4].classList.toggle('active', !!d.btn_shop);
     }
+    
+    // QR Code Generation
+    if (d.slug) {
+      const url = window.location.origin + '/biolink.html?b=' + d.slug;
+      const qrImg = document.getElementById('dashboardQR');
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url)}`;
+        qrImg.style.display = 'block';
+        const txt = document.getElementById('qrPlaceholderText');
+        if (txt) txt.style.display = 'none';
+        
+        document.querySelectorAll('.link-online-menu').forEach(link => {
+          link.href = url;
+          link.innerHTML = '🔗 Ver carta online';
+        });
+      }
+    }
   } catch(e) { console.error('Biolink Fetch Error', e); }
 }
 
@@ -163,11 +180,37 @@ async function fetchReservations() {
 async function fetchChannels() {
   try {
     const res = await fetch(API_URL + '/channels', { headers: { 'Authorization': 'Bearer ' + token }});
-    const ch = await res.json();
-    if (!Array.isArray(ch)) return;
+    const channels = await res.json();
+    if (!Array.isArray(channels)) return;
     
-    // In a full implementation, you'd bind the UI badges based on this array
-    // Example: Facebook -> if found, add connected badge
+    const cards = document.querySelectorAll('.channel-card, .ch-status-item');
+    cards.forEach(card => {
+      let nameEl = card.querySelector('.ch-card-name') || card.querySelector('.ch-status-name');
+      if (!nameEl) return;
+      const name = nameEl.textContent.trim().toLowerCase();
+      
+      const match = channels.find(c => name.includes(c.platform.toLowerCase()));
+      if (match) {
+        card.classList.add('connected');
+        
+        const badge = card.querySelector('.ch-status-badge') || card.querySelector('.ch-card-status');
+        if (badge) {
+          badge.innerHTML = '● Conectado';
+          badge.classList.remove('pending');
+          badge.classList.add('connected', 'connected-text');
+        }
+        
+        const num = card.querySelector('.ch-card-num') || card.querySelector('.ch-status-num');
+        if (num) num.textContent = match.identifier || '';
+        
+        const btn = card.querySelector('.btn-primary-sm, .btn-secondary-sm');
+        if (btn) {
+          btn.textContent = 'Gestionar';
+          btn.className = 'btn-secondary-sm';
+        }
+      }
+    });
+
   } catch(e) { console.error(e); }
 }
 
@@ -258,16 +301,7 @@ bioDescInput?.addEventListener('input', e => {
 });
 
 // ── AI Demo test ───────────────────────────────────────────────────────
-const botResponses = [
-  'Claro, nuestro horario es de lunes a viernes de 12:00 a 15:30 y de 20:00 a 23:30. 🕐',
-  '¡Por supuesto! Puedo hacer la reserva ahora mismo. ¿Para cuántas personas y a qué hora? 📅',
-  'Tenemos ofertas especiales de mediodía. ¿Quieres ver el menú completo? 🍕',
-  '¡Perfecto! Tu pedido ha sido registrado. Te confirmamos en breves. 😊',
-  'Estamos en el centro. Para llegar en metro, la parada más cercana es "Centro". 📍'
-];
-let responseIndex = 0;
-
-function sendTestMessage() {
+async function sendTestMessage() {
   const input = document.getElementById('testInput');
   const messages = document.getElementById('testMessages');
   if (!input || !messages) return;
@@ -286,15 +320,26 @@ function sendTestMessage() {
   messages.appendChild(typing);
   messages.scrollTop = messages.scrollHeight;
 
-  setTimeout(() => {
+  try {
+    const res = await fetch(API_URL + '/chat-test', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ text })
+    });
+    const data = await res.json();
     typing.remove();
     const botBubble = document.createElement('div');
     botBubble.className = 'test-bubble bot';
-    botBubble.textContent = botResponses[responseIndex % botResponses.length];
-    responseIndex++;
+    botBubble.textContent = data.reply || 'Sin respuesta';
     messages.appendChild(botBubble);
     messages.scrollTop = messages.scrollHeight;
-  }, 1000);
+  } catch(e) {
+    typing.remove();
+    const errBubble = document.createElement('div');
+    errBubble.className = 'test-bubble bot';
+    errBubble.textContent = '❌ Error de red.';
+    messages.appendChild(errBubble);
+  }
 }
 document.getElementById('testInput')?.addEventListener('keydown', e => {
   if (e.key === 'Enter') sendTestMessage();
@@ -501,30 +546,68 @@ document.querySelectorAll('.btn-primary-full').forEach(btn => {
   });
 });
 
-// Channel Mocks
-document.querySelectorAll('.channel-card .btn-primary-sm').forEach(btn => {
-  btn.addEventListener('click', async () => {
-    btn.textContent = 'Verificando...';
-    setTimeout(async () => {
-      const card = btn.closest('.channel-card');
-      const name = card.querySelector('.ch-card-name').textContent.trim().toLowerCase();
-      // Enviar peticion fake channels
-      try {
-        await fetch(API_URL + '/channels', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-          body: JSON.stringify({ platform: name, identifier: '@conexion_usuario', status: 'connected' })
-        });
-      } catch(e){}
-
-      card.classList.add('connected');
-      card.querySelector('.ch-card-status').innerHTML = '● Conectado';
-      card.querySelector('.ch-card-status').classList.add('connected-text');
-      btn.textContent = 'Gestionar';
-      btn.className = 'btn-secondary-sm';
-    }, 1200);
+// Real Channel Configs
+document.querySelectorAll('.channel-card .btn-primary-sm, .channel-card .btn-secondary-sm').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const card = btn.closest('.channel-card');
+    const name = card.querySelector('.ch-card-name').textContent.trim();
+    
+    document.getElementById('cModalTitle').textContent = `Conectar ${name}`;
+    document.getElementById('cModalPlatform').value = name.toLowerCase();
+    
+    const numEl = card.querySelector('.ch-card-num');
+    const num = numEl ? numEl.textContent.trim() : '';
+    document.getElementById('cModalInput').value = num.includes('Añade el') ? '' : num;
+    
+    document.getElementById('channelModal').style.display = 'flex';
   });
 });
+
+async function saveChannelForm() {
+  const platform = document.getElementById('cModalPlatform').value;
+  const identifier = document.getElementById('cModalInput').value;
+  const btn = document.getElementById('cModalSubmit');
+  
+  if (!identifier) return alert('Debes introducir un identificador o número válido');
+  
+  btn.textContent = 'Guardando...';
+  try {
+    const res = await fetch(API_URL + '/channels', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ platform, identifier, status: 'connected' })
+    });
+    if (res.ok) {
+       document.getElementById('channelModal').style.display = 'none';
+       window.location.reload(); // Refresh immediately to show connected status
+    } else {
+       alert('Error al guardar.');
+    }
+  } catch(e) {
+    alert('Error al guardar el canal');
+  }
+  btn.textContent = 'Conectar';
+}
+
+async function downloadQR() {
+  const img = document.getElementById('dashboardQR');
+  if (!img || !img.src) return alert('El QR no está listo aún');
+  try {
+    const response = await fetch(img.src);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'atendia-qr.png';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch(e) {
+    window.open(img.src, '_blank');
+  }
+}
 
 // Copy biolink URL
 document.querySelector('.btn-secondary-sm')?.addEventListener('click', function(e) {
