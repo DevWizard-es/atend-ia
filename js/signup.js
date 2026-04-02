@@ -142,16 +142,16 @@ async function handlePayment() {
   const linkKey = `${selectedPlan}_${billingCycle}`;
   const stripeUrl = STRIPE_LINKS[linkKey] || '';
 
-  // If it's a test link or there's no Stripe link, go directly to app
-  if (!stripeUrl || stripeUrl.includes('test_') || stripeUrl.includes('mailto:')) {
-    btn.textContent = '✓ Cuenta creada! Entrando...';
+  // Only skip Stripe if there truly is no link or it's a mailto
+  if (!stripeUrl || stripeUrl.includes('mailto:')) {
+    btn.textContent = '✓ Cuenta creada! Entrando al panel...';
     setTimeout(() => { window.location.href = 'app.html'; }, 800);
     return;
   }
 
-  // Build Stripe URL with prefilled email
-  btn.textContent = 'Redirigiendo a pago seguro...';
-  const finalUrl = email ? `${stripeUrl}?prefilled_email=${encodeURIComponent(email)}` : stripeUrl;
+  // Go to Stripe (including test links - user will see the Stripe checkout)
+  btn.textContent = 'Redirigiendo a Stripe...';
+  const finalUrl = `${stripeUrl}?prefilled_email=${encodeURIComponent(email || '')}`;
   setTimeout(() => { window.location.href = finalUrl; }, 800);
 }
 

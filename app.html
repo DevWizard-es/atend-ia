@@ -80,27 +80,27 @@
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-icon">💬</div>
-          <div class="kpi-value">247</div>
+          <div class="kpi-value" id="kpi-messages">—</div>
           <div class="kpi-label">Mensajes hoy</div>
-          <div class="kpi-trend up">↑ 23% vs ayer</div>
+          <div class="kpi-trend" id="kpi-messages-trend">Calculando...</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-icon">🛒</div>
-          <div class="kpi-value">38</div>
+          <div class="kpi-value" id="kpi-orders">—</div>
           <div class="kpi-label">Pedidos tomados</div>
-          <div class="kpi-trend up">↑ 12%</div>
+          <div class="kpi-trend" id="kpi-orders-trend">Calculando...</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-icon">📅</div>
-          <div class="kpi-value">12</div>
+          <div class="kpi-value" id="kpi-reservations">—</div>
           <div class="kpi-label">Reservas</div>
-          <div class="kpi-trend up">↑ 5%</div>
+          <div class="kpi-trend" id="kpi-res-trend">Calculando...</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-icon">⚡</div>
-          <div class="kpi-value">1.2s</div>
+          <div class="kpi-value" id="kpi-response">—</div>
           <div class="kpi-label">Tiempo de respuesta</div>
-          <div class="kpi-trend up">🟢 Excelente</div>
+          <div class="kpi-trend">🟢 Activo</div>
         </div>
       </div>
 
@@ -119,39 +119,8 @@
           <div class="card-header">
             <h3>Canales activos</h3>
           </div>
-          <div class="channels-status">
-            <div class="ch-status-item">
-              <span class="ch-emoji">💬</span>
-              <div class="ch-status-info">
-                <div class="ch-status-name">WhatsApp Business</div>
-                <div class="ch-status-num">+34 666 123 456</div>
-              </div>
-              <div class="ch-status-badge connected">Conectado</div>
-            </div>
-            <div class="ch-status-item">
-              <span class="ch-emoji">📷</span>
-              <div class="ch-status-info">
-                <div class="ch-status-name">Instagram DM</div>
-                <div class="ch-status-num">@minegocio</div>
-              </div>
-              <div class="ch-status-badge connected">Conectado</div>
-            </div>
-            <div class="ch-status-item">
-              <span class="ch-emoji">📘</span>
-              <div class="ch-status-info">
-                <div class="ch-status-name">Facebook Messenger</div>
-                <div class="ch-status-num">Mi Negocio</div>
-              </div>
-              <div class="ch-status-badge connected">Conectado</div>
-            </div>
-            <div class="ch-status-item">
-              <span class="ch-emoji">🌐</span>
-              <div class="ch-status-info">
-                <div class="ch-status-name">Chat en Web</div>
-                <div class="ch-status-num">minegocio.com</div>
-              </div>
-              <div class="ch-status-badge pending">Configura</div>
-            </div>
+          <div class="channels-status" id="dashboardChannels">
+            <div style="text-align:center; padding:20px; color:var(--text-dim)">Cargando canales...</div>
           </div>
         </div>
 
@@ -170,19 +139,13 @@
           </div>
           <div class="qr-section">
             <div class="qr-display">
-              <div class="qr-code-big">
-                ▪▪▪▪▪▪▪<br>
-                ▪ ▪ ▪ ▪<br>
-                ▪ ▪▪▪ ▪ ▪<br>
-                ▪ ▪▪▪ ▪ ▪<br>
-                ▪ ▪ ▪ ▪<br>
-                ▪▪▪▪▪▪▪<br>
-              </div>
+              <img id="dashboardQR" style="display:none; width:150px; height:150px; border-radius:8px;" alt="QR menú">
+              <p id="qrPlaceholderText" style="color:var(--text-dim); font-size:0.8rem; text-align:center; padding:20px;">Configura tu<br>Bio Link primero</p>
             </div>
             <div class="qr-actions">
-              <button class="btn-secondary">📥 Descargar PNG</button>
-              <button class="btn-secondary">🖨️ Imprimir</button>
-              <button class="btn-primary-sm">🔗 Ver menú online</button>
+              <button class="btn-secondary" onclick="downloadQR()">📥 Descargar PNG</button>
+              <button class="btn-secondary" onclick="window.print()">🖨️ Imprimir</button>
+              <a href="#" class="btn-primary-sm link-online-menu" target="_blank" style="text-decoration:none;">🔗 Ver menú online</a>
             </div>
           </div>
         </div>
@@ -510,35 +473,36 @@
     <section class="section" id="section-channels">
       <div class="section-header">
         <h1>💬 Canales de Comunicación</h1>
+        <p>Conecta tus redes sociales para que el agente responda automáticamente</p>
       </div>
       <div class="channels-grid">
-        <div class="channel-card connected">
+        <div class="channel-card" id="ch-whatsapp">
           <div class="ch-card-icon">💬</div>
           <div class="ch-card-name">WhatsApp Business</div>
-          <div class="ch-card-status connected-text">● Conectado</div>
-          <div class="ch-card-num">+34 666 123 456</div>
-          <button class="btn-secondary-sm">Gestionar</button>
+          <div class="ch-card-status">No configurado</div>
+          <div class="ch-card-num" style="font-size:0.8rem;color:var(--text-dim)">Tu número de empresa</div>
+          <button class="btn-primary-sm">Conectar</button>
         </div>
-        <div class="channel-card connected">
+        <div class="channel-card" id="ch-instagram">
           <div class="ch-card-icon">📷</div>
           <div class="ch-card-name">Instagram</div>
-          <div class="ch-card-status connected-text">● Conectado</div>
-          <div class="ch-card-num">@minegocio</div>
-          <button class="btn-secondary-sm">Gestionar</button>
+          <div class="ch-card-status">No configurado</div>
+          <div class="ch-card-num" style="font-size:0.8rem;color:var(--text-dim)">Tu cuenta de Instagram</div>
+          <button class="btn-primary-sm">Conectar</button>
         </div>
-        <div class="channel-card connected">
+        <div class="channel-card" id="ch-facebook">
           <div class="ch-card-icon">📘</div>
           <div class="ch-card-name">Facebook Messenger</div>
-          <div class="ch-card-status connected-text">● Conectado</div>
-          <div class="ch-card-num">Mi Negocio</div>
-          <button class="btn-secondary-sm">Gestionar</button>
+          <div class="ch-card-status">No configurado</div>
+          <div class="ch-card-num" style="font-size:0.8rem;color:var(--text-dim)">Tu página de Facebook</div>
+          <button class="btn-primary-sm">Conectar</button>
         </div>
-        <div class="channel-card">
+        <div class="channel-card" id="ch-webchat">
           <div class="ch-card-icon">🌐</div>
           <div class="ch-card-name">Chat en tu Web</div>
           <div class="ch-card-status">No configurado</div>
-          <div class="ch-card-num">Añade el código a tu web</div>
-          <button class="btn-primary-sm">Conectar</button>
+          <div class="ch-card-num" style="font-size:0.8rem;color:var(--text-dim)">Añade el widget a tu web</div>
+          <button class="btn-primary-sm">Añadir widget</button>
         </div>
       </div>
     </section>

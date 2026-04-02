@@ -23,14 +23,41 @@ async function fetchBizData() {
       const emailEl = document.querySelector('.user-email');
       if (d.userEmail && emailEl) emailEl.textContent = d.userEmail;
 
-      const kpis = document.querySelectorAll('.kpi-value');
-      if (kpis.length >= 3 && d.kpis) {
-        kpis[0].textContent = d.kpis.messages;
-        kpis[1].textContent = d.kpis.orders;
-        kpis[2].textContent = d.kpis.reservations;
-      }
+      // Dashboard welcome message
+      const welcomeP = document.querySelector('#section-dashboard .section-header p');
+      if (welcomeP) welcomeP.innerHTML = `Bienvenido, <strong>${d.biz.name}</strong>. Tu agente está activo y listo.`;
 
-      // Poblate agent section using IDs
+      // KPIs with real data
+      const msgs = d.kpis?.messages ?? 0;
+      const orders = d.kpis?.orders ?? 0;
+      const resv = d.kpis?.reservations ?? 0;
+      
+      const kpiMsg = document.getElementById('kpi-messages');
+      const kpiOrd = document.getElementById('kpi-orders');
+      const kpiRes = document.getElementById('kpi-reservations');
+      const kpiRsp = document.getElementById('kpi-response');
+      
+      if (kpiMsg) kpiMsg.textContent = msgs;
+      if (kpiOrd) kpiOrd.textContent = orders;
+      if (kpiRes) kpiRes.textContent = resv;
+      if (kpiRsp) kpiRsp.textContent = '<1s';
+      
+      const kpiMsgT = document.getElementById('kpi-messages-trend');
+      const kpiOrdT = document.getElementById('kpi-orders-trend');
+      const kpiResT = document.getElementById('kpi-res-trend');
+      if (kpiMsgT) kpiMsgT.textContent = msgs > 0 ? `⬆️ ${msgs} total` : 'Aún sin mensajes';
+      if (kpiOrdT) kpiOrdT.textContent = orders > 0 ? `⬆️ ${orders} total` : 'Aún sin pedidos';
+      if (kpiResT) kpiResT.textContent = resv > 0 ? `⬆️ ${resv} total` : 'Aún sin reservas';
+
+      // Analytics section
+      const aMsg = document.getElementById('analytic-msg');
+      const aUsr = document.getElementById('analytic-usr');
+      const aRes = document.getElementById('analytic-res');
+      if (aMsg) aMsg.textContent = msgs;
+      if (aUsr) aUsr.textContent = 0; // TODO: unique users
+      if (aRes) aRes.textContent = resv;
+
+      // Populate agent section fields
       if (document.getElementById('bizNameInput')) document.getElementById('bizNameInput').value = d.biz.name || '';
       if (document.getElementById('bizTypeInput')) document.getElementById('bizTypeInput').value = d.biz.type || '';
       if (document.getElementById('bizAddressInput')) document.getElementById('bizAddressInput').value = d.biz.address || '';
@@ -215,37 +242,67 @@ async function fetchChannels() {
   try {
     const res = await fetch(API_URL + '/channels', { headers: { 'Authorization': 'Bearer ' + token }});
     const channels = await res.json();
+    
+    // Helper emoji map
+    const emojiMap = { whatsapp: '💬', instagram: '📷', facebook: '📘', web: '🌐' };
+    
+    // === Fill dashboard channels widget ===
+    const dashDiv = document.getElementById('dashboardChannels');
+    if (dashDiv) {
+      if (!Array.isArray(channels) || channels.length === 0) {
+        dashDiv.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-dim)">No tienes canales conectados aún.<br><a href="#" onclick="document.querySelector(\"[data-section=channels]\").click()" style="color:var(--purple)">Conectar →</a></div>';
+      } else {
+        dashDiv.innerHTML = channels.map(ch => `
+          <div class="ch-status-item">
+            <span class="ch-emoji">${emojiMap[ch.platform] || '💬'}</span>
+            <div class="ch-status-info">
+              <div class="ch-status-name">${ch.platform}</div>
+              <div class="ch-status-num">${ch.identifier || ''}</div>
+            </div>
+            <div class="ch-status-badge connected">Conectado</div>
+          </div>
+        `).join('');
+      }
+    }
+    
+    // === Update channel cards in Channels section ===
     if (!Array.isArray(channels)) return;
     
-    const cards = document.querySelectorAll('.channel-card, .ch-status-item');
-    cards.forEach(card => {
-      let nameEl = card.querySelector('.ch-card-name') || card.querySelector('.ch-status-name');
-      if (!nameEl) return;
-      const name = nameEl.textContent.trim().toLowerCase();
-      
-      const match = channels.find(c => name.includes(c.platform.toLowerCase()));
-      if (match) {
-        card.classList.add('connected');
-        
-        const badge = card.querySelector('.ch-status-badge') || card.querySelector('.ch-card-status');
-        if (badge) {
-          badge.innerHTML = '● Conectado';
-          badge.classList.remove('pending');
-          badge.classList.add('connected', 'connected-text');
-        }
-        
-        const num = card.querySelector('.ch-card-num') || card.querySelector('.ch-status-num');
-        if (num) num.textContent = match.identifier || '';
-        
-        const btn = card.querySelector('.btn-primary-sm, .btn-secondary-sm');
-        if (btn) {
-          btn.textContent = 'Gestionar';
-          btn.className = 'btn-secondary-sm';
-        }
+    // Reset all cards first
+    document.querySelectorAll('.channel-card').forEach(card => {
+      card.classList.remove('connected');
+      const statusEl = card.querySelector('.ch-card-status');
+      if (statusEl) {
+        statusEl.textContent = 'No configurado';
+        statusEl.className = 'ch-card-status';
       }
+      const btn = card.querySelector('button');
+      if (btn) { btn.textContent = 'Conectar'; btn.className = 'btn-primary-sm'; }
     });
-
-  } catch(e) { console.error(e); }
+    
+    // Apply connected state where applicable
+    channels.forEach(ch => {
+      const platLc = ch.platform.toLowerCase();
+      let cardId = '';
+      if (platLc.includes('whatsapp')) cardId = 'ch-whatsapp';
+      else if (platLc.includes('instagram')) cardId = 'ch-instagram';
+      else if (platLc.includes('facebook')) cardId = 'ch-facebook';
+      else if (platLc.includes('web') || platLc.includes('chat')) cardId = 'ch-webchat';
+      
+      if (!cardId) return;
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      
+      card.classList.add('connected');
+      const statusEl = card.querySelector('.ch-card-status');
+      if (statusEl) { statusEl.textContent = '● Conectado'; statusEl.className = 'ch-card-status connected-text'; }
+      const numEl = card.querySelector('.ch-card-num');
+      if (numEl) { numEl.textContent = ch.identifier || ''; numEl.style.color = ''; }
+      const btn = card.querySelector('button');
+      if (btn) { btn.textContent = 'Gestionar'; btn.className = 'btn-secondary-sm'; }
+    });
+    
+  } catch(e) { console.error('Channels error:', e); }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
