@@ -225,10 +225,10 @@
         // Build buttons
         const cont = document.getElementById('linksContainer');
         if (data.btn_chat) {
-          cont.innerHTML += `<a href="#" class="bio-btn primary" onclick="alert('Iniciando chat con IA...')">💬 Chatear con nosotros</a>`;
+          cont.innerHTML += `<a href="chat.html?b=${slug}" class="bio-btn primary">💬 Chatear con la IA</a>`;
         }
         if (data.btn_menu) {
-          cont.innerHTML += `<a href="${API_URL.replace('/api','')}/menu/${slug}" class="bio-btn secondary">📋 Ver menú</a>`;
+          cont.innerHTML += `<a href="menu.html?b=${slug}" class="bio-btn secondary">📋 Ver menú de hoy</a>`;
         }
         if (data.btn_res) {
           cont.innerHTML += `<div class="bio-btn secondary" onclick="document.getElementById('resModal').style.display='flex'">📅 Reservar mesa</div>`;

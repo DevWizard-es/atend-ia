@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú / Catálogo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #7c3aed;
+      --bg: #0f0f1a;
+      --card: #1a1a2e;
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 0;
+    }
+    header {
+      width: 100%;
+      background: var(--card);
+      padding: 30px 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+    header p { color: var(--text-dim); font-size: 0.95rem; }
+    
+    .container {
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+    }
+    .category {
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+    .category h2 {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .product {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .product-info { flex: 1; padding-right: 15px; }
+    .product-name { font-weight: 600; font-size: 1.05rem; margin-bottom: 5px; }
+    .product-desc { color: var(--text-dim); font-size: 0.85rem; line-height: 1.4; }
+    .product-price { font-weight: 700; font-size: 1.1rem; color: #fff; white-space: nowrap; }
+    
+    .loading { text-align: center; padding: 50px 20px; color: var(--text-dim); }
+    
+    .back-btn {
+      position: absolute;
+      left: 20px; top: 32px;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="#" id="backBtn" class="back-btn">←</a>
+    <h1 id="bizName">Cargando menú...</h1>
+    <p id="bizDesc">Por favor espera</p>
+  </header>
+
+  <div class="container" id="menuContainer">
+    <div class="loading">Cargando productos...</div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    async function loadMenu() {
+      const slug = new URLSearchParams(window.location.search).get('b');
+      if (!slug) {
+        document.getElementById('bizName').textContent = 'Error';
+        document.getElementById('bizDesc').textContent = 'No se ha encontrado el negocio';
+        document.getElementById('menuContainer').innerHTML = '';
+        return;
+      }
+      
+      document.getElementById('backBtn').href = 'biolink.html?b=' + slug;
+
+      try {
+        const res = await fetch(API_URL + '/public/menu/' + slug);
+        if (!res.ok) throw new Error('Not found');
+        const data = await res.json();
+        
+        // Biz info
+        document.getElementById('bizName').textContent = data.bizName || 'Nuestro Menú';
+        document.getElementById('bizDesc').textContent = 'Todos nuestros productos';
+        
+        if (data.color) {
+          document.documentElement.style.setProperty('--primary', data.color.replace(';',''));
+        }
+
+        const cont = document.getElementById('menuContainer');
+        cont.innerHTML = '';
+        
+        if (!data.menu || data.menu.length === 0) {
+          cont.innerHTML = '<div class="loading">Este negocio aún no tiene productos en su carta.</div>';
+          return;
+        }
+
+        // Render categories
+        data.menu.forEach(cat => {
+          if (!cat.items || cat.items.length === 0) return;
+          
+          const catDiv = document.createElement('div');
+          catDiv.className = 'category';
+          catDiv.innerHTML = `<h2>${cat.category || 'Otros'}</h2>`;
+          
+          cat.items.forEach(item => {
+            if (item.available === false) return; // Skip unavailable items
+            catDiv.innerHTML += `
+              <div class="product">
+                <div class="product-info">
+                  <div class="product-name">${item.name}</div>
+                  <div class="product-desc">${item.description || ''}</div>
+                </div>
+                <div class="product-price">€${Number(item.price).toFixed(2)}</div>
+              </div>
+            `;
+          });
+          
+          cont.appendChild(catDiv);
+        });
+        
+      } catch(e) {
+        document.getElementById('bizName').textContent = 'Oops';
+        document.getElementById('bizDesc').textContent = 'No pudimos cargar el menú';
+        document.getElementById('menuContainer').innerHTML = '<div class="loading">El menú no está disponible en este momento.</div>';
+      }
+    }
+
+    loadMenu();
+  </script>
+</body>
+</html>
