@@ -180,6 +180,10 @@
         </select>
       </div>
       <div class="form-group">
+        <label>Teléfono o Email (para avisarte)</label>
+        <input type="text" id="r_contact" class="form-input" placeholder="Tu número o correo">
+      </div>
+      <div class="form-group">
         <label>Fecha y Hora</label>
         <input type="datetime-local" id="r_time" class="form-input">
       </div>
@@ -253,21 +257,26 @@
       const slug = new URLSearchParams(window.location.search).get('b');
       const name = document.getElementById('r_name').value;
       const size = document.getElementById('r_size').value;
+      const contact = document.getElementById('r_contact').value;
       let time = document.getElementById('r_time').value;
-      if (!name || !time) return alert('Por favor rellena el nombre y la hora');
+      
+      if (!name || !time || !contact) return alert('Por favor rellena tu nombre, contacto y fecha.');
       time = new Date(time).toLocaleString('es-ES', { dateStyle:'short', timeStyle:'short'});
+
+      // Append contact to name so we don't need a DB migration
+      const fullContact = `${name} (${contact})`;
 
       document.getElementById('btnSubmitRes').textContent = 'Enviando...';
       try {
         const res = await fetch(API_URL + '/public/reservations', {
           method: 'POST', headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ slug, name, size, time })
+          body: JSON.stringify({ slug, name: fullContact, size, time })
         });
         if (res.ok) {
-          alert('¡Reserva enviada! Te confirmaremos en breve.');
+          alert('✅ ¡Reserva enviada! Tu solicitud ha sido registrada correctamente. Te enviaremos una confirmación a: ' + contact + ' en los próximos minutos.');
           document.getElementById('resModal').style.display='none';
         } else {
-          alert('Error al reservar.');
+          alert('❌ Lo sentimos, no hemos podido procesar tu reserva ahora mismo.');
         }
       } catch(e) {
         alert('Error de conexión.');
