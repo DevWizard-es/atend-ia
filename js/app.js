@@ -122,13 +122,13 @@ async function fetchBiolinkData() {
     }
     
     // QR Code Generation
+    const txt = document.getElementById('qrPlaceholderText');
     if (d.slug) {
       const url = window.location.origin + '/biolink.html?b=' + d.slug;
       const qrImg = document.getElementById('dashboardQR');
       if (qrImg) {
         qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url)}`;
         qrImg.style.display = 'block';
-        const txt = document.getElementById('qrPlaceholderText');
         if (txt) txt.style.display = 'none';
         
         document.querySelectorAll('.link-online-menu').forEach(link => {
@@ -136,6 +136,8 @@ async function fetchBiolinkData() {
           link.innerHTML = '🔗 Ver carta online';
         });
       }
+    } else {
+      if (txt) txt.innerHTML = 'Guarda tu<br>Bio Link 1º';
     }
   } catch(e) { console.error('Biolink Fetch Error', e); }
 }
@@ -147,33 +149,60 @@ async function fetchReservations() {
     if (!Array.isArray(arr)) return;
 
     const listDiv = document.querySelector('.res-full-list');
-    if (!listDiv) return;
-    listDiv.innerHTML = ''; // reset
+    const miniDiv = document.getElementById('miniReservations');
+    if (listDiv) listDiv.innerHTML = '';
+    if (miniDiv) miniDiv.innerHTML = '';
 
     if (arr.length === 0) {
-      listDiv.innerHTML = '<p style="color:var(--text-muted)">Aún no tienes reservas.</p>';
+      if (listDiv) listDiv.innerHTML = '<p style="color:var(--text-muted)">Aún no tienes reservas.</p>';
+      if (miniDiv) miniDiv.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-dim)">Sin próximas reservas.</div>';
       return;
     }
 
-    arr.forEach(r => {
-      const div = document.createElement('div');
-      div.className = `res-full-item ${r.status === 'confirmed' ? 'confirmed' : ''}`;
-      // Parse basic structure
-      div.innerHTML = `
-        <div class="res-full-time">${r.res_time || 'Sin hora'}</div>
-        <div class="res-full-info">
-          <div class="res-full-name">${r.customer_name}</div>
-          <div class="res-full-detail">${r.party_size || '-'} · ${r.channel || 'IA Bot'}</div>
-        </div>
-        <div class="res-actions" data-id="${r.id}">
-          ${r.status === 'confirmed' ? '<span class="confirmed-badge">✓ Confirmada</span>' : 
-            r.status === 'cancelled' ? '<span style="color:var(--red);font-size:0.8rem">✕ Cancelada</span>' : 
-            `<button class="btn-confirm" onclick="updateReservation(${r.id}, 'confirmed', this)">✓ Confirmar</button>
-             <button class="btn-cancel-res" onclick="updateReservation(${r.id}, 'cancelled', this)">✕</button>`}
-        </div>
-      `;
-      listDiv.appendChild(div);
-    });
+    // Llenar vista completa
+    if (listDiv) {
+      arr.forEach(r => {
+        const div = document.createElement('div');
+        div.className = `res-full-item ${r.status === 'confirmed' ? 'confirmed' : ''}`;
+        div.innerHTML = `
+          <div class="res-full-time">${r.res_time ? new Date(r.res_time).toLocaleString() : 'Sin hora'}</div>
+          <div class="res-full-info">
+            <div class="res-full-name">${r.customer_name}</div>
+            <div class="res-full-detail">${r.party_size || '-'} · ${r.channel || 'Externa'}</div>
+          </div>
+          <div class="res-actions" data-id="${r.id}">
+            ${r.status === 'confirmed' ? '<span class="confirmed-badge">✓ Confirmada</span>' : 
+              r.status === 'cancelled' ? '<span style="color:var(--red);font-size:0.8rem">✕ Cancelada</span>' : 
+              `<button class="btn-confirm" onclick="updateReservation(${r.id}, 'confirmed', this)">✓ Confirmar</button>
+               <button class="btn-cancel-res" onclick="updateReservation(${r.id}, 'cancelled', this)">✕</button>`}
+          </div>
+        `;
+        listDiv.appendChild(div);
+      });
+    }
+
+    // Llenar vista dashboard (solo ultimas 3)
+    if (miniDiv) {
+      const top3 = arr.slice(0, 3);
+      top3.forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'res-mini-item';
+        div.innerHTML = `
+          <div class="res-time" style="font-size:0.8rem">
+            ${r.res_time ? new Date(r.res_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '--:--'}
+          </div>
+          <div class="res-detail">
+            <div class="res-name">${r.customer_name}</div>
+            <div class="res-persons">${r.party_size || '?'} pax</div>
+          </div>
+          <div class="res-status ${r.status === 'confirmed' ? 'confirmed' : 'pending-res'}">
+            ${r.status === 'confirmed' ? '✓' : '⏳'}
+          </div>
+        `;
+        miniDiv.appendChild(div);
+      });
+    }
+
   } catch(e) { console.error('Reservations API Error', e); }
 }
 

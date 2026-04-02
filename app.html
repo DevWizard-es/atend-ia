@@ -111,50 +111,7 @@
             <a href="#" class="card-link">Ver todas</a>
           </div>
           <div class="conversation-list">
-            <div class="conv-item">
-              <div class="conv-avatar">👤</div>
-              <div class="conv-info">
-                <div class="conv-name">María García</div>
-                <div class="conv-last">Quiero reservar una mesa para 4...</div>
-              </div>
-              <div class="conv-meta">
-                <span class="conv-channel">📷 IG</span>
-                <span class="conv-time">2m</span>
-              </div>
-            </div>
-            <div class="conv-item">
-              <div class="conv-avatar">👤</div>
-              <div class="conv-info">
-                <div class="conv-name">Carlos López</div>
-                <div class="conv-last">¿Tenéis menú del día?</div>
-              </div>
-              <div class="conv-meta">
-                <span class="conv-channel">💬 WA</span>
-                <span class="conv-time">5m</span>
-              </div>
-            </div>
-            <div class="conv-item">
-              <div class="conv-avatar">👤</div>
-              <div class="conv-info">
-                <div class="conv-name">Ana Martínez</div>
-                <div class="conv-last">¿A qué hora cerráis?</div>
-              </div>
-              <div class="conv-meta">
-                <span class="conv-channel">📘 FB</span>
-                <span class="conv-time">12m</span>
-              </div>
-            </div>
-            <div class="conv-item">
-              <div class="conv-avatar">👤</div>
-              <div class="conv-info">
-                <div class="conv-name">Pedro Ruiz</div>
-                <div class="conv-last">Pedido: 2x Margarita, 1x Diavola</div>
-              </div>
-              <div class="conv-meta">
-                <span class="conv-channel">💬 WA</span>
-                <span class="conv-time">18m</span>
-              </div>
-            </div>
+            <div style="text-align:center; padding:20px; color:var(--text-dim)">Aún no tienes conversaciones.</div>
           </div>
         </div>
 
@@ -202,31 +159,8 @@
           <div class="card-header">
             <h3>Próximas reservas</h3>
           </div>
-          <div class="reservations-mini">
-            <div class="res-mini-item">
-              <div class="res-time">19:30</div>
-              <div class="res-detail">
-                <div class="res-name">María G.</div>
-                <div class="res-persons">2 personas · Mesa 3</div>
-              </div>
-              <div class="res-status confirmed">✓</div>
-            </div>
-            <div class="res-mini-item">
-              <div class="res-time">20:00</div>
-              <div class="res-detail">
-                <div class="res-name">Carlos L.</div>
-                <div class="res-persons">4 personas · Mesa 7</div>
-              </div>
-              <div class="res-status confirmed">✓</div>
-            </div>
-            <div class="res-mini-item">
-              <div class="res-time">21:30</div>
-              <div class="res-detail">
-                <div class="res-name">Ana M.</div>
-                <div class="res-persons">2 personas · Barra</div>
-              </div>
-              <div class="res-status pending-res">⏳</div>
-            </div>
+          <div class="reservations-mini" id="miniReservations">
+            <div style="text-align:center; padding:20px; color:var(--text-dim)">Sin próximas reservas.</div>
           </div>
         </div>
 
@@ -383,7 +317,7 @@
       <div class="menu-toolbar">
         <button class="btn-primary-sm" onclick="addCategory()">+ Añadir categoría</button>
         <button class="btn-secondary-sm">📥 Importar CSV</button>
-        <button class="btn-secondary-sm">🖨️ Ver carta online</button>
+        <a href="#" class="btn-secondary-sm link-online-menu" target="_blank" style="text-decoration:none; display:inline-flex; align-items:center;">🔗 Ver carta online</a>
       </div>
 
       <div class="menu-categories" id="menuCategories">
@@ -725,8 +659,13 @@
       <input type="hidden" id="cModalPlatform">
       <div style="display:flex; gap:10px;">
         <button class="btn-secondary" style="flex:1" onclick="document.getElementById('channelModal').style.display='none'">Cancelar</button>
-        <button class="btn-primary-full" style="flex:1; margin-top:0;" onclick="saveChannelForm()" id="cModalSubmit">Conectar</button>
+        <button class="btn-primary-full" style="flex:1; margin-top:0;" onclick="saveChannelForm()" id="cModalSubmit">Conexión Manual</button>
       </div>
+      <a href="https://www.facebook.com/v19.0/dialog/oauth?client_id=123456789&redirect_uri=https://atend-ia.netlify.app/&scope=pages_manage_metadata,pages_read_engagement,pages_messaging" 
+         target="_blank" class="btn-primary-full" id="cModalOAuth"
+         style="background:#1877F2; border:none; text-decoration:none; text-align:center; margin-top:15px; display:block;">
+         Inicia Sesión con Meta OAuth
+      </a>
     </div>
   </div>
 
