@@ -12,6 +12,15 @@ async function fetchBizData() {
     const d = await res.json();
     if (d.biz) {
       document.querySelector('.user-name').textContent = d.biz.name;
+      if (d.userEmail) document.querySelector('.user-email').textContent = d.userEmail;
+
+      const kpis = document.querySelectorAll('.kpi-value');
+      if (kpis.length >= 3 && d.kpis) {
+        kpis[0].textContent = d.kpis.messages;
+        kpis[1].textContent = d.kpis.orders;
+        kpis[2].textContent = d.kpis.reservations;
+      }
+
       const inputs = document.querySelectorAll('#section-agent .form-input');
       if (inputs.length >= 5) {
         inputs[0].value = d.biz.name || '';
