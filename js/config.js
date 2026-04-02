@@ -9,8 +9,8 @@ const STRIPE_LINKS = {
   starter_annual:   'https://buy.stripe.com/test_cNibJ17NhgOre7Rd1RbII02',   // €180/año (€15×12)
   pro_monthly:      'https://buy.stripe.com/test_aFa6oH0kP2XB9RB7HxbII01',   // €49/mes
   pro_annual:       'https://buy.stripe.com/test_dRm4gz1oT69NfbV1j9bII03',   // €490/año (€39×12)
-  business_monthly: 'https://buy.stripe.com/test_aFa6oH0kP2XB9RB7HxbII01',   // Link TEST temporal (usa Pro) de Stripe para que no dé 404
-  business_annual:  'https://buy.stripe.com/test_dRm4gz1oT69NfbV1j9bII03',   // Link TEST temporal (usa Pro) de Stripe para que no dé 404
+  business_monthly: 'mailto:hola@atend-ia.com?subject=Plan Business',
+  business_annual:  'mailto:hola@atend-ia.com?subject=Plan Business Anual',
 };
 
 // Datos de la empresa

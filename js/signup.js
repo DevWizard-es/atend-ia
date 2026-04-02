@@ -144,8 +144,15 @@ async function handlePayment() {
 
   // Only skip Stripe if there truly is no link or it's a mailto
   if (!stripeUrl || stripeUrl.includes('mailto:')) {
-    btn.textContent = '✓ Cuenta creada! Entrando al panel...';
-    setTimeout(() => { window.location.href = 'app.html'; }, 800);
+    btn.textContent = 'Account created. Contacting sales...';
+    setTimeout(() => { 
+      window.location.href = stripeUrl; 
+      // Do NOT force redirect to app.html to avoid the bypass the user complained about
+      const succ = document.createElement('p');
+      succ.style.cssText = 'color:var(--green);text-align:center;font-size:0.85rem;margin-top:10px;';
+      succ.textContent = '✓ Registro completado. Por favor, envía el correo de contacto para activar tu plan Business.';
+      btn.parentNode.insertBefore(succ, btn.nextSibling);
+    }, 800);
     return;
   }
 
