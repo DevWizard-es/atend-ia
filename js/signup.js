@@ -156,5 +156,13 @@ async function handlePayment() {
 }
 
 // Init
-selectPlan('pro');
-updateOrderSummary();
+document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const p = params.get('plan');
+  if (['starter', 'pro', 'business'].includes(p)) {
+    selectPlan(p);
+  } else {
+    selectPlan('pro');
+  }
+  updateOrderSummary();
+});

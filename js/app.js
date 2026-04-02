@@ -156,7 +156,10 @@ async function fetchBiolinkData() {
     // QR Code Generation
     const txt = document.getElementById('qrPlaceholderText');
     if (d.slug) {
-      const url = window.location.origin + '/biolink.html?b=' + d.slug;
+      const url = typeof BRAND !== 'undefined' && BRAND.url ? 
+                  BRAND.url + '/biolink.html?b=' + d.slug :
+                  window.location.origin + '/biolink.html?b=' + d.slug;
+      
       const qrImg = document.getElementById('dashboardQR');
       if (qrImg) {
         qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url)}`;
