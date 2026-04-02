@@ -138,13 +138,13 @@
             <h3>Tu QR de menú</h3>
           </div>
           <div class="qr-section">
-            <div class="qr-display">
-              <img id="dashboardQR" style="display:none; width:150px; height:150px; border-radius:8px;" alt="QR menú">
-              <p id="qrPlaceholderText" style="color:var(--text-dim); font-size:0.8rem; text-align:center; padding:20px;">Configura tu<br>Bio Link primero</p>
+            <div class="qr-display" style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+              <div id="qrcode" style="padding:10px; background:white; border-radius:8px;"></div>
+              <p id="qrPlaceholderText" style="color:var(--text-dim); font-size:0.8rem; text-align:center; padding:10px;">Configura tu<br>Bio Link primero</p>
             </div>
             <div class="qr-actions">
               <button class="btn-secondary" onclick="downloadQR()">📥 Descargar PNG</button>
-              <button class="btn-secondary" onclick="window.print()">🖨️ Imprimir</button>
+              <button class="btn-secondary" onclick="printQR()">🖨️ Imprimir</button>
               <a href="#" class="btn-primary-sm link-online-menu" target="_blank" style="text-decoration:none;">🔗 Ver menú online</a>
             </div>
           </div>

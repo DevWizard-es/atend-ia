@@ -153,28 +153,87 @@ async function fetchBiolinkData() {
       bSwitches[4].classList.toggle('active', !!d.btn_shop);
     }
     
-    // QR Code Generation
+    // QR Code Generation (Local using qrcode.js)
     const txt = document.getElementById('qrPlaceholderText');
-    if (d.slug) {
+    const qrContainer = document.getElementById('qrcode');
+    if (d.slug && qrContainer) {
       const url = typeof BRAND !== 'undefined' && BRAND.url ? 
                   BRAND.url + '/biolink.html?b=' + d.slug :
                   window.location.origin + '/biolink.html?b=' + d.slug;
       
-      const qrImg = document.getElementById('dashboardQR');
-      if (qrImg) {
-        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url)}`;
-        qrImg.style.display = 'block';
-        if (txt) txt.style.display = 'none';
-        
-        document.querySelectorAll('.link-online-menu').forEach(link => {
-          link.href = url;
-          link.innerHTML = '🔗 Ver carta online';
-        });
-      }
+      qrContainer.innerHTML = ''; // Clear previous
+      new QRCode(qrContainer, {
+        text: url,
+        width: 150,
+        height: 150,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      });
+      
+      if (txt) txt.style.display = 'none';
+      
+      document.querySelectorAll('.link-online-menu').forEach(link => {
+        link.href = url;
+        link.innerHTML = '🔗 Ver carta online';
+      });
+      
+      // Store current URL globally for printing
+      window.currentQRUrl = url;
+      window.currentBizName = d.display_name || 'Nuestro Negocio';
     } else {
       if (txt) txt.innerHTML = 'Guarda tu<br>Bio Link 1º';
     }
   } catch(e) { console.error('Biolink Fetch Error', e); }
+}
+
+function printQR() {
+  if (!window.currentQRUrl) return alert('Primero configura tu Bio Link');
+  
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Imprimir QR - ${window.currentBizName}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+        <style>
+          body { font-family: 'Inter', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; }
+          .container { border: 2px dashed #ccc; padding: 50px; border-radius: 20px; }
+          h1 { font-size: 2.5rem; margin-bottom: 10px; color: #1f2937; }
+          p { font-size: 1.2rem; color: #6b7280; margin-bottom: 30px; }
+          #qrcode { margin-bottom: 30px; }
+          .footer { font-size: 0.8rem; color: #9ca3af; margin-top: 40px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>${window.currentBizName}</h1>
+          <p>Escanea para ver nuestra carta y reservar</p>
+          <div id="qrcode"></div>
+          <div class="footer">Powered by AtendIA</div>
+        </div>
+        <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+        <script>
+          new QRCode(document.getElementById("qrcode"), {
+            text: "${window.currentQRUrl}",
+            width: 300,
+            height: 300
+          });
+          setTimeout(() => { window.print(); window.close(); }, 500);
+        </script>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
+function downloadQR() {
+  const qrCanvas = document.querySelector('#qrcode canvas');
+  if (!qrCanvas) return alert('QR no generado aún');
+  const link = document.createElement('a');
+  link.download = 'codigo-qr-menu.png';
+  link.href = qrCanvas.toDataURL();
+  link.click();
 }
 
 async function fetchReservations() {
