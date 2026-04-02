@@ -98,13 +98,13 @@ function showFieldError(fieldId, msg) {
 
 async function handlePayment() {
   const btn = document.getElementById('payBtn');
+  const email = document.getElementById('userEmail')?.value.trim();
+  const pass = document.getElementById('userPass')?.value.trim();
+  const bizName = document.getElementById('bizName')?.value.trim();
+  const bizType = document.getElementById('bizType')?.value;
+
   btn.textContent = 'Creando cuenta...';
   btn.disabled = true;
-
-  const email = document.getElementById('userEmail')?.value;
-  const pass = document.getElementById('userPass')?.value;
-  const bizName = document.getElementById('bizName')?.value;
-  const bizType = document.getElementById('bizType')?.value;
 
   try {
     const res = await fetch(API_URL + '/auth/register', {
@@ -114,43 +114,45 @@ async function handlePayment() {
     });
     const data = await res.json();
     if (!data.success) {
-      alert('Error: ' + data.error);
-      btn.textContent = 'Procesar pago seguro';
+      // Show the error clearly in the UI
+      const errP = document.createElement('p');
+      errP.style.cssText = 'color:#ef4444;text-align:center;font-size:0.85rem;margin-top:10px;';
+      errP.textContent = '❌ ' + (data.error || 'Error al crear la cuenta');
+      btn.parentNode.insertBefore(errP, btn.nextSibling);
+      setTimeout(() => errP.remove(), 5000);
+      btn.textContent = 'Empezar mi prueba gratis →';
       btn.disabled = false;
       return;
     }
+    // Store token
     localStorage.setItem('atend_token', data.token);
   } catch(e) {
     console.error(e);
-    alert('Aviso: Servidor backend en mantenimiento. Ingresando en modo local.');
+    // Can't reach server — show error, don't bypass
+    const errP = document.createElement('p');
+    errP.style.cssText = 'color:#ef4444;text-align:center;font-size:0.85rem;margin-top:10px;';
+    errP.textContent = '❌ No se puede conectar con el servidor. Verifica tu conexión.';
+    btn.parentNode.insertBefore(errP, btn.nextSibling);
+    btn.textContent = 'Empezar mi prueba gratis →';
+    btn.disabled = false;
+    return;
   }
-
-  btn.textContent = 'Redirigiendo a pago seguro...';
 
   // Get the right Stripe link
   const linkKey = `${selectedPlan}_${billingCycle}`;
-  let stripeUrl = '';
+  const stripeUrl = STRIPE_LINKS[linkKey] || '';
 
-  try {
-    stripeUrl = STRIPE_LINKS[linkKey];
-  } catch(e) {
-    stripeUrl = '';
-  }
-
-  // Si no hay Stripe, entra al panel directo (útil para pruebas)
-  if (!stripeUrl || stripeUrl.includes('XXXX')) {
-    setTimeout(() => {
-      window.location.href = 'app.html';
-    }, 1200);
+  // If it's a test link or there's no Stripe link, go directly to app
+  if (!stripeUrl || stripeUrl.includes('test_') || stripeUrl.includes('mailto:')) {
+    btn.textContent = '✓ Cuenta creada! Entrando...';
+    setTimeout(() => { window.location.href = 'app.html'; }, 800);
     return;
   }
 
   // Build Stripe URL with prefilled email
+  btn.textContent = 'Redirigiendo a pago seguro...';
   const finalUrl = email ? `${stripeUrl}?prefilled_email=${encodeURIComponent(email)}` : stripeUrl;
-
-  setTimeout(() => {
-    window.location.href = finalUrl;
-  }, 800);
+  setTimeout(() => { window.location.href = finalUrl; }, 800);
 }
 
 // Init

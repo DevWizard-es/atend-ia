@@ -9,10 +9,19 @@ if (!token && window.location.pathname.includes('app.html')) {
 async function fetchBizData() {
   try {
     const res = await fetch(API_URL + '/config', { headers: { 'Authorization': 'Bearer ' + token }});
+    if (!res.ok) {
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem('atend_token');
+        window.location.href = 'login.html';
+        return;
+      }
+    }
     const d = await res.json();
     if (d.biz) {
-      document.querySelector('.user-name').textContent = d.biz.name;
-      if (d.userEmail) document.querySelector('.user-email').textContent = d.userEmail;
+      const nameEl = document.querySelector('.user-name');
+      if (nameEl) nameEl.textContent = d.biz.name;
+      const emailEl = document.querySelector('.user-email');
+      if (d.userEmail && emailEl) emailEl.textContent = d.userEmail;
 
       const kpis = document.querySelectorAll('.kpi-value');
       if (kpis.length >= 3 && d.kpis) {
@@ -21,35 +30,29 @@ async function fetchBizData() {
         kpis[2].textContent = d.kpis.reservations;
       }
 
-      const inputs = document.querySelectorAll('#section-agent .form-input');
-      if (inputs.length >= 5) {
-        inputs[0].value = d.biz.name || '';
-        inputs[1].value = d.biz.type || '🍽️ Restaurante';
-        inputs[2].value = d.biz.address || '';
-        inputs[3].value = d.biz.schedule || '';
-        inputs[4].value = d.biz.phone || '';
-      }
+      // Poblate agent section using IDs
+      if (document.getElementById('bizNameInput')) document.getElementById('bizNameInput').value = d.biz.name || '';
+      if (document.getElementById('bizTypeInput')) document.getElementById('bizTypeInput').value = d.biz.type || '';
+      if (document.getElementById('bizAddressInput')) document.getElementById('bizAddressInput').value = d.biz.address || '';
+      if (document.getElementById('bizScheduleInput')) document.getElementById('bizScheduleInput').value = d.biz.schedule || '';
+      if (document.getElementById('bizPhoneInput')) document.getElementById('bizPhoneInput').value = d.biz.phone || '';
     }
     if (d.agentConfig) {
-      const inputs = document.querySelectorAll('#section-agent .form-input');
-      if (inputs.length >= 6) inputs[5].value = d.agentConfig.agent_name || 'Asistente';
-      const ta = document.querySelector('textarea.form-input');
-      if (ta) ta.value = d.agentConfig.instructions || '';
+      if (document.getElementById('agentNameInput')) document.getElementById('agentNameInput').value = d.agentConfig.agent_name || '';
+      if (document.getElementById('agentInstructions')) document.getElementById('agentInstructions').value = d.agentConfig.instructions || '';
       
       const toneBtns = document.querySelectorAll('.tone-option');
       toneBtns.forEach(b => {
-        if (b.textContent.includes(d.agentConfig.tone)) {
-          toneBtns.forEach(o => o.classList.remove('selected'));
+        b.classList.remove('selected');
+        if (d.agentConfig.tone && b.textContent.includes(d.agentConfig.tone)) {
           b.classList.add('selected');
         }
       });
 
       const switches = document.querySelectorAll('.agent-toggle-section .switch');
-      if (switches.length >= 3) {
-        switches[0].classList.toggle('active', !!d.agentConfig.active);
-        switches[1].classList.toggle('active', !!d.agentConfig.take_orders);
-        switches[2].classList.toggle('active', !!d.agentConfig.manage_reservations);
-      }
+      if (switches.length >= 1) switches[0].classList.toggle('active', !!d.agentConfig.active);
+      if (switches.length >= 2) switches[1].classList.toggle('active', !!d.agentConfig.take_orders);
+      if (switches.length >= 3) switches[2].classList.toggle('active', !!d.agentConfig.manage_reservations);
     }
   } catch(e) { console.error('Fetch Config Error', e); }
 }
@@ -58,12 +61,11 @@ async function fetchMenuData() {
   try {
     const res = await fetch(API_URL + '/menu', { headers: { 'Authorization': 'Bearer ' + token }});
     const d = await res.json();
-    if (!Array.isArray(d)) return;
     const catContainer = document.getElementById('menuCategories');
     if (!catContainer) return;
 
-    if (d.length > 0) {
-      catContainer.innerHTML = ''; // Clear default mock menu
+    if (Array.isArray(d) && d.length > 0) {
+      catContainer.innerHTML = ''; // Clear default mock menu only if we have real data
       const grouped = {};
       d.forEach(i => {
         grouped[i.category] = grouped[i.category] || [];
@@ -72,6 +74,9 @@ async function fetchMenuData() {
       for (const catName in grouped) {
         addCategoryDetailed(catName, grouped[catName]);
       }
+    } else {
+      // Show empty state - wipe defaults
+      catContainer.innerHTML = '<p style="color:var(--text-dim);padding:24px;">Aún no tienes productos en el menú. Empieza añadiendo categorías.</p>';
     }
   } catch(e) { console.error('Menu Fetch Error', e); }
 }
@@ -476,94 +481,94 @@ document.querySelectorAll('.btn-primary-full').forEach(btn => {
     btn.textContent = 'Guardando...';
     btn.disabled = true;
 
-    const isMenu = orig.toLowerCase().includes('menú') || btn.closest('#section-menu');
-    const isAgent = orig.toLowerCase().includes('cambios') && btn.closest('#section-agent');
-    const isBiolink = orig.toLowerCase().includes('publicar') || btn.closest('#section-biolink');
+    // Detect which section we're in
+    const section = btn.closest('.section');
+    const sectionId = section?.id || '';
 
     try {
-      if (isAgent) {
-        const inputs = document.querySelectorAll('#section-agent .form-input');
-        const ta = document.querySelector('textarea.form-input');
-        const toneEl = document.querySelector('.tone-option.selected');
-        const tone = toneEl ? toneEl.textContent.trim().split(' ')[1] : 'Amigable';
-
-        const switches = document.querySelectorAll('.agent-toggle-section .switch');
-        const active = switches[0]?.classList.contains('active');
-        const takeO = switches[1]?.classList.contains('active');
-        const mngR = switches[2]?.classList.contains('active');
-
+      if (sectionId === 'section-agent') {
         await fetch(API_URL + '/config', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
           body: JSON.stringify({
-            bizName: inputs[0]?.value,
-            bizType: inputs[1]?.value,
-            bizAddress: inputs[2]?.value,
-            bizSchedule: inputs[3]?.value,
-            bizPhone: inputs[4]?.value,
-            agentName: inputs[5]?.value,
-            tone: tone,
-            instructions: ta?.value,
-            active,
-            take_orders: takeO,
-            manage_reservations: mngR
+            bizName: document.getElementById('bizNameInput')?.value,
+            bizType: document.getElementById('bizTypeInput')?.value,
+            bizAddress: document.getElementById('bizAddressInput')?.value,
+            bizSchedule: document.getElementById('bizScheduleInput')?.value,
+            bizPhone: document.getElementById('bizPhoneInput')?.value,
+            agentName: document.getElementById('agentNameInput')?.value,
+            tone: document.querySelector('.tone-option.selected')?.textContent.trim().replace(/[^a-zA-Zá-úÁ-Ú]/gu, '').trim() || 'Amigable',
+            instructions: document.getElementById('agentInstructions')?.value,
+            active: document.querySelectorAll('.agent-toggle-section .switch')[0]?.classList.contains('active'),
+            take_orders: document.querySelectorAll('.agent-toggle-section .switch')[1]?.classList.contains('active'),
+            manage_reservations: document.querySelectorAll('.agent-toggle-section .switch')[2]?.classList.contains('active'),
           })
         });
       }
 
-      if (isMenu) {
+      if (sectionId === 'section-menu') {
         const menuItems = [];
         document.querySelectorAll('.menu-category').forEach(catDiv => {
           const categoryName = catDiv.querySelector('.cat-name').value;
           catDiv.querySelectorAll('.product-row').forEach(pRow => {
+            const nameVal = pRow.querySelector('.prod-name')?.value;
+            if (!nameVal) return; // skip empty rows
             menuItems.push({
               category: categoryName,
-              name: pRow.querySelector('.prod-name').value,
-              description: pRow.querySelector('.prod-desc')?.value,
-              price: parseFloat(pRow.querySelector('.prod-price').value || 0),
-              available: pRow.querySelector('.switch').classList.contains('active')
+              name: nameVal,
+              description: pRow.querySelector('.prod-desc')?.value || '',
+              price: parseFloat(pRow.querySelector('.prod-price')?.value || 0),
+              available: pRow.querySelector('.switch')?.classList.contains('active') ?? true
             });
           });
         });
-        
         await fetch(API_URL + '/menu', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
           body: JSON.stringify({ menu: menuItems })
         });
+        // After saving menu, reload QR/biolink to update carta link
+        await fetchBiolinkData();
       }
 
-      if (isBiolink) {
-        const slug = document.querySelector('.url-slug').value;
+      if (sectionId === 'section-biolink') {
+        const slug = document.querySelector('.url-slug')?.value?.trim();
+        if (!slug) { alert('Debes escribir un enlace personalizado.'); throw new Error('no slug'); }
         const bInputs = document.querySelectorAll('.biolink-editor .form-input');
-        const color = document.querySelector('.color-opt.selected')?.style.background;
+        const color = document.querySelector('.color-opt.selected')?.style.background || '#8b47ff';
         const bs = document.querySelectorAll('.button-toggles .switch');
-
-        const payload = {
-          slug: slug,
-          display_name: bInputs[0]?.value,
-          description: bInputs[1]?.value,
-          color: color,
-          btn_chat: bs[0]?.classList.contains('active'),
-          btn_menu: bs[1]?.classList.contains('active'),
-          btn_res: bs[2]?.classList.contains('active'),
-          btn_map: bs[3]?.classList.contains('active'),
-          btn_shop: bs[4]?.classList.contains('active')
-        };
 
         const r = await fetch(API_URL + '/biolink', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({
+            slug,
+            display_name: bInputs[0]?.value || '',
+            description: bInputs[1]?.value || '',
+            color,
+            btn_chat: bs[0]?.classList.contains('active'),
+            btn_menu: bs[1]?.classList.contains('active'),
+            btn_res: bs[2]?.classList.contains('active'),
+            btn_map: bs[3]?.classList.contains('active'),
+            btn_shop: bs[4]?.classList.contains('active')
+          })
         });
         const ans = await r.json();
         if (!ans.success) {
-          alert('Error: ' + (ans.error || 'No se pudo guardar la bio url'));
+          alert('Error: ' + (ans.error || 'No se pudo guardar el bio link'));
           throw new Error('Bio link fail');
         }
+        // Refresh QR after slug saved
+        await fetchBiolinkData();
       }
 
-    } catch(e) { console.error('Error guardando', e); }
+    } catch(e) {
+      console.error('Error guardando:', e);
+      btn.textContent = '❌ Error';
+      btn.disabled = false;
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+      return;
+    }
 
     btn.textContent = '✓ Guardado!';
     btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';

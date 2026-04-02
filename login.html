@@ -79,12 +79,20 @@
 
       <script src="js/config.js"></script>
       <script>
+        // Allow Enter key
+        document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+
         async function handleLogin() {
           const btn = document.getElementById('loginBtn');
+          const errDiv = document.getElementById('loginErr');
           const email = document.getElementById('loginEmail').value.trim();
           const pass = document.getElementById('loginPass').value.trim();
           
-          if (!email || !pass) return alert('Por favor, rellena email y contraseña.');
+          errDiv.textContent = '';
+          if (!email || !pass) {
+            errDiv.textContent = 'Por favor, rellena email y contraseña.';
+            return;
+          }
           
           btn.textContent = 'Verificando...';
           btn.disabled = true;
@@ -98,7 +106,7 @@
             const data = await res.json();
             
             if (!data.success) {
-              alert('Error: ' + data.error);
+              errDiv.textContent = '❌ ' + (data.error || 'Credenciales incorrectas');
               btn.textContent = 'Entrar al panel →';
               btn.disabled = false;
               return;
@@ -107,8 +115,9 @@
             window.location.href = 'app.html';
           } catch(e) {
             console.error(e);
-            alert('Aviso conectando con el servidor. Entrando en modo local.');
-            window.location.href = 'app.html';
+            errDiv.textContent = '❌ No se puede conectar con el servidor. Inténtalo de nuevo.';
+            btn.textContent = 'Entrar al panel →';
+            btn.disabled = false;
           }
         }
       </script>
@@ -116,6 +125,7 @@
       <p class="note-bottom" style="margin-top: 24px; text-align: center;">
         ¿No tienes cuenta? <a href="signup.html" style="color: white;">Empieza gratis</a>
       </p>
+      <p id="loginErr" style="color:#ef4444; font-size:0.85rem; text-align:center; margin-top:12px; min-height:20px;"></p>
     </div>
 
   </div>
