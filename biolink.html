@@ -203,14 +203,24 @@
       if (!slug) {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('content').style.display = 'flex';
-        document.getElementById('bioTitle').textContent = 'Página no encontrada';
-        document.getElementById('bioDesc').textContent = 'El enlace no es válido.';
+        document.getElementById('bioTitle').textContent = 'Enlace no válido';
+        document.getElementById('bioDesc').textContent = 'Por favor, escanea el código QR de nuevo.';
         return;
       }
 
       try {
         const res = await fetch(API_URL + '/biolink/' + slug);
-        if (!res.ok) throw new Error('Not found');
+        if (!res.ok) {
+           if (res.status === 404) {
+             document.getElementById('bioTitle').textContent = 'Negocio no encontrado';
+             document.getElementById('bioDesc').textContent = 'El negocio aún no ha activado su página o el enlace ha cambiado.';
+           } else {
+             throw new Error('Server error');
+           }
+           document.getElementById('loader').style.display = 'none';
+           document.getElementById('content').style.display = 'flex';
+           return;
+        }
         const data = await res.json();
         
         // Aplicar color
