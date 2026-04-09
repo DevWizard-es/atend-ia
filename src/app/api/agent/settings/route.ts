@@ -1,0 +1,48 @@
+import { getDb } from "@/lib/db";
+import { NextResponse } from "next/server";
+
+const ORG_ID = "pizzeria-id-demo";
+
+export async function GET() {
+  const db = await getDb();
+  
+  // Safe migration for columns (if not exist)
+  try { await db.exec(`ALTER TABLE organizations ADD COLUMN whatsapp_phone TEXT DEFAULT ''`); } catch (_) {}
+  try { await db.exec(`ALTER TABLE organizations ADD COLUMN google_maps_url TEXT DEFAULT ''`); } catch (_) {}
+  try { await db.exec(`ALTER TABLE organizations ADD COLUMN agent_tone TEXT DEFAULT 'Pro'`); } catch (_) {}
+  try { await db.exec(`ALTER TABLE organizations ADD COLUMN agent_instructions TEXT DEFAULT ''`); } catch (_) {}
+  
+  try {
+    const settings = await db.get(
+      "SELECT name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions FROM organizations WHERE id = ?",
+      [ORG_ID]
+    );
+    return NextResponse.json(settings || {});
+  } catch (error) {
+    return NextResponse.json({ error: "Database error" }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  const db = await getDb();
+  const body = await request.json();
+  
+  const { name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions } = body;
+
+  try {
+    await db.run(
+      `UPDATE organizations 
+       SET name = COALESCE(?, name),
+           slug = COALESCE(?, slug),
+           whatsapp_phone = COALESCE(?, whatsapp_phone),
+           google_maps_url = COALESCE(?, google_maps_url),
+           agent_tone = COALESCE(?, agent_tone),
+           agent_instructions = COALESCE(?, agent_instructions)
+       WHERE id = ?`,
+      [name || null, slug || null, whatsapp_phone || null, google_maps_url || null, agent_tone || null, agent_instructions || null, ORG_ID]
+    );
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: "Database error" }, { status: 500 });
+  }
+}

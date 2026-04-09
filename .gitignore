@@ -1,0 +1,10 @@
+node_modules
+.next
+.env
+.env.local
+atendia_v2.sqlite
+*.sqlite-journal
+*.log
+dist
+build
+.vercel
