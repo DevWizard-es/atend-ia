@@ -1,21 +1,48 @@
-import sqlite3 from 'sqlite3';
-import { open, Database } from 'sqlite';
+import { createClient, Client } from '@libsql/client';
 import path from 'path';
 
-let db: Database | null = null;
+let internalClient: Client | null = null;
+
+// Wrapper que emula los métodos de "sqlite" y "sqlite3"
+// para no romper la aplicación entera tras la migración a Turso.
+const dbWrapper = {
+  get: async (sql: string, args: any = []) => {
+    // libSQL espera un array o object para bindings. Si "args" no es un array, lo envolvemos.
+    const params = Array.isArray(args) ? args : [args];
+    const rs = await internalClient!.execute({ sql, args: params });
+    return rs.rows[0]; 
+  },
+  all: async (sql: string, args: any = []) => {
+    const params = Array.isArray(args) ? args : [args];
+    const rs = await internalClient!.execute({ sql, args: params });
+    return rs.rows;
+  },
+  run: async (sql: string, args: any = []) => {
+    const params = Array.isArray(args) ? args : (args ? [args] : []);
+    const rs = await internalClient!.execute({ sql, args: params });
+    return { 
+      lastID: rs.lastInsertRowid ? rs.lastInsertRowid.toString() : undefined, 
+      changes: rs.rowsAffected 
+    };
+  },
+  exec: async (sql: string) => {
+    await internalClient!.executeMultiple(sql);
+  }
+};
 
 export async function getDb() {
-  if (db) return db;
+  if (internalClient) return dbWrapper;
 
-  // En Render usa el disco persistente (/data). En local usa el raíz del proyecto.
-  const dbPath = process.env.DATABASE_PATH || path.join(process.cwd(), 'atendia_v2.sqlite');
+  // Si proporcionas la URL de Turso, la usará. Si no, en local creará un archivo .db
+  const dbUrl = process.env.TURSO_DATABASE_URL || \`file:\${path.join(process.cwd(), 'atendia_v2_local_turso.db')}\`;
   
-  db = await open({
-    filename: dbPath,
-    driver: sqlite3.Database
+  internalClient = createClient({
+    url: dbUrl,
+    authToken: process.env.TURSO_DATABASE_TOKEN || "",
   });
 
-  await db.exec(`
+  // Ejecutamos siempre la inicialización del esquema.
+  await internalClient.executeMultiple(`
     CREATE TABLE IF NOT EXISTS organizations (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
@@ -32,7 +59,7 @@ export async function getDb() {
       org_id TEXT NOT NULL,
       email TEXT UNIQUE NOT NULL,
       password TEXT NOT NULL,
-      role TEXT DEFAULT 'owner', -- 'owner', 'staff', 'agency'
+      role TEXT DEFAULT 'owner',
       FOREIGN KEY (org_id) REFERENCES organizations (id)
     );
 
@@ -49,7 +76,7 @@ export async function getDb() {
       id TEXT PRIMARY KEY,
       org_id TEXT NOT NULL,
       contact_id TEXT NOT NULL,
-      status TEXT DEFAULT 'open', -- 'open', 'closed', 'snoozed'
+      status TEXT DEFAULT 'open',
       last_message TEXT,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (org_id) REFERENCES organizations (id),
@@ -59,7 +86,7 @@ export async function getDb() {
     CREATE TABLE IF NOT EXISTS messages (
       id TEXT PRIMARY KEY,
       conv_id TEXT NOT NULL,
-      direction TEXT NOT NULL, -- 'inbound', 'outbound'
+      direction TEXT NOT NULL,
       content TEXT NOT NULL,
       sender_name TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -72,7 +99,7 @@ export async function getDb() {
       rating INTEGER NOT NULL,
       comment TEXT,
       author_name TEXT,
-      status TEXT DEFAULT 'pending', -- 'pending', 'replied'
+      status TEXT DEFAULT 'pending',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (org_id) REFERENCES organizations (id)
     );
@@ -89,5 +116,5 @@ export async function getDb() {
     );
   `);
 
-  return db;
+  return dbWrapper;
 }

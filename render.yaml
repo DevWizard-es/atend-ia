@@ -9,8 +9,10 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: DATABASE_PATH
-        value: /data/atendia_v2.sqlite
+      - key: TURSO_DATABASE_URL
+        value: "" # Requires user to set this in the Render dashboard manually
+      - key: TURSO_DATABASE_TOKEN
+        value: "" # Requires user to set this in the Render dashboard manually
       - key: JWT_SECRET
         generateValue: true
       - key: NEXT_PUBLIC_APP_URL
@@ -18,8 +20,4 @@ services:
           type: web
           name: atend-ia
           property: host
-    disk:
-      name: atendia-db
-      mountPath: /data
-      sizeGB: 1
     healthCheckPath: /api/ping
