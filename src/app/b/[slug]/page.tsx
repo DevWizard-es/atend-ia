@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { MessageCircle, Star, MapPin, Menu as MenuIcon, ChevronRight, Check, Phone } from "lucide-react";
+import AdSlot from "@/components/AdSlot";
 
 export default function PublicLanding({ params }: { params: { slug: string } }) {
   const [business, setBusiness] = useState<any>(null);
@@ -87,6 +88,15 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
         <div className="absolute -bottom-px left-0 right-0 h-16 bg-gradient-to-b from-transparent to-slate-50" />
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-2xl -ml-10" />
+      </div>
+
+      {/* ── SLOT 1: Banner superior (alta visibilidad) ── */}
+      <div className="max-w-md mx-auto px-5 pt-3">
+        <AdSlot
+          adSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_BANNER || "0000000001"}
+          format="banner"
+          className="rounded-xl overflow-hidden"
+        />
       </div>
 
       <div className="max-w-md mx-auto px-5 -mt-20 pb-16 space-y-6 relative z-10">
@@ -264,6 +274,13 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
             </div>
           </div>
         )}
+
+        {/* ── SLOT 2: Rectangle intermedio (alto RPM) ── */}
+        <AdSlot
+          adSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECT || "0000000002"}
+          format="rectangle"
+          className="py-2"
+        />
 
         {/* Footer */}
         <div className="text-center pt-4 pb-4">

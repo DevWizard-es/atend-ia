@@ -7,68 +7,6 @@ import {
   ArrowRight, ChevronRight, Menu, X, Globe, QrCode, Inbox, TrendingUp
 } from "lucide-react";
 
-const plans = [
-  {
-    name: "Básico",
-    price: "49",
-    period: "/mes",
-    description: "Ideal para negocios que empiezan a crecer online.",
-    color: "border-slate-200",
-    badge: null,
-    features: [
-      "1 negocio / ubicación",
-      "Página bio-link personalizada",
-      "Captación de leads por WhatsApp",
-      "Bandeja de mensajes básica",
-      "Gestión de reseñas Google",
-      "Analytics básico",
-      "Soporte por email",
-    ],
-    cta: "Empezar gratis 14 días",
-    ctaStyle: "bg-slate-900 text-white hover:bg-slate-800",
-  },
-  {
-    name: "Premium",
-    price: "99",
-    period: "/mes",
-    description: "Para negocios que quieren dominar su área local.",
-    color: "border-blue-500 ring-2 ring-blue-500 ring-offset-2",
-    badge: "Más popular",
-    features: [
-      "Hasta 3 negocios / ubicaciones",
-      "Página bio-link con QR personalizado",
-      "Captación ilimitada de leads",
-      "Inbox completo estilo WhatsApp",
-      "Respuestas automáticas con IA",
-      "Analytics avanzado + exportación PDF",
-      "Campañas de fidelización",
-      "Soporte prioritario 24/7",
-    ],
-    cta: "Empezar gratis 14 días",
-    ctaStyle: "bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-500/30",
-  },
-  {
-    name: "Agencia",
-    price: "249",
-    period: "/mes",
-    description: "Gestiona múltiples clientes desde un panel centralizado.",
-    color: "border-slate-200",
-    badge: null,
-    features: [
-      "Negocios ilimitados",
-      "Panel multi-cliente centralizado",
-      "Marca blanca (white-label)",
-      "API de integración",
-      "Reportes automáticos para clientes",
-      "IA entrenada por vertical",
-      "Gestor de cuenta dedicado",
-      "SLA garantizado 99.9%",
-    ],
-    cta: "Hablar con ventas",
-    ctaStyle: "bg-slate-900 text-white hover:bg-slate-800",
-  },
-];
-
 const features = [
   { icon: Globe, title: "Bio-Link Profesional", desc: "Una página pública con QR para que tus clientes te contacten, te dejen reseñas o vean tu menú. Todo desde un solo link.", color: "bg-blue-50 text-blue-600" },
   { icon: Inbox, title: "Inbox Unificado", desc: "Todas las conversaciones de WhatsApp y web en un solo lugar. Responde rápido y nunca pierdas un lead.", color: "bg-indigo-50 text-indigo-600" },
@@ -81,7 +19,14 @@ const features = [
 const testimonials = [
   { name: "Laura Gómez", role: "Dueña · Cafetería El Rincón", avatar: "L", quote: "En 2 semanas pasé de 3.8 a 4.7 en Google. Los clientes ahora me escriben directamente por WhatsApp gracias al QR en las mesas.", stars: 5 },
   { name: "Carlos Mendoza", role: "Propietario · Taller AutoPro", avatar: "C", quote: "La bandeja unificada me cambió la vida. Antes perdía leads porque no me enteraba. Ahora respondo en minutos y mi conversión subió un 30%.", stars: 5 },
-  { name: "Ana Ruiz", role: "Directora · Clínica DentalPlus", avatar: "A", quote: "Como agencia gestionamos 8 clientes. El panel multi-cuenta es perfecto y los reportes PDF nos ahorran horas cada mes.", stars: 5 },
+  { name: "Ana Ruiz", role: "Directora · Clínica DentalPlus", avatar: "A", quote: "Pensé que algo así costaría una fortuna. Que sea completamente gratis y funcione tan bien es increíble. Lo recomiendo a todos mis contactos.", stars: 5 },
+];
+
+const howItWorks = [
+  { step: "01", title: "Crea tu cuenta gratis", desc: "Regístrate en menos de 2 minutos. Sin tarjeta. Sin letra pequeña. Gratis para siempre.", icon: "🚀" },
+  { step: "02", title: "Configura tu negocio", desc: "Añade tu menú, foto, número de WhatsApp y enlace a Google Maps. Listo en 5 minutos.", icon: "⚙️" },
+  { step: "03", title: "Comparte tu Bio-Link", desc: "Imprime el QR para tus mesas o comparte el link en redes. Tus clientes te encontrarán al instante.", icon: "🔗" },
+  { step: "04", title: "Crece sin límites", desc: "Gestiona tu reputación, responde mensajes y analiza el crecimiento de tu negocio. Todo gratis.", icon: "📈" },
 ];
 
 export default function LandingPage() {
@@ -97,7 +42,7 @@ export default function LandingPage() {
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Funcionalidades</a>
-            <a href="#pricing" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Precios</a>
+            <a href="#how-it-works" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Cómo funciona</a>
             <a href="#testimonials" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Testimonios</a>
           </div>
           <div className="hidden md:flex items-center gap-3">
@@ -105,7 +50,7 @@ export default function LandingPage() {
               Iniciar sesión
             </Link>
             <Link href="/signup" className="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
-              Prueba gratis 14 días →
+              Empezar gratis →
             </Link>
           </div>
           <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -115,7 +60,7 @@ export default function LandingPage() {
         {mobileMenuOpen && (
           <div className="md:hidden px-6 pb-4 space-y-2 border-t border-slate-100 pt-4">
             <Link href="/login" className="block py-2 text-sm font-bold text-slate-700">Iniciar sesión</Link>
-            <Link href="/signup" className="block py-2 px-4 bg-blue-600 text-white rounded-xl text-sm font-bold text-center">Prueba gratis 14 días</Link>
+            <Link href="/signup" className="block py-2 px-4 bg-blue-600 text-white rounded-xl text-sm font-bold text-center">Empezar gratis</Link>
           </div>
         )}
       </nav>
@@ -127,9 +72,10 @@ export default function LandingPage() {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-400/10 rounded-full blur-3xl -ml-40" />
 
         <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-full text-blue-700 text-sm font-bold mb-8">
-            <Zap className="w-4 h-4" />
-            Más de 500 negocios ya usan AtendIA
+          {/* Free badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full text-emerald-700 text-sm font-black mb-8 shadow-sm">
+            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+            100% Gratis — Sin tarjeta de crédito, para siempre
           </div>
 
           <h1 className="text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6">
@@ -142,11 +88,12 @@ export default function LandingPage() {
           <p className="text-xl text-slate-600 font-medium max-w-2xl mx-auto leading-relaxed mb-10">
             La plataforma all-in-one para negocios locales. Captura leads por WhatsApp,
             mejora tus reseñas en Google y gestiona todos tus mensajes desde un único lugar.
+            <strong className="text-slate-800"> Completamente gratis.</strong>
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/signup" className="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-lg hover:bg-blue-700 transition-all shadow-2xl shadow-blue-500/30 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98]">
-              Empieza gratis 14 días <ArrowRight className="w-5 h-5" />
+              Crear mi cuenta gratis <ArrowRight className="w-5 h-5" />
             </Link>
             <Link href="/b/pizzeria-roma" target="_blank" className="flex items-center gap-2 px-8 py-4 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold text-lg hover:border-blue-300 hover:bg-blue-50/30 transition-all">
               Ver demo en vivo <ChevronRight className="w-5 h-5 text-slate-400" />
@@ -154,7 +101,7 @@ export default function LandingPage() {
           </div>
 
           <p className="mt-5 text-sm text-slate-400 font-medium">
-            Sin tarjeta de crédito · Configuración en 5 minutos · Cancela cuando quieras
+            Sin tarjeta de crédito · Configuración en 5 minutos · Gratis para siempre
           </p>
 
           {/* Hero Dashboard Preview */}
@@ -220,7 +167,7 @@ export default function LandingPage() {
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">Todo lo que necesita tu negocio</h2>
             <p className="text-lg text-slate-500 font-medium max-w-xl mx-auto">
-              Herramientas pensadas para dueños de negocios locales que quieren crecer sin complicaciones.
+              Herramientas pensadas para dueños de negocios locales que quieren crecer. <strong className="text-slate-700">Sin pagar nada.</strong>
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -237,12 +184,52 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* How it works */}
+      <section id="how-it-works" className="py-24 px-6 bg-slate-50/70">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full text-emerald-700 text-sm font-black mb-6">
+              ✅ Gratis para siempre — ¿Cómo es posible?
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">Fácil de usar. Gratis de verdad.</h2>
+            <p className="text-lg text-slate-500 font-medium max-w-2xl mx-auto">
+              AtendIA es gratuito para negocios. Nos financiamos mediante anuncios discretos en las páginas públicas de tus clientes,
+              como hace Google o Instagram. Tú creces, nosotros crecemos contigo.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {howItWorks.map((step) => (
+              <div key={step.step} className="relative bg-white p-7 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all group">
+                <div className="text-3xl mb-4">{step.icon}</div>
+                <div className="text-xs font-black text-blue-600 uppercase tracking-widest mb-2">Paso {step.step}</div>
+                <h3 className="text-base font-black text-slate-900 mb-2 tracking-tight">{step.title}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed font-medium">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Free callout */}
+          <div className="mt-12 p-8 bg-white rounded-3xl border-2 border-emerald-200 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0">🎁</div>
+              <div>
+                <p className="font-black text-slate-900 text-lg">¿Cuánto cuesta?</p>
+                <p className="text-slate-500 font-medium text-sm">Para tu negocio: absolutamente nada. Sin planes, sin límites, sin sorpresas.</p>
+              </div>
+            </div>
+            <Link href="/signup" className="flex-shrink-0 flex items-center gap-2 px-7 py-3.5 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-500/20 whitespace-nowrap">
+              Empezar ahora — Es gratis <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
-      <section id="testimonials" className="py-20 px-6 bg-slate-50/70">
+      <section id="testimonials" className="py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-black tracking-tight mb-3">Lo que dicen nuestros clientes</h2>
-            <p className="text-slate-500 font-medium">Negocios reales, resultados reales.</p>
+            <h2 className="text-4xl font-black tracking-tight mb-3">Lo que dicen nuestros negocios</h2>
+            <p className="text-slate-500 font-medium">Negocios reales, resultados reales. Sin coste.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t) => (
@@ -266,49 +253,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="pricing" className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">Precios simples y transparentes</h2>
-            <p className="text-lg text-slate-500 font-medium">14 días gratis. Sin tarjeta de crédito.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-            {plans.map((plan) => (
-              <div key={plan.name} className={`relative p-8 bg-white rounded-3xl border-2 ${plan.color} flex flex-col`}>
-                {plan.badge && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-blue-600 text-white text-xs font-black uppercase tracking-widest rounded-full shadow-lg shadow-blue-500/30">
-                    {plan.badge}
-                  </div>
-                )}
-                <div className="mb-6">
-                  <div className="text-lg font-black text-slate-900 mb-1">{plan.name}</div>
-                  <div className="flex items-end gap-1 mb-2">
-                    <span className="text-5xl font-black tracking-tight">{plan.price}€</span>
-                    <span className="text-slate-500 font-bold pb-1">{plan.period}</span>
-                  </div>
-                  <p className="text-sm text-slate-500 font-medium">{plan.description}</p>
-                </div>
-                <ul className="space-y-3 mb-8 flex-1">
-                  {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-3 text-sm font-medium text-slate-700">
-                      <Check className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href={plan.name === "Agencia" ? "/signup?plan=agencia" : `/signup?plan=${plan.name.toLowerCase()}`}
-                  className={`w-full py-3.5 rounded-2xl font-bold text-sm text-center transition-all ${plan.ctaStyle}`}
-                >
-                  {plan.cta}
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Final CTA */}
       <section className="py-20 px-6">
         <div className="max-w-3xl mx-auto">
@@ -317,14 +261,14 @@ export default function LandingPage() {
             <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-indigo-400/20 rounded-full blur-3xl" />
             <div className="relative z-10">
               <div className="text-5xl mb-4">🚀</div>
-              <h2 className="text-4xl font-black text-white tracking-tight mb-3">¿Listo para crecer?</h2>
+              <h2 className="text-4xl font-black text-white tracking-tight mb-3">¿Listo para crecer gratis?</h2>
               <p className="text-blue-100 font-medium mb-8 max-w-lg mx-auto">
-                Únete a más de 500 negocios locales que ya gestionan su captación y reputación con AtendIA.
+                Únete a más de 500 negocios locales que ya gestionan su captación y reputación con AtendIA. Sin pagar un euro.
               </p>
               <Link href="/signup" className="inline-flex items-center gap-2 px-10 py-4 bg-white text-blue-700 rounded-2xl font-black text-lg hover:bg-blue-50 transition-all shadow-xl">
-                Empezar gratis ahora <ArrowRight className="w-5 h-5" />
+                Crear mi cuenta gratis <ArrowRight className="w-5 h-5" />
               </Link>
-              <p className="text-blue-200 text-sm mt-4 font-medium">Sin tarjeta de crédito · 14 días gratis · Cancela cuando quieras</p>
+              <p className="text-blue-200 text-sm mt-4 font-medium">Sin tarjeta de crédito · Gratis para siempre · Configúrate en 5 min</p>
             </div>
           </div>
         </div>

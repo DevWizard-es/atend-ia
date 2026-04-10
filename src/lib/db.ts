@@ -7,7 +7,8 @@ let db: Database | null = null;
 export async function getDb() {
   if (db) return db;
 
-  const dbPath = path.join(process.cwd(), 'atendia_v2.sqlite');
+  // En Render usa el disco persistente (/data). En local usa el raíz del proyecto.
+  const dbPath = process.env.DATABASE_PATH || path.join(process.cwd(), 'atendia_v2.sqlite');
   
   db = await open({
     filename: dbPath,

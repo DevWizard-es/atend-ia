@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: atend-ia
+    env: node
+    plan: free
+    region: frankfurt  # Closer to Spain
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_PATH
+        value: /data/atendia_v2.sqlite
+      - key: JWT_SECRET
+        generateValue: true
+      - key: NEXT_PUBLIC_APP_URL
+        fromService:
+          type: web
+          name: atend-ia
+          property: host
+    disk:
+      name: atendia-db
+      mountPath: /data
+      sizeGB: 1
+    healthCheckPath: /api/ping

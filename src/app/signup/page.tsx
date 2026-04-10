@@ -3,46 +3,46 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ArrowLeft, Eye, EyeOff, Check, Zap } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
-
-const planDetails: Record<string, { name: string; price: string; color: string }> = {
-  básico: { name: "Plan Básico", price: "49€/mes", color: "bg-slate-100 text-slate-700 border-slate-200" },
-  premium: { name: "Plan Premium", price: "99€/mes", color: "bg-blue-50 text-blue-700 border-blue-200" },
-  agencia: { name: "Plan Agencia", price: "249€/mes", color: "bg-indigo-50 text-indigo-700 border-indigo-200" },
-};
-
-const STRIPE_LINKS: Record<string, string> = {
-  básico: "https://buy.stripe.com/test_aFaeVd2sX0Pte7R2ndbII00",
-  premium: "https://buy.stripe.com/test_aFa6oH0kP2XB9RB7HxbII01",
-  agencia: "https://buy.stripe.com/test_dRm4gz1oT69NfbV1j9bII03", // placeholder logic
-};
+import { useRouter } from "next/navigation";
 
 function SignupForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const planKey = searchParams.get("plan") || "premium";
-  const plan = planDetails[planKey] || planDetails["premium"];
-
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({ name: "", business: "", email: "", password: "" });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
-    // Simulate auth registration
-    await new Promise(r => setTimeout(r, 1000));
-    
-    // Get Stripe Link
-    // Open Stripe in new tab for the MVP payment flow
-    const stripeUrl = STRIPE_LINKS[planKey] || STRIPE_LINKS["premium"];
-    const finalUrl = `${stripeUrl}?prefilled_email=${encodeURIComponent(form.email || "")}`;
-    window.open(finalUrl, "_blank");
+    setError("");
 
-    // Redirect to Dashboard
-    router.push("/dashboard");
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ownerName: form.name,
+          businessName: form.business,
+          email: form.email,
+          password: form.password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Error al crear la cuenta. Inténtalo de nuevo.");
+        setLoading(false);
+        return;
+      }
+
+      // Redirect to dashboard on success
+      router.push("/dashboard");
+    } catch {
+      setError("Error de conexión. Inténtalo de nuevo.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,14 +59,14 @@ function SignupForm() {
             Atend<span className="text-blue-600">IA</span>
           </div>
 
-          {/* Plan badge */}
-          <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold mb-6 ${plan.color}`}>
-            <Zap className="w-3.5 h-3.5" />
-            {plan.name} — {plan.price}
+          {/* Free badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 text-xs font-bold mb-6">
+            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+            Gratis para siempre — Sin tarjeta de crédito
           </div>
 
           <h1 className="text-3xl font-black tracking-tight mb-2">Crea tu cuenta</h1>
-          <p className="text-slate-500 font-medium mb-8">14 días gratis, sin tarjeta de crédito.</p>
+          <p className="text-slate-500 font-medium mb-8">Tu negocio en AtendIA en menos de 5 minutos.</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -108,6 +108,7 @@ function SignupForm() {
                 <input
                   type={showPass ? "text" : "password"}
                   required
+                  minLength={8}
                   placeholder="Mínimo 8 caracteres"
                   value={form.password}
                   onChange={e => setForm({ ...form, password: e.target.value })}
@@ -118,6 +119,12 @@ function SignupForm() {
                 </button>
               </div>
             </div>
+
+            {error && (
+              <div className="px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm font-medium text-red-700">
+                {error}
+              </div>
+            )}
 
             <button
               type="submit"
@@ -135,15 +142,15 @@ function SignupForm() {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-slate-100">
-            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium mb-3">
-              <Check className="w-3.5 h-3.5 text-emerald-500" /> Sin tarjeta de crédito requerida
-            </div>
-            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium mb-3">
-              <Check className="w-3.5 h-3.5 text-emerald-500" /> 14 días gratis incluidos
+          <div className="mt-6 pt-6 border-t border-slate-100 space-y-2">
+            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+              <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" /> Sin tarjeta de crédito requerida
             </div>
             <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-              <Check className="w-3.5 h-3.5 text-emerald-500" /> Cancela cuando quieras
+              <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" /> Acceso completo a todas las funciones
+            </div>
+            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+              <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" /> Gratis para siempre, sin límites
             </div>
           </div>
         </div>
@@ -160,9 +167,5 @@ function SignupForm() {
 }
 
 export default function SignupPage() {
-  return (
-    <Suspense>
-      <SignupForm />
-    </Suspense>
-  );
+  return <SignupForm />;
 }
