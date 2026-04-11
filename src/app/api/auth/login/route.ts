@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     }
 
     // Verify password
-    const valid = await bcrypt.compare(password, user.password);
+    const valid = await bcrypt.compare(password, user.password as string);
     if (!valid) {
       return NextResponse.json({ error: 'Credenciales inválidas.' }, { status: 401 });
     }
