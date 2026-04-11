@@ -19,10 +19,12 @@ export async function GET() {
   try { await db.exec(`ALTER TABLE organizations ADD COLUMN promo_emoji TEXT DEFAULT '🎁'`); } catch (_) {}
   try { await db.exec(`ALTER TABLE organizations ADD COLUMN promo_title TEXT DEFAULT ''`); } catch (_) {}
   try { await db.exec(`ALTER TABLE organizations ADD COLUMN promo_description TEXT DEFAULT ''`); } catch (_) {}
+  try { await db.exec(`ALTER TABLE organizations ADD COLUMN profile_emoji TEXT DEFAULT ''`); } catch (_) {}
+  try { await db.exec(`ALTER TABLE organizations ADD COLUMN profile_color TEXT DEFAULT 'from-blue-500 to-indigo-600'`); } catch (_) {}
   
   try {
     const settings = await db.get(
-      "SELECT name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions, promo_emoji, promo_title, promo_description FROM organizations WHERE id = ?",
+      "SELECT name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions, promo_emoji, promo_title, promo_description, profile_emoji, profile_color FROM organizations WHERE id = ?",
       [ORG_ID]
     );
     return NextResponse.json(settings || {});
@@ -41,7 +43,7 @@ export async function POST(request: Request) {
   const ORG_ID = session.orgId;
   const body = await request.json();
   
-  const { name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions, promo_emoji, promo_title, promo_description } = body;
+  const { name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions, promo_emoji, promo_title, promo_description, profile_emoji, profile_color } = body;
 
   try {
     await db.run(
@@ -54,12 +56,15 @@ export async function POST(request: Request) {
            agent_instructions = COALESCE(?, agent_instructions),
            promo_emoji = COALESCE(?, promo_emoji),
            promo_title = COALESCE(?, promo_title),
-           promo_description = COALESCE(?, promo_description)
+           promo_description = COALESCE(?, promo_description),
+           profile_emoji = COALESCE(?, profile_emoji),
+           profile_color = COALESCE(?, profile_color)
        WHERE id = ?`,
       [
         name || null, slug || null, whatsapp_phone || null, google_maps_url || null,
         agent_tone || null, agent_instructions || null,
         promo_emoji || null, promo_title || null, promo_description || null,
+        profile_emoji || null, profile_color || null,
         ORG_ID
       ]
     );

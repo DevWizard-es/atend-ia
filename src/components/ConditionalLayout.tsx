@@ -6,11 +6,10 @@ import Sidebar from "./Sidebar";
 import { Menu, X } from "lucide-react";
 
 // Rutas que NO muestran el sidebar de administración
-const PUBLIC_ROUTES = ["/", "/login", "/signup"];
+const PUBLIC_ROUTES = ["/", "/login", "/signup", "/privacy", "/terms", "/contact"];
 
 function isPublicRoute(pathname: string) {
   if (PUBLIC_ROUTES.includes(pathname)) return true;
-  
   if (pathname.startsWith("/b/")) return true;
   return false;
 }

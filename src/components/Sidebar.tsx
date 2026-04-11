@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   BarChart3,
   MessageSquare,
@@ -15,7 +15,9 @@ import {
   Home,
   Package,
   Settings,
-  X
+  X,
+  Pencil,
+  Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -30,16 +32,53 @@ const navItems = [
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
+const PROFILE_EMOJIS = ["", "🏪", "☕", "🍕", "💈", "🏋️", "🌿", "🐾", "🔧", "🎨", "🍰", "🎵", "🏥", "📚"];
+const PROFILE_COLORS = [
+  { label: "Azul", value: "from-blue-500 to-indigo-600" },
+  { label: "Verde", value: "from-emerald-500 to-teal-600" },
+  { label: "Naranja", value: "from-orange-500 to-red-600" },
+  { label: "Violeta", value: "from-purple-500 to-pink-600" },
+  { label: "Noche", value: "from-slate-700 to-slate-900" },
+  { label: "Dorado", value: "from-amber-500 to-orange-600" },
+];
+
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [businessName, setBusinessName] = useState("Mi Negocio");
+  const [profileEmoji, setProfileEmoji] = useState("");
+  const [profileColor, setProfileColor] = useState("from-blue-500 to-indigo-600");
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetch("/api/agent/settings")
       .then((r) => r.json())
-      .then((d) => d.name && setBusinessName(d.name))
+      .then((d) => {
+        if (d.name) setBusinessName(d.name);
+        if (d.profile_emoji !== undefined) setProfileEmoji(d.profile_emoji || "");
+        if (d.profile_color) setProfileColor(d.profile_color);
+      })
       .catch(() => {});
   }, []);
+
+  const saveProfile = async () => {
+    setSaving(true);
+    await fetch("/api/agent/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ profile_emoji: profileEmoji, profile_color: profileColor }),
+    }).catch(() => {});
+    setSaving(false);
+    setEditingProfile(false);
+  };
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/me", { method: "DELETE" });
+    router.push("/");
+  };
+
+  const initials = businessName.substring(0, 2).toUpperCase();
 
   return (
     <aside className="w-64 bg-slate-50 border-r border-slate-200 h-screen flex flex-col sticky top-0">
@@ -102,14 +141,72 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         {/* Business card */}
         <div className="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold shadow-sm">
-              {businessName.substring(0, 2).toUpperCase()}
-            </div>
+            {/* Avatar — clickable to edit */}
+            <button
+              onClick={() => setEditingProfile(!editingProfile)}
+              className={cn(
+                "w-9 h-9 rounded-full bg-gradient-to-br flex items-center justify-center text-white text-sm font-bold shadow-sm relative group shrink-0",
+                profileColor
+              )}
+              title="Cambiar icono del perfil"
+            >
+              {profileEmoji || initials}
+              <div className="absolute inset-0 rounded-full bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <Pencil className="w-3 h-3 text-white" />
+              </div>
+            </button>
             <div className="min-w-0">
               <div className="text-xs font-bold text-slate-900 truncate">{businessName}</div>
               <div className="text-[10px] text-blue-600 uppercase tracking-wider font-black">Plan Premium</div>
             </div>
           </div>
+
+          {/* Profile editor panel */}
+          {editingProfile && (
+            <div className="mb-3 space-y-3 pt-3 border-t border-slate-100">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Icono</p>
+              <div className="grid grid-cols-7 gap-1">
+                {PROFILE_EMOJIS.map((e) => (
+                  <button
+                    key={e || "none"}
+                    onClick={() => setProfileEmoji(e)}
+                    className={cn(
+                      "w-8 h-8 rounded-lg flex items-center justify-center text-sm transition-all",
+                      profileEmoji === e ? "bg-blue-100 border-2 border-blue-500" : "hover:bg-slate-100 border-2 border-transparent"
+                    )}
+                    title={e || "Iniciales"}
+                  >
+                    {e || <span className="text-[9px] font-black text-slate-400">AB</span>}
+                  </button>
+                ))}
+              </div>
+
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Color</p>
+              <div className="flex flex-wrap gap-2">
+                {PROFILE_COLORS.map((c) => (
+                  <button
+                    key={c.value}
+                    onClick={() => setProfileColor(c.value)}
+                    className={cn(
+                      "w-7 h-7 rounded-full bg-gradient-to-br transition-all",
+                      c.value,
+                      profileColor === c.value ? "ring-2 ring-offset-2 ring-blue-500 scale-110" : "hover:scale-105"
+                    )}
+                    title={c.label}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={saveProfile}
+                disabled={saving}
+                className="w-full py-2 bg-blue-600 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-blue-700 transition-colors"
+              >
+                <Check className="w-3 h-3" /> {saving ? "Guardando..." : "Guardar cambios"}
+              </button>
+            </div>
+          )}
+
           <Link 
             href="/campaign"
             onClick={() => onClose?.()}
@@ -121,13 +218,13 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         </div>
 
         {/* Logout */}
-        <Link
-          href="/"
+        <button
+          onClick={handleLogout}
           className="flex items-center gap-2 px-3 py-2 w-full text-sm font-semibold text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
         >
           <LogOut className="w-4 h-4" />
           Cerrar sesión
-        </Link>
+        </button>
       </div>
     </aside>
   );

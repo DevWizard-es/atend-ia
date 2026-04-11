@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   MessageCircle, Star, BarChart3, Users, Shield, Zap, Check,
   ArrowRight, ChevronRight, Menu, X, Globe, QrCode, Inbox, TrendingUp
@@ -32,6 +32,17 @@ const howItWorks = [
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authState, setAuthState] = useState<{authenticated: boolean; businessName?: string; email?: string; slug?: string; profileEmoji?: string;} | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/me").then(r => r.json()).then(setAuthState).catch(() => setAuthState({ authenticated: false }));
+  }, []);
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/me", { method: "DELETE" });
+    setAuthState({ authenticated: false });
+    window.location.reload();
+  };
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -47,12 +58,31 @@ export default function LandingPage() {
             <a href="#testimonials" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Testimonios</a>
           </div>
           <div className="hidden md:flex items-center gap-3">
-            <Link href="/login" className="px-4 py-2 text-sm font-bold text-slate-700 hover:text-slate-900 transition-colors">
-              Iniciar sesión
-            </Link>
-            <Link href="/signup" className="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
-              Empezar gratis →
-            </Link>
+            {authState === null ? null : authState.authenticated ? (
+              <div className="flex items-center gap-3">
+                <Link href="/dashboard" className="flex items-center gap-2.5 px-4 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-black">
+                    {authState.profileEmoji || (authState.businessName?.substring(0, 2).toUpperCase() ?? "MI")}
+                  </div>
+                  <span className="text-sm font-bold text-slate-800">{authState.businessName || "Mi Negocio"}</span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 text-sm font-bold text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-100"
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            ) : (
+              <>
+                <Link href="/login" className="px-4 py-2 text-sm font-bold text-slate-700 hover:text-slate-900 transition-colors">
+                  Iniciar sesión
+                </Link>
+                <Link href="/signup" className="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
+                  Empezar gratis →
+                </Link>
+              </>
+            )}
           </div>
           <button className="md:hidden p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -60,8 +90,17 @@ export default function LandingPage() {
         </div>
         {mobileMenuOpen && (
           <div className="md:hidden px-6 pb-4 space-y-2 border-t border-slate-100 pt-4">
-            <Link href="/login" className="block py-2 text-sm font-bold text-slate-700">Iniciar sesión</Link>
-            <Link href="/signup" className="block py-2 px-4 bg-blue-600 text-white rounded-xl text-sm font-bold text-center">Empezar gratis</Link>
+            {authState?.authenticated ? (
+              <>
+                <Link href="/dashboard" className="block py-2 text-sm font-bold text-slate-700">Mi Dashboard</Link>
+                <button onClick={handleLogout} className="block py-2 text-sm font-bold text-red-500">Cerrar sesión</button>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="block py-2 text-sm font-bold text-slate-700">Iniciar sesión</Link>
+                <Link href="/signup" className="block py-2 px-4 bg-blue-600 text-white rounded-xl text-sm font-bold text-center">Empezar gratis</Link>
+              </>
+            )}
           </div>
         )}
       </nav>
