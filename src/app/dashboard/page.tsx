@@ -200,7 +200,7 @@ export default function Dashboard() {
               <p className="text-xs text-slate-400 font-extrabold uppercase tracking-widest mb-2">Estado</p>
               <p className="text-sm text-slate-600 font-medium leading-relaxed">Tu asistente está listo para atender clientes. Personaliza su comportamiento en la sección 'Agente IA'.</p>
             </div>
-            <Link href="/agent-ia" className="w-full py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-colors shadow-sm text-center">
+            <Link href="/agent" className="w-full py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-colors shadow-sm text-center">
               Gestionar Agente
             </Link>
           </div>

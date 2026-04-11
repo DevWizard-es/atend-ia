@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Settings, Save, Link2, MapPin, Phone, Building2, Smile } from "lucide-react";
+import { cn } from "@/lib/utils";
+
 
 const BUSINESS_EMOJIS = [
   "", "🏪", "🍕", "☕", "🍔", "🥗", "🍰", "🍣", "🌮", "🍜",
@@ -21,6 +23,8 @@ export default function SettingsPage() {
     whatsapp_phone: "",
     google_maps_url: "",
     google_review_url: "",
+    google_questions_url: "",
+    inbox_mode: "internal",
     profile_emoji: "",
   });
 
@@ -35,6 +39,8 @@ export default function SettingsPage() {
           whatsapp_phone: data.whatsapp_phone || "",
           google_maps_url: data.google_maps_url || "",
           google_review_url: data.google_review_url || "",
+          google_questions_url: data.google_questions_url || "",
+          inbox_mode: data.inbox_mode || "internal",
           profile_emoji: data.profile_emoji || "",
         });
       } catch (e) {}
@@ -244,6 +250,62 @@ export default function SettingsPage() {
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all"
                       />
                     </div>
+                  </div>
+                </section>
+
+                <hr className="border-slate-100" />
+
+                {/* Inbox Configuration Section */}
+                <section>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
+                      <Link2 className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-black text-slate-900 leading-tight">Canal de Mensajes (Inbox)</h2>
+                      <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Configura a dónde llegan los mensajes</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {[
+                        { id: "internal", label: "Interno (AtendIA)", desc: "Usa la bandeja de mensajes propia." },
+                        { id: "whatsapp", label: "WhatsApp", desc: "Redirige los mensajes a tu WhatsApp." },
+                        { id: "google", label: "Google Questions", desc: "Enlaza a las preguntas de Google Maps." },
+                      ].map((mode) => (
+                        <button
+                          key={mode.id}
+                          type="button"
+                          onClick={() => setForm({ ...form, inbox_mode: mode.id })}
+                          className={cn(
+                            "p-4 rounded-2xl border-2 text-left transition-all",
+                            form.inbox_mode === mode.id
+                              ? "border-blue-500 bg-blue-50/50 shadow-md"
+                              : "border-slate-100 bg-slate-50 hover:bg-white hover:border-slate-200"
+                          )}
+                        >
+                          <div className={cn("text-sm font-black mb-1", form.inbox_mode === mode.id ? "text-blue-600" : "text-slate-900")}>
+                            {mode.label}
+                          </div>
+                          <p className="text-[11px] font-medium text-slate-500 leading-tight">{mode.desc}</p>
+                        </button>
+                      ))}
+                    </div>
+
+                    {form.inbox_mode === "google" && (
+                      <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
+                        <label className="block text-sm font-bold text-slate-700">Enlace de Preguntas Google</label>
+                        <input
+                          type="url"
+                          value={form.google_questions_url || ""}
+                          onChange={(e) => setForm({ ...form, google_questions_url: e.target.value })}
+                          placeholder="https://www.google.com/maps/questions/..."
+                          required
+                          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
+                        />
+                      </div>
+                    )}
                   </div>
                 </section>
               </>

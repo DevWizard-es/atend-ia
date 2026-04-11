@@ -18,6 +18,7 @@ import {
   X,
   Pencil,
   Check,
+  ArrowUpRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -48,6 +49,9 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const [businessName, setBusinessName] = useState("Mi Negocio");
   const [profileEmoji, setProfileEmoji] = useState("");
   const [profileColor, setProfileColor] = useState("from-blue-500 to-indigo-600");
+  const [inboxMode, setInboxMode] = useState("internal");
+  const [whatsappPhone, setWhatsappPhone] = useState("");
+  const [googleQuestionsUrl, setGoogleQuestionsUrl] = useState("");
   const [editingProfile, setEditingProfile] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -58,6 +62,9 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         if (d.name) setBusinessName(d.name);
         if (d.profile_emoji !== undefined) setProfileEmoji(d.profile_emoji || "");
         if (d.profile_color) setProfileColor(d.profile_color);
+        if (d.inbox_mode) setInboxMode(d.inbox_mode);
+        if (d.whatsapp_phone) setWhatsappPhone(d.whatsapp_phone);
+        if (d.google_questions_url) setGoogleQuestionsUrl(d.google_questions_url);
       })
       .catch(() => {});
   }, []);
@@ -108,30 +115,43 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
 
       <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
-          const isActive =
-            pathname === item.href ||
-            (item.href === "/dashboard" && pathname === "/dashboard");
+          let href = item.href;
+          if (item.name === "Inbox") {
+            if (inboxMode === "whatsapp" && whatsappPhone) {
+              href = `https://wa.me/${whatsappPhone.replace(/\D/g, "")}`;
+            } else if (inboxMode === "google" && googleQuestionsUrl) {
+              href = googleQuestionsUrl;
+            }
+          }
+
+          const isActive = pathname === href || (href === "/dashboard" && pathname === "/dashboard");
+          const isExternal = href.startsWith("http");
+
           return (
             <Link
-              key={item.href}
-              href={item.href}
+              key={item.name}
+              href={href}
+              target={isExternal ? "_blank" : undefined}
               onClick={() => onClose?.()}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all group",
+                "flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all group",
                 isActive
                   ? "bg-blue-50 text-blue-600 shadow-sm border border-blue-100"
                   : "text-slate-500 hover:bg-slate-200/50 hover:text-slate-900"
               )}
             >
-              <item.icon
-                className={cn(
-                  "w-5 h-5",
-                  isActive
-                    ? "text-blue-600"
-                    : "text-slate-400 group-hover:text-slate-600"
-                )}
-              />
-              {item.name}
+              <div className="flex items-center gap-3">
+                <item.icon
+                  className={cn(
+                    "w-5 h-5",
+                    isActive
+                      ? "text-blue-600"
+                      : "text-slate-400 group-hover:text-slate-600"
+                  )}
+                />
+                {item.name}
+              </div>
+              {isExternal && <ArrowUpRight className="w-3.5 h-3.5 opacity-50" />}
             </Link>
           );
         })}

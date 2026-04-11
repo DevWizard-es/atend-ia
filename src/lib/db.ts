@@ -48,6 +48,8 @@ export async function getDb() {
       whatsapp_phone TEXT DEFAULT '',
       google_maps_url TEXT DEFAULT '',
       google_review_url TEXT DEFAULT '',
+      google_questions_url TEXT DEFAULT '',
+      inbox_mode TEXT DEFAULT 'internal',
       agent_tone TEXT DEFAULT 'Pro',
       agent_instructions TEXT DEFAULT '',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
