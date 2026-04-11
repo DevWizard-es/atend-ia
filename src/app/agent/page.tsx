@@ -32,6 +32,8 @@ export default function AgentPage() {
   const [instructions, setInstructions] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [mapsUrl, setMapsUrl] = useState("");
+  const [businessNameState, setBusinessNameState] = useState("");
+  const [businessSlug, setBusinessSlug] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
@@ -46,6 +48,8 @@ export default function AgentPage() {
           if (data.agent_instructions) setInstructions(data.agent_instructions);
           if (data.whatsapp_phone) setWhatsapp(data.whatsapp_phone);
           if (data.google_maps_url) setMapsUrl(data.google_maps_url);
+          if (data.name) setBusinessNameState(data.name);
+          if (data.slug) setBusinessSlug(data.slug);
         }
       } catch (e) {}
     }
@@ -83,7 +87,13 @@ export default function AgentPage() {
     try {
       const res = await fetch("/api/agent/chat", {
         method: "POST",
-        body: JSON.stringify({ message: input, tone })
+        body: JSON.stringify({ 
+          message: input, 
+          tone,
+          businessName: businessNameState,
+          businessSlug,
+        }),
+        headers: { "Content-Type": "application/json" },
       });
       const data = await res.json();
       setMessages(prev => [...prev, { role: 'bot', content: data.reply }]);
@@ -123,14 +133,25 @@ export default function AgentPage() {
         {/* Settings Column */}
         <div className="lg:col-span-5 space-y-6 overflow-y-auto pr-2 custom-scrollbar">
           
-          {/* Channels Configuration */}
+          {/* Channels + Business Info Configuration */}
           <section className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <LinkIcon className="w-5 h-5 text-indigo-600" />
-              <h3 className="font-black text-slate-800 tracking-tight">Canales Vinculados</h3>
+              <h3 className="font-black text-slate-800 tracking-tight">Datos del Negocio</h3>
             </div>
             
             <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Nombre del Negocio</label>
+                <input 
+                  type="text"
+                  placeholder="Ej: Cafetería El Sol"
+                  value={businessNameState}
+                  onChange={(e) => setBusinessNameState(e.target.value)}
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                />
+              </div>
+
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
                   <Phone className="w-3.5 h-3.5 text-emerald-500" /> WhatsApp Business
@@ -192,14 +213,15 @@ export default function AgentPage() {
           <section className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <Settings2 className="w-5 h-5 text-blue-600" />
-              <h3 className="font-black text-slate-800 tracking-tight">Instrucciones Base</h3>
+              <h3 className="font-black text-slate-800 tracking-tight">Instrucciones para el Asistente</h3>
             </div>
+            <p className="text-xs text-slate-400 font-medium -mt-2">El Asistente usará esta información para responder a tus clientes de forma precisa.</p>
             <textarea 
-              rows={6}
+              rows={7}
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
               className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 outline-none transition-all resize-none"
-              placeholder="Ej: 'Eres el asistente de Pizzería Roma...'"
+              placeholder={`Escribe aquí la información clave de tu negocio:\n\nHorario: Lunes a Viernes 9:00-22:00\nEspecialidad: Pizza artesana y pastas\nDirección: Calle Mayor 12, Madrid\nWiFi: SÍ (contraseña: cliente2024)\nApto para celíacos: SÍ\nMáximo de personas por reserva: 10`}
             />
           </section>
         </div>

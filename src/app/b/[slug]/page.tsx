@@ -312,6 +312,7 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
       {/* AI Chat Widget */}
       <AIChatWidget 
         businessName={business.name} 
+        businessSlug={business.slug}
         agentTone={business.agent_tone}
         isOpen={chatOpen}
         onOpenChange={setChatOpen}

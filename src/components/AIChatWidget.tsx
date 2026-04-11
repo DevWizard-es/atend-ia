@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 
 interface AIChatWidgetProps {
   businessName: string;
+  businessSlug?: string;
   agentTone?: string;
   /** Allow parent to control open state (e.g. from a CTA button) */
   isOpen?: boolean;
@@ -14,6 +15,7 @@ interface AIChatWidgetProps {
 
 export default function AIChatWidget({
   businessName,
+  businessSlug,
   agentTone = "Pro",
   isOpen: controlledIsOpen,
   onOpenChange,
@@ -52,7 +54,12 @@ export default function AIChatWidget({
       const res = await fetch("/api/agent/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input, tone: agentTone }),
+        body: JSON.stringify({ 
+          message: input, 
+          tone: agentTone,
+          businessName: businessName,
+          businessSlug: businessSlug,
+        }),
       });
       const data = await res.json();
       setMessages((prev) => [...prev, { role: "bot", content: data.reply }]);

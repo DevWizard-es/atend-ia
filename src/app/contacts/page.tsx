@@ -59,12 +59,31 @@ export default function ContactsPage() {
         </div>
       </header>
 
-      {/* Stats */}
+      {/* Stats — derived from real data */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { label: "Total Contactos", value: "1,280", icon: Users, color: "text-blue-600", bg: "bg-blue-50", change: "+12 esta semana" },
-          { label: "Leads Activos", value: "384", icon: TrendingUp, color: "text-emerald-600", bg: "bg-emerald-50", change: "+8 nuevos hoy" },
-          { label: "Tasa de Conversión", value: "18.4%", icon: UserCheck, color: "text-purple-600", bg: "bg-purple-50", change: "+2.1% este mes" },
+          { 
+            label: "Total Contactos", 
+            value: loading ? "..." : contacts.length.toLocaleString("es-ES"), 
+            icon: Users, color: "text-blue-600", bg: "bg-blue-50", 
+            change: contacts.length > 0 ? `${contacts.length} en tu base de datos` : "Aún sin contactos" 
+          },
+          { 
+            label: "Leads Activos", 
+            value: loading ? "..." : contacts.length.toLocaleString("es-ES"), 
+            icon: TrendingUp, color: "text-emerald-600", bg: "bg-emerald-50", 
+            change: contacts.length > 0 ? "Captados desde el Biolink" : "Comparte tu Biolink para captar leads" 
+          },
+          { 
+            label: "Nuevos este mes", 
+            value: loading ? "..." : contacts.filter((c: any) => {
+              const d = new Date(c.last_interaction || c.created_at || Date.now());
+              const now = new Date();
+              return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            }).length.toLocaleString("es-ES"), 
+            icon: UserCheck, color: "text-purple-600", bg: "bg-purple-50", 
+            change: "Interacciones recientes" 
+          },
         ].map((stat, i) => (
           <div key={i} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-5">
             <div className={cn("p-4 rounded-2xl", stat.bg, stat.color)}>
@@ -73,7 +92,7 @@ export default function ContactsPage() {
             <div>
               <div className="text-3xl font-black text-slate-900 tracking-tight">{stat.value}</div>
               <div className="text-sm font-bold text-slate-500">{stat.label}</div>
-              <div className="text-xs text-emerald-600 font-bold mt-0.5">{stat.change}</div>
+              <div className="text-xs text-slate-400 font-medium mt-0.5">{stat.change}</div>
             </div>
           </div>
         ))}
