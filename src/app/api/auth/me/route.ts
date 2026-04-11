@@ -10,6 +10,10 @@ export async function GET() {
   
   try {
     const db = await getDb();
+    // Safe migration
+    try { await db.exec(`ALTER TABLE users ADD COLUMN email_verified INTEGER DEFAULT 0`); } catch (_) {}
+    
+    const user = await db.get("SELECT email_verified FROM users WHERE id = ?", [session.userId]);
     const org = await db.get(
       "SELECT name, slug, profile_emoji, profile_color FROM organizations WHERE id = ?",
       [session.orgId]
@@ -17,13 +21,14 @@ export async function GET() {
     return NextResponse.json({
       authenticated: true,
       email: session.email,
+      emailVerified: user?.email_verified === 1,
       businessName: org?.name || "",
       slug: org?.slug || "",
       profileEmoji: org?.profile_emoji || "",
       profileColor: org?.profile_color || "from-blue-500 to-indigo-600",
     });
   } catch {
-    return NextResponse.json({ authenticated: true, email: session.email });
+    return NextResponse.json({ authenticated: true, email: session.email, emailVerified: false });
   }
 }
 
