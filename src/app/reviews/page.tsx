@@ -14,13 +14,21 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const reviews = [
-  { id: 1, author: "Maria L.", rating: 5, comment: "El servicio fue excelente y la comida deliciosa. Muy recomendado.", time: "Hace 2 horas", status: "pending", source: "Google Maps" },
-  { id: 2, author: "Pedro S.", rating: 4, comment: "Buen ambiente, aunque tardaron un poco en traer la cuenta.", time: "Hace 1 día", status: "replied", source: "Google Maps" },
-  { id: 3, author: "Ana R.", rating: 5, comment: "Increíble experiencia, volveremos seguro.", time: "Hace 2 días", status: "replied", source: "Web Widget" },
-];
+import { useState, useEffect } from "react";
 
 export default function ReviewsPage() {
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/reviews")
+      .then((r) => r.json())
+      .then((d) => {
+        if (Array.isArray(d)) setReviews(d);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       {/* Header */}
@@ -97,15 +105,17 @@ export default function ReviewsPage() {
           {reviews.map((review) => (
             <div key={review.id} className="p-6 hover:bg-slate-50/50 transition-all flex gap-6">
               <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 flex-shrink-0">
-                {review.author.charAt(0)}
+                {(review.author_name || "U").charAt(0)}
               </div>
               <div className="flex-1 space-y-3 min-w-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="font-bold text-slate-900">{review.author}</span>
-                    <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full">{review.source}</span>
+                    <span className="font-bold text-slate-900">{review.author_name || "Cliente Anónimo"}</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 bg-slate-100 text-slate-500 rounded-full">{review.source || "Google Maps"}</span>
                   </div>
-                  <span className="text-[11px] font-bold text-slate-400 uppercase">{review.time}</span>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase">
+                    {review.created_at ? new Date(review.created_at).toLocaleDateString() : "Reciente"}
+                  </span>
                 </div>
                 
                 <div className="flex gap-1">

@@ -1,10 +1,15 @@
 import { getDb } from "@/lib/db";
 import { NextResponse } from "next/server";
-
-const ORG_ID = "pizzeria-id-demo";
+import { getSession } from "@/lib/auth";
 
 export async function GET() {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
   const db = await getDb();
+  const ORG_ID = session.orgId;
   
   // Safe migration for columns (if not exist)
   try { await db.exec(`ALTER TABLE organizations ADD COLUMN whatsapp_phone TEXT DEFAULT ''`); } catch (_) {}
@@ -24,7 +29,13 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
   const db = await getDb();
+  const ORG_ID = session.orgId;
   const body = await request.json();
   
   const { name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions } = body;

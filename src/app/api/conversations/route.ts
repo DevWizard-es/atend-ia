@@ -1,13 +1,14 @@
 import { getDb } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const orgId = searchParams.get("orgId");
-
-  if (!orgId) {
-    return NextResponse.json({ error: "orgId requerido" }, { status: 400 });
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
+
+  const orgId = session.orgId;
 
   const db = await getDb();
   

@@ -1,11 +1,17 @@
 import { getDb } from "@/lib/db";
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 
 // GET — Load catalog products
 export async function GET() {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
   const db = await getDb();
-  const ORG_ID = "pizzeria-id-demo";
+  const ORG_ID = session.orgId;
 
   try {
     const products = await db.all(
@@ -20,8 +26,13 @@ export async function GET() {
 
 // POST — Create new product
 export async function POST(request: Request) {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
   const db = await getDb();
-  const ORG_ID = "pizzeria-id-demo";
+  const ORG_ID = session.orgId;
   
   try {
     const body = await request.json();

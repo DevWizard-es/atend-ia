@@ -14,6 +14,7 @@ import {
   Home,
   Package,
   Settings,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -28,16 +29,34 @@ const navItems = [
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
+  const [businessName, setBusinessName] = useState("Mi Negocio");
+
+  useEffect(() => {
+    fetch("/api/agent/settings")
+      .then((r) => r.json())
+      .then((d) => d.name && setBusinessName(d.name))
+      .catch(() => {});
+  }, []);
 
   return (
     <aside className="w-64 bg-slate-50 border-r border-slate-200 h-screen flex flex-col sticky top-0">
       {/* Logo + Back to Landing */}
       <div className="p-6 border-b border-slate-100">
-        <Link href="/" className="text-2xl font-black tracking-tight text-slate-900 block mb-4">
-          Atend<span className="text-blue-600">IA</span>
-        </Link>
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <Link href="/" className="text-2xl font-black tracking-tight text-slate-900">
+            Atend<span className="text-blue-600">IA</span>
+          </Link>
+          {onClose && (
+            <button 
+              onClick={onClose}
+              className="lg:hidden p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-all"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
+        </div>
         <Link
           href="/"
           className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors group"
@@ -56,6 +75,7 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => onClose?.()}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all group",
                 isActive
@@ -82,10 +102,10 @@ export default function Sidebar() {
         <div className="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold shadow-sm">
-              PR
+              {businessName.substring(0, 2).toUpperCase()}
             </div>
-            <div>
-              <div className="text-xs font-bold text-slate-900">Pizzería Roma</div>
+            <div className="min-w-0">
+              <div className="text-xs font-bold text-slate-900 truncate">{businessName}</div>
               <div className="text-[10px] text-blue-600 uppercase tracking-wider font-black">Plan Premium</div>
             </div>
           </div>

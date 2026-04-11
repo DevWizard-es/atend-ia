@@ -17,11 +17,19 @@ import QRCode from "react-qr-code";
 
 export default function Dashboard() {
   const [showQR, setShowQR] = useState(false);
-  const [slug, setSlug] = useState("pizzeria-roma");
-  const bioLinkUrl = `http://localhost:3000/b/${slug}`;
+  const [slug, setSlug] = useState("");
+  const [origin, setOrigin] = useState("");
+
+  const bioLinkUrl = origin ? `${origin}/b/${slug}` : "";
 
   useEffect(() => {
-    fetch("/api/agent/settings").then(r => r.json()).then(d => d.slug && setSlug(d.slug)).catch(() => {});
+    setOrigin(window.location.origin);
+    fetch("/api/agent/settings")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.slug) setSlug(d.slug);
+      })
+      .catch(() => {});
   }, []);
 
   const handleDownloadQR = () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Search,
   Filter,
@@ -15,15 +15,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const contacts = [
-  { id: 1, name: "María García", phone: "+34 612 345 678", source: "WhatsApp", rating: 5, visits: 4, lastInteraction: "Hace 5 min", status: "hot", tag: "VIP" },
-  { id: 2, name: "Juan Pérez", phone: "+34 623 456 789", source: "Google QR", rating: 4, visits: 2, lastInteraction: "Hace 1 hora", status: "warm", tag: "Lead" },
-  { id: 3, name: "Elena Rodríguez", phone: "+34 634 567 890", source: "Web Widget", rating: 5, visits: 7, lastInteraction: "Hace 2 días", status: "hot", tag: "VIP" },
-  { id: 4, name: "Carlos López", phone: "+34 645 678 901", source: "WhatsApp", rating: 3, visits: 1, lastInteraction: "Hace 3 días", status: "cold", tag: "Lead" },
-  { id: 5, name: "Ana Martínez", phone: "+34 656 789 012", source: "Instagram", rating: 5, visits: 5, lastInteraction: "Ayer", status: "warm", tag: "Frecuente" },
-  { id: 6, name: "Pedro Sánchez", phone: "+34 667 890 123", source: "Google QR", rating: 4, visits: 3, lastInteraction: "Hace 4 días", status: "warm", tag: "Lead" },
-];
-
 const statusConfig = {
   hot: { label: "Caliente", color: "text-rose-600 bg-rose-50 border-rose-100" },
   warm: { label: "Tibio", color: "text-amber-600 bg-amber-50 border-amber-100" },
@@ -32,9 +23,22 @@ const statusConfig = {
 
 export default function ContactsPage() {
   const [search, setSearch] = useState("");
+  const [contacts, setContacts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/contacts")
+      .then((r) => r.json())
+      .then((d) => {
+        if (Array.isArray(d)) setContacts(d);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
   const filtered = contacts.filter(c =>
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.phone.includes(search)
+    (c.name || "").toLowerCase().includes(search.toLowerCase()) ||
+    (c.phone || "").includes(search)
   );
 
   return (

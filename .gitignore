@@ -8,3 +8,6 @@ atendia_v2.sqlite
 dist
 build
 .vercel
+atendia_v2_local_turso.db
+seed-production.js
+seed_remote.js

@@ -95,7 +95,7 @@ export default function LandingPage() {
             <Link href="/signup" className="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-lg hover:bg-blue-700 transition-all shadow-2xl shadow-blue-500/30 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98]">
               Crear mi cuenta gratis <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link href="/b/pizzeria-roma" target="_blank" className="flex items-center gap-2 px-8 py-4 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold text-lg hover:border-blue-300 hover:bg-blue-50/30 transition-all">
+            <Link href="/b/atendia-demo" target="_blank" className="flex items-center gap-2 px-8 py-4 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold text-lg hover:border-blue-300 hover:bg-blue-50/30 transition-all">
               Ver demo en vivo <ChevronRight className="w-5 h-5 text-slate-400" />
             </Link>
           </div>

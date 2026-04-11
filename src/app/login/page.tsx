@@ -11,11 +11,32 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
 
+  const [error, setError] = useState("");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(r => setTimeout(r, 600)); // make it faster too
-    router.push("/dashboard");
+    setError("");
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error || "Error al iniciar sesión");
+        setLoading(false);
+        return;
+      }
+
+      router.push("/dashboard");
+    } catch {
+      setError("Error de conexión");
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,6 +85,11 @@ export default function LoginPage() {
                 </button>
               </div>
             </div>
+            {error && (
+              <div className="px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm font-medium text-red-700 animate-in fade-in slide-in-from-top-1">
+                {error}
+              </div>
+            )}
 
             <button
               type="submit"
@@ -81,11 +107,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Demo access */}
-          <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-            <p className="text-xs font-bold text-amber-700 mb-1">🎯 Acceso demo</p>
-            <p className="text-xs text-amber-600 font-medium">Usa cualquier email y contraseña para entrar al panel de demostración.</p>
-          </div>
         </div>
 
         <p className="text-center text-sm font-medium text-slate-500 mt-6">
