@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { sendVerificationEmail } from "@/lib/email";
 
-// TEMPORARY DEBUG ENDPOINT — only use in development/testing
-// Access: GET /api/debug/test-email?to=youremail@example.com
+// DEBUG — GET /api/debug/test-email?to=email@example.com
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const to = searchParams.get("to");
@@ -11,7 +10,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "?to=email is required" }, { status: 400 });
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_APP_PASSWORD;
 
   try {
     const result = await sendVerificationEmail({
@@ -23,17 +23,18 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       success: true,
-      apiKeyPresent: !!apiKey,
-      apiKeyPrefix: apiKey ? apiKey.substring(0, 8) + "..." : null,
-      result,
+      gmailUserPresent: !!gmailUser,
+      gmailPassPresent: !!gmailPass,
+      gmailUser: gmailUser ? gmailUser.substring(0, 5) + "***" : null,
+      messageId: (result as any)?.messageId,
     });
   } catch (err: any) {
     return NextResponse.json({
       success: false,
-      apiKeyPresent: !!apiKey,
-      apiKeyPrefix: apiKey ? apiKey.substring(0, 8) + "..." : null,
+      gmailUserPresent: !!gmailUser,
+      gmailPassPresent: !!gmailPass,
+      gmailUser: gmailUser ? gmailUser.substring(0, 5) + "***" : null,
       error: err?.message || String(err),
-      details: err,
     });
   }
 }

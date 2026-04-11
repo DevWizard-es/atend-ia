@@ -1,4 +1,18 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
+
+function getTransporter() {
+  const user = process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_APP_PASSWORD;
+
+  if (!user || !pass) {
+    throw new Error(`Gmail SMTP not configured. GMAIL_USER=${user ? "set" : "missing"}, GMAIL_APP_PASSWORD=${pass ? "set" : "missing"}`);
+  }
+
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: { user, pass },
+  });
+}
 
 export async function sendVerificationEmail({
   to,
@@ -11,14 +25,14 @@ export async function sendVerificationEmail({
   token: string;
   baseUrl: string;
 }) {
-  const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
-  // URL debe apuntar al endpoint de la API que procesa la verificación
   const verifyUrl = `${baseUrl}/api/auth/verify?token=${token}`;
+  const transporter = getTransporter();
+  const fromEmail = process.env.GMAIL_USER;
 
-  const result = await resend.emails.send({
-    from: "AtendIA <onboarding@resend.dev>",
+  const result = await transporter.sendMail({
+    from: `"AtendIA" <${fromEmail}>`,
     to,
-    subject: `✅ Verifica tu cuenta en AtendIA`,
+    subject: "✅ Verifica tu cuenta en AtendIA",
     html: `
 <!DOCTYPE html>
 <html lang="es">
@@ -50,13 +64,13 @@ export async function sendVerificationEmail({
       <!-- Security note -->
       <div style="background:#f1f5f9;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
         <p style="margin:0;font-size:12px;color:#64748b;line-height:1.6;">
-          <strong>🔒 Seguridad:</strong> Este enlace caduca en <strong>24 horas</strong>. Si no creaste esta cuenta, puedes ignorar este email con total tranquilidad.
+          <strong>🔒 Seguridad:</strong> Este enlace caduca en <strong>24 horas</strong>. Si no creaste esta cuenta, puedes ignorar este email.
         </p>
       </div>
 
       <!-- Manual link -->
       <p style="color:#94a3b8;font-size:12px;text-align:center;margin:0;">
-        Si el botón no funciona, copia este enlace en tu navegador:<br/>
+        Si el botón no funciona, copia este enlace:<br/>
         <span style="color:#2563eb;word-break:break-all;">${verifyUrl}</span>
       </p>
     </div>
@@ -70,11 +84,9 @@ export async function sendVerificationEmail({
     </div>
   </div>
 </body>
-</html>
-    `.trim(),
+</html>`.trim(),
   });
 
-  // Log result for debugging
-  console.log("[email] Resend result:", JSON.stringify(result));
+  console.log("[email] Gmail SMTP result:", result.messageId, result.response);
   return result;
 }
