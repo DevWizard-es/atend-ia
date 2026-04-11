@@ -1,18 +1,26 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Settings, Save, Link2, MapPin, Phone, Building2 } from "lucide-react";
+import { Settings, Save, Link2, MapPin, Phone, Building2, Smile } from "lucide-react";
+
+const BUSINESS_EMOJIS = [
+  "", "🏪", "🍕", "☕", "🍔", "🥗", "🍰", "🍣", "🌮", "🍜",
+  "💈", "🏋️", "🌿", "🐾", "🔧", "🎨", "📚", "🏥", "💊", "🎵",
+  "✂️", "🧴", "👗", "👟", "💻", "🚗", "🏠", "🎯", "🔑", "🌟",
+];
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   
   const [form, setForm] = useState({
     name: "",
     slug: "",
     whatsapp_phone: "",
-    google_maps_url: ""
+    google_maps_url: "",
+    profile_emoji: "",
   });
 
   useEffect(() => {
@@ -24,7 +32,8 @@ export default function SettingsPage() {
           name: data.name || "",
           slug: data.slug || "",
           whatsapp_phone: data.whatsapp_phone || "",
-          google_maps_url: data.google_maps_url || ""
+          google_maps_url: data.google_maps_url || "",
+          profile_emoji: data.profile_emoji || "",
         });
       } catch (e) {}
       setLoading(false);
@@ -43,7 +52,7 @@ export default function SettingsPage() {
         body: JSON.stringify(form)
       });
       if (res.ok) {
-        setMessage({ text: "Ajustes del perfil actualizados correctamente.", type: "success" });
+        setMessage({ text: "Perfil actualizado correctamente.", type: "success" });
       } else {
         setMessage({ text: "Hubo un error al actualizar.", type: "error" });
       }
@@ -54,6 +63,8 @@ export default function SettingsPage() {
     setTimeout(() => setMessage(null), 5000);
   };
 
+  const initials = form.name?.substring(0, 2)?.toUpperCase() || "MI";
+
   return (
     <div className="p-8 max-w-4xl mx-auto space-y-8">
       {/* Header */}
@@ -62,7 +73,9 @@ export default function SettingsPage() {
           <h1 className="text-3xl font-black tracking-tight text-slate-900 flex items-center gap-3">
             <Settings className="w-8 h-8 text-blue-600" /> Perfil Comercial
           </h1>
-          <p className="text-slate-500 font-medium leading-relaxed mt-1">Configura el nombre, el Bio-link y los canales de contacto de tu negocio que tus clientes verán públicamente.</p>
+          <p className="text-slate-500 font-medium leading-relaxed mt-1">
+            Configura el nombre, icono, Bio-link y canales de contacto.
+          </p>
         </div>
       </header>
 
@@ -76,6 +89,61 @@ export default function SettingsPage() {
               </div>
             ) : (
               <>
+                {/* Profile Icon Section */}
+                <section>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2.5 bg-purple-50 text-purple-600 rounded-xl">
+                      <Smile className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-black text-slate-900 leading-tight">Icono del Negocio</h2>
+                      <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Aparece en tu BioLink público</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-6">
+                    {/* Preview */}
+                    <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg shadow-blue-500/20 flex items-center justify-center text-3xl border-4 border-slate-50 shrink-0">
+                      {form.profile_emoji || initials}
+                    </div>
+
+                    <div className="flex-1">
+                      <button
+                        type="button"
+                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                        className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-sm transition-all border border-slate-200"
+                      >
+                        {showEmojiPicker ? "Cerrar selector" : "Cambiar icono"} ✏️
+                      </button>
+                      <p className="text-xs text-slate-400 font-medium mt-2">
+                        {form.profile_emoji ? `Icono actual: ${form.profile_emoji}` : "Usando las iniciales del negocio"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Emoji Grid */}
+                  {showEmojiPicker && (
+                    <div className="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                      <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Elige un icono:</p>
+                      <div className="grid grid-cols-10 gap-2">
+                        {BUSINESS_EMOJIS.map((emoji, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => { setForm({ ...form, profile_emoji: emoji }); setShowEmojiPicker(false); }}
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl hover:bg-white transition-all hover:scale-110 hover:shadow-md ${form.profile_emoji === emoji ? "bg-blue-100 border-2 border-blue-500" : "border-2 border-transparent"}`}
+                            title={emoji || "Usar iniciales"}
+                          >
+                            {emoji || <span className="text-[9px] font-black text-slate-400">AB</span>}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </section>
+
+                <hr className="border-slate-100" />
+
                 {/* Branding Section */}
                 <section>
                   <div className="flex items-center gap-3 mb-6">
@@ -116,7 +184,7 @@ export default function SettingsPage() {
                           className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
                         />
                       </div>
-                      <p className="text-xs text-slate-400 font-medium">Este será tu enlace público. Solo se permiten letras, números y guiones.</p>
+                      <p className="text-xs text-slate-400 font-medium">Solo letras minúsculas, números y guiones.</p>
                     </div>
                   </div>
                 </section>

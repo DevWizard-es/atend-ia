@@ -29,6 +29,7 @@ export async function GET(
     whatsapp_phone: business.whatsapp_phone,
     google_maps_url: business.google_maps_url,
     agent_tone: business.agent_tone || "Pro",
+    profile_emoji: business.profile_emoji || "",
     promo_emoji: business.promo_emoji || "🎁",
     promo_title: business.promo_title || "¡10% de descuento en tu próxima visita!",
     promo_description: business.promo_description || "Déjanos tu WhatsApp y te enviamos el cupón al instante.",

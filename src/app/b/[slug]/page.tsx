@@ -83,17 +83,10 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      {/* Hero gradient */}
-      <div className="h-48 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10" />
-        <div className="absolute -bottom-px left-0 right-0 h-16 bg-gradient-to-b from-transparent to-slate-50" />
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-2xl -ml-10" />
-      </div>
+    <div className="min-h-screen bg-white">
 
       {/* ── SLOT 1: Banner superior (alta visibilidad) ── */}
-      <div className="max-w-md mx-auto px-5 pt-3">
+      <div className="max-w-md mx-auto px-5 pt-6">
         <AdSlot
           adSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_BANNER || "0000000001"}
           format="banner"
@@ -101,26 +94,17 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
         />
       </div>
 
-      <div className="max-w-md mx-auto px-5 -mt-20 pb-16 space-y-6 relative z-10">
+      <div className="max-w-md mx-auto px-5 pt-4 pb-16 space-y-6 relative z-10">
         
         {/* Profile Card */}
-        <div className="bg-white rounded-3xl shadow-2xl shadow-blue-500/10 border border-slate-100 p-6 text-center">
-          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg shadow-blue-500/30 mx-auto flex items-center justify-center text-3xl mb-4 -mt-14 border-4 border-white">
-            🍕
+        <div className="bg-white rounded-3xl shadow-lg shadow-slate-200/60 border border-slate-100 p-6 text-center">
+          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg shadow-blue-500/20 mx-auto flex items-center justify-center text-3xl mb-4 border-4 border-slate-50">
+            {business.profile_emoji || business.name?.charAt(0)?.toUpperCase() || "🏪"}
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">{business.name}</h1>
-          <p className="text-slate-500 text-sm font-medium mt-1">Restaurante · Madrid, España</p>
-          <div className="flex items-center justify-center gap-1 mt-2">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-            ))}
-            <span className="text-sm font-bold text-slate-600 ml-1">4.9</span>
-            <span className="text-sm text-slate-400">(128 reseñas)</span>
-          </div>
-          <div className="inline-flex items-center gap-1.5 mt-3 px-3 py-1 bg-emerald-50 border border-emerald-100 rounded-full">
-            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="text-xs font-bold text-emerald-600">Abierto ahora · Hasta las 23:30</span>
-          </div>
+          {business.google_maps_url && (
+            <p className="text-slate-500 text-sm font-medium mt-1">📍 {business.name}</p>
+          )}
         </div>
 
         {/* CTA Buttons */}
