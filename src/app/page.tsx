@@ -6,6 +6,7 @@ import {
   MessageCircle, Star, BarChart3, Users, Shield, Zap, Check,
   ArrowRight, ChevronRight, Menu, X, Globe, QrCode, Inbox, TrendingUp
 } from "lucide-react";
+import AdBanner from "@/components/AdBanner";
 
 const features = [
   { icon: Globe, title: "Bio-Link Profesional", desc: "Una página pública con QR para que tus clientes te contacten, te dejen reseñas o vean tu menú. Todo desde un solo link.", color: "bg-blue-50 text-blue-600" },
@@ -184,6 +185,11 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Banner Ad Sense */}
+      <div className="max-w-5xl mx-auto px-6">
+        <AdBanner slot="0000000003" />
+      </div>
+
       {/* How it works */}
       <section id="how-it-works" className="py-24 px-6 bg-slate-50/70">
         <div className="max-w-5xl mx-auto">
@@ -253,6 +259,11 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Banner Ad Sense */}
+      <div className="max-w-5xl mx-auto px-6">
+        <AdBanner slot="0000000004" />
+      </div>
+
       {/* Final CTA */}
       <section className="py-20 px-6">
         <div className="max-w-3xl mx-auto">
@@ -279,9 +290,9 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-2xl font-black">Atend<span className="text-blue-600">IA</span></div>
           <div className="flex gap-6 text-sm font-semibold text-slate-500">
-            <a href="#" className="hover:text-slate-900 transition-colors">Privacidad</a>
-            <a href="#" className="hover:text-slate-900 transition-colors">Términos</a>
-            <a href="#" className="hover:text-slate-900 transition-colors">Contacto</a>
+            <Link href="/privacy" className="hover:text-slate-900 transition-colors">Privacidad</Link>
+            <Link href="/terms" className="hover:text-slate-900 transition-colors">Términos</Link>
+            <a href="mailto:hola@atendia.app" className="hover:text-slate-900 transition-colors">Contacto</a>
           </div>
           <p className="text-sm text-slate-400 font-medium">© 2026 AtendIA. Todos los derechos reservados.</p>
         </div>

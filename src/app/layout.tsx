@@ -12,6 +12,9 @@ const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-5634358
 export const metadata: Metadata = {
   title: "AtendIA - Plataforma Gratuita para Negocios Locales",
   description: "Captación, Mensajería y Reputación para Negocios Locales. 100% gratis. Sin tarjeta de crédito.",
+  other: {
+    "google-adsense-account": "ca-pub-5634358982750683",
+  },
 };
 
 export default function RootLayout({
