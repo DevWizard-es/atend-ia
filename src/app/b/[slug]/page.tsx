@@ -11,6 +11,7 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
   const [leadSent, setLeadSent] = useState(false);
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
+  const [chatOpen, setChatOpen] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -141,6 +142,23 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
             </div>
             <ChevronRight className="w-5 h-5 opacity-50 relative z-10 group-hover:translate-x-1 transition-transform" />
             <div className="absolute right-0 top-0 w-40 h-40 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-700" />
+          </button>
+
+          {/* AI Chat CTA */}
+          <button
+            onClick={() => setChatOpen(true)}
+            className="w-full group flex items-center justify-between p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-blue-300 hover:bg-blue-50/30 transition-all duration-200"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl group-hover:scale-110 transition-transform">
+                <span className="text-xl">🤖</span>
+              </div>
+              <div className="text-left">
+                <div className="text-xs font-black uppercase tracking-widest text-slate-400">Respuesta inmediata</div>
+                <div className="text-base font-bold text-slate-800">Habla con nuestro Asistente IA</div>
+              </div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
           </button>
 
           {/* Review */}
@@ -294,7 +312,9 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
       {/* AI Chat Widget */}
       <AIChatWidget 
         businessName={business.name} 
-        agentTone={business.agent_tone} 
+        agentTone={business.agent_tone}
+        isOpen={chatOpen}
+        onOpenChange={setChatOpen}
       />
     </div>
   );

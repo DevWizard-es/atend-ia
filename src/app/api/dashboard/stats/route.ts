@@ -29,21 +29,27 @@ export async function GET() {
       [session.orgId]
     );
 
-    // 4. Mensajes Recientes (Últimos 3)
+    // 4. Mensajes Recientes — via conversation to filter by org_id
     const recentMessages = await db.all(
-      `SELECT m.*, c.name as contactName 
-       FROM messages m 
-       JOIN contacts c ON m.contact_id = c.id 
-       WHERE m.org_id = ? 
-       ORDER BY m.created_at DESC 
-       LIMIT 3`,
+      `SELECT m.content, m.created_at, c.name as contactName
+       FROM messages m
+       JOIN conversations conv ON m.conv_id = conv.id
+       JOIN contacts c ON conv.contact_id = c.id
+       WHERE conv.org_id = ?
+       ORDER BY m.created_at DESC
+       LIMIT 5`,
       [session.orgId]
     );
+
+    const avgRaw = ratingStats?.average;
+    const rating = avgRaw != null
+      ? parseFloat(String(avgRaw)).toFixed(1)
+      : "0.0";
 
     return NextResponse.json({
       leads: contactsCount?.count || 0,
       conversations: conversationsCount?.count || 0,
-      rating: ratingStats?.average ? parseFloat(ratingStats.average).toFixed(1) : "0.0",
+      rating,
       recentMessages: recentMessages || []
     });
 
