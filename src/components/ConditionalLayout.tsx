@@ -8,6 +8,7 @@ const PUBLIC_ROUTES = ["/", "/login", "/signup"];
 
 function isPublicRoute(pathname: string) {
   if (PUBLIC_ROUTES.includes(pathname)) return true;
+  
   if (pathname.startsWith("/b/")) return true;
   return false;
 }
