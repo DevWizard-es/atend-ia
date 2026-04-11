@@ -6,8 +6,8 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// Publisher ID de AdSense — configura NEXT_PUBLIC_ADSENSE_CLIENT en tus variables de entorno
-const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "";
+// Publisher ID de AdSense
+const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-5634358982750683";
 
 export const metadata: Metadata = {
   title: "AtendIA - Plataforma Gratuita para Negocios Locales",

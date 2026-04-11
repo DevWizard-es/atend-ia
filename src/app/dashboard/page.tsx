@@ -12,27 +12,49 @@ import {
   ExternalLink,
   QrCode,
   X,
-  ChevronRight
+  ChevronRight,
+  Inbox
 } from "lucide-react";
 
 import QRCode from "react-qr-code";
+import { formatDistanceToNow } from "date-fns";
+import { es } from "date-fns/locale";
 
 export default function Dashboard() {
   const [showQR, setShowQR] = useState(false);
   const [slug, setSlug] = useState("");
   const [origin, setOrigin] = useState("");
+  const [stats, setStats] = useState({
+    leads: 0,
+    conversations: 0,
+    rating: "0.0",
+    recentMessages: []
+  });
+  const [loading, setLoading] = useState(true);
 
   const bioLinkUrl = origin ? `${origin}/b/${slug}` : "";
 
   useEffect(() => {
     setOrigin(window.location.origin);
+    
+    // Cargar slug para QR y links
     fetch("/api/agent/settings")
       .then((r) => r.json())
       .then((d) => {
         if (d.slug) setSlug(d.slug);
-        else setSlug("atendia-demo"); // Fallback para la demo
       })
-      .catch(() => setSlug("atendia-demo"));
+      .catch(() => {});
+
+    // Cargar estadísticas reales
+    fetch("/api/dashboard/stats")
+      .then((r) => r.json())
+      .then((d) => {
+        if (!d.error) {
+          setStats(d);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   const handleDownloadQR = () => {
@@ -46,13 +68,13 @@ export default function Dashboard() {
       canvas.width = img.width;
       canvas.height = img.height;
       if (ctx) {
-        ctx.fillStyle = "white"; // Add white background
+        ctx.fillStyle = "white"; 
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0);
       }
       const pngFile = canvas.toDataURL("image/png");
       const downloadLink = document.createElement("a");
-      downloadLink.download = "Pizzeria-Roma-QR.png";
+      downloadLink.download = `${slug || 'negocio'}-QR.png`;
       downloadLink.href = `${pngFile}`;
       downloadLink.click();
     };
@@ -68,16 +90,8 @@ export default function Dashboard() {
           <p className="text-slate-500 font-medium">Gestiona tu negocio como un pro el día de hoy.</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="relative group">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
-            <input
-              type="text"
-              placeholder="Buscar contactos o reseñas..."
-              className="pl-10 pr-4 py-2 bg-slate-100/50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all w-64"
-            />
-          </div>
-          <Link href="/b/atendia-demo" target="_blank" className="flex items-center gap-2 px-8 py-4 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold text-lg hover:border-blue-300 hover:bg-blue-50/30 transition-all">
-            Ver demo en vivo <ChevronRight className="w-5 h-5 text-slate-400" />
+          <Link href={bioLinkUrl} target="_blank" className="flex items-center gap-2 px-8 py-4 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold text-lg hover:border-blue-300 hover:bg-blue-50/30 transition-all">
+            Ver mi BioLink <ExternalLink className="w-5 h-5 text-slate-400" />
           </Link>
           <button className="p-2.5 bg-white border border-slate-200 rounded-xl text-slate-500 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50/50 transition-all shadow-sm">
             <Bell className="w-5 h-5" />
@@ -88,21 +102,23 @@ export default function Dashboard() {
       {/* KPI Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Leads Totales", value: "1,280", trend: "+12.5%", icon: Users, color: "text-blue-600", bg: "bg-blue-50" },
-          { label: "Conversaciones", value: "482", trend: "+8.2%", icon: MessageCircle, color: "text-indigo-600", bg: "bg-indigo-50" },
-          { label: "Google Rating", value: "4.9", trend: "+0.1", icon: Star, color: "text-amber-500", bg: "bg-amber-50" },
-          { label: "Conversion Rate", value: "18.4%", trend: "+2.3%", icon: ArrowUpRight, color: "text-emerald-600", bg: "bg-emerald-50" },
+          { label: "Leads Totales", value: stats.leads, trend: "+0%", icon: Users, color: "text-blue-600", bg: "bg-blue-50" },
+          { label: "Conversaciones", value: stats.conversations, trend: "+0%", icon: MessageCircle, color: "text-indigo-600", bg: "bg-indigo-50" },
+          { label: "Calificación IA", value: stats.rating, trend: "NUEVO", icon: Star, color: "text-amber-500", bg: "bg-amber-50" },
+          { label: "Conversion Rate", value: "0%", trend: "+0%", icon: ArrowUpRight, color: "text-emerald-600", bg: "bg-emerald-50" },
         ].map((kpi, i) => (
           <div key={i} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all group">
             <div className="flex items-center justify-between mb-4">
               <div className={`p-3 rounded-2xl ${kpi.bg} ${kpi.color} group-hover:scale-110 transition-transform`}>
                 <kpi.icon className="w-6 h-6" />
               </div>
-              <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${kpi.trend.startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
+              <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-50 text-slate-400">
                 {kpi.trend}
               </span>
             </div>
-            <div className="text-3xl font-black text-slate-900 mb-1 tracking-tight">{kpi.value}</div>
+            <div className="text-3xl font-black text-slate-900 mb-1 tracking-tight">
+              {loading ? "..." : kpi.value}
+            </div>
             <div className="text-sm font-semibold text-slate-500 tracking-wide">{kpi.label}</div>
           </div>
         ))}
@@ -113,31 +129,43 @@ export default function Dashboard() {
         {/* Inbox Preview */}
         <div className="lg:col-span-2 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-            <h3 className="text-lg font-black text-slate-900 tracking-tight">Recientes</h3>
-            <a href="/inbox" className="text-sm font-bold text-blue-600 hover:underline flex items-center gap-1">
+            <h3 className="text-lg font-black text-slate-900 tracking-tight">Actividad Reciente</h3>
+            <Link href="/inbox" className="text-sm font-bold text-blue-600 hover:underline flex items-center gap-1">
               Ver todo el Inbox <ArrowUpRight className="w-4 h-4" />
-            </a>
+            </Link>
           </div>
           <div className="flex-1">
-            {[
-              { author: "Maria Garcia", msg: "Hola, quisiera reservar una mesa para 4 personas hoy a las 20:30.", time: "Hace 5 min", status: "unread" },
-              { author: "Juan Perez", msg: "¿Tenéis opciones sin gluten en el menú?", time: "Hace 12 min", status: "read" },
-              { author: "Elena Rodriguez", msg: "Gracias por la atención, el servicio fue impecable.", time: "Hace 1 hora", status: "read" },
-            ].map((msg, i) => (
-              <div key={i} className={`p-5 flex items-start gap-4 hover:bg-slate-50 transition-all cursor-pointer border-b border-slate-50 last:border-0 ${msg.status === 'unread' ? 'bg-blue-50/20' : ''}`}>
-                <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center font-bold shadow-sm ${msg.status === 'unread' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}`}>
-                  {msg.author.charAt(0)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-slate-900 text-sm truncate">{msg.author}</span>
-                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-slate-400">{msg.time}</span>
+            {stats.recentMessages.length > 0 ? (
+              stats.recentMessages.map((msg: any, i) => (
+                <div key={i} className={`p-5 flex items-start gap-4 hover:bg-slate-50 transition-all cursor-pointer border-b border-slate-50 last:border-0`}>
+                  <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center font-bold shadow-sm bg-slate-100 text-slate-600`}>
+                    {msg.contactName?.charAt(0) || "U"}
                   </div>
-                  <p className="text-slate-500 text-sm line-clamp-1 leading-relaxed">{msg.msg}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-bold text-slate-900 text-sm truncate">{msg.contactName}</span>
+                      <span className="text-[10px] uppercase tracking-wider font-extrabold text-slate-400">
+                        {formatDistanceToNow(new Date(msg.created_at), { addSuffix: true, locale: es })}
+                      </span>
+                    </div>
+                    <p className="text-slate-500 text-sm line-clamp-1 leading-relaxed">{msg.content}</p>
+                  </div>
                 </div>
-                {msg.status === 'unread' && <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse mt-1.5 shadow-[0_0_10px_rgba(0,82,255,0.4)]"></div>}
+              ))
+            ) : (
+              <div className="p-12 text-center flex flex-col items-center justify-center gap-4">
+                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-300">
+                  <Inbox className="w-8 h-8" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-slate-900">Bandeja de entrada vacía</h4>
+                  <p className="text-sm text-slate-500 max-w-xs mx-auto">Cuando tus clientes te escriban mediante el BioLink, aparecerán aquí.</p>
+                </div>
+                <Link href={bioLinkUrl} target="_blank" className="mt-2 text-sm font-bold text-blue-600 px-4 py-2 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors">
+                  Ver mi enlace público
+                </Link>
               </div>
-            ))}
+            )}
           </div>
         </div>
 
@@ -167,14 +195,14 @@ export default function Dashboard() {
           </div>
 
           <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-4">
-            <h3 className="text-base font-black text-slate-900 tracking-tight">Sugerencia de IA</h3>
+            <h3 className="text-base font-black text-slate-900 tracking-tight">Asistente de IA</h3>
             <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-              <p className="text-xs text-slate-400 font-extrabold uppercase tracking-widest mb-2">Para: Reseña de Maria L.</p>
-              <p className="text-sm text-slate-600 italic leading-relaxed">"Muchas gracias por tu visita Maria, nos alegra que disfrutaras de la cena. ¡Esperamos verte pronto!"</p>
+              <p className="text-xs text-slate-400 font-extrabold uppercase tracking-widest mb-2">Estado</p>
+              <p className="text-sm text-slate-600 font-medium leading-relaxed">Tu asistente está listo para atender clientes. Personaliza su comportamiento en la sección 'Agente IA'.</p>
             </div>
-            <button className="w-full py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-colors shadow-sm">
-              Aprobar y Responder
-            </button>
+            <Link href="/agent-ia" className="w-full py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-colors shadow-sm text-center">
+              Gestionar Agente
+            </Link>
           </div>
         </div>
       </div>

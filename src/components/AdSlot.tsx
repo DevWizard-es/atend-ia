@@ -27,7 +27,7 @@ interface AdSlotProps {
 // ─────────────────────────────────────────────
 
 const ADSENSE_CLIENT =
-  process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-XXXXXXXXXXXXXXXX";
+  process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-5634358982750683";
 
 const FORMAT_STYLES: Record<string, React.CSSProperties> = {
   banner: { display: "block", width: "100%", height: "60px" },
