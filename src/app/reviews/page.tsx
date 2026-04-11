@@ -47,8 +47,9 @@ export default function ReviewsPage() {
         </div>
       </header>
 
-      {/* Stats Grid */}
+      {/* Stats Grid — computed from real reviews */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Rating */}
         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 bg-amber-50 text-amber-500 rounded-2xl">
@@ -56,30 +57,56 @@ export default function ReviewsPage() {
             </div>
             <span className="text-sm font-bold text-slate-500">Rating Promedio</span>
           </div>
-          <div className="text-4xl font-black text-slate-900 tracking-tight">4.9 / 5</div>
-          <p className="text-xs text-emerald-600 font-bold mt-2">+0.2 este mes</p>
+          <div className="text-4xl font-black text-slate-900 tracking-tight">
+            {loading ? "..." : reviews.length > 0
+              ? `${(reviews.reduce((s: number, r: any) => s + (r.rating || 0), 0) / reviews.length).toFixed(1)} / 5`
+              : "— / 5"
+            }
+          </div>
+          <p className="text-xs text-slate-400 font-bold mt-2">
+            {reviews.length > 0 ? `Basado en ${reviews.length} reseña${reviews.length > 1 ? "s" : ""}` : "Sin reseñas aún"}
+          </p>
         </div>
 
+        {/* Response rate */}
         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 bg-blue-50 text-blue-500 rounded-2xl">
               <CheckCircle2 className="w-6 h-6" />
             </div>
-            <span className="text-sm font-bold text-slate-500">Tasa de Respuesta</span>
+            <span className="text-sm font-bold text-slate-500">Reseñas Respondidas</span>
           </div>
-          <div className="text-4xl font-black text-slate-900 tracking-tight">92 %</div>
-          <p className="text-xs text-slate-400 font-bold mt-2">Objetivo: 100%</p>
+          <div className="text-4xl font-black text-slate-900 tracking-tight">
+            {loading ? "..." : reviews.length > 0
+              ? `${reviews.filter((r: any) => r.status === "replied" || r.status === "responded").length} / ${reviews.length}`
+              : "0 / 0"
+            }
+          </div>
+          <p className="text-xs text-slate-400 font-bold mt-2">
+            {reviews.length > 0
+              ? `${Math.round((reviews.filter((r: any) => r.status === "replied" || r.status === "responded").length / reviews.length) * 100)}% de respuesta`
+              : "Objetivo: responder todas"
+            }
+          </p>
         </div>
 
+        {/* Pending */}
         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 bg-indigo-50 text-indigo-500 rounded-2xl">
               <Clock className="w-6 h-6" />
             </div>
-            <span className="text-sm font-bold text-slate-500">Tiempo de Respuesta</span>
+            <span className="text-sm font-bold text-slate-500">Pendientes de Respuesta</span>
           </div>
-          <div className="text-4xl font-black text-slate-900 tracking-tight">14 m</div>
-          <p className="text-xs text-emerald-600 font-bold mt-2">-5m vs mes anterior</p>
+          <div className="text-4xl font-black text-slate-900 tracking-tight">
+            {loading ? "..." : reviews.filter((r: any) => r.status === "pending" || !r.status || r.status === "").length}
+          </div>
+          <p className="text-xs text-slate-400 font-bold mt-2">
+            {reviews.filter((r: any) => r.status === "pending" || !r.status || r.status === "").length > 0
+              ? "¡Respóndelas para mejorar tu reputación!"
+              : "¡Todas respondidas! 🎉"
+            }
+          </p>
         </div>
       </div>
 

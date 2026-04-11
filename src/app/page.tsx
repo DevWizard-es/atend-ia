@@ -292,7 +292,7 @@ export default function LandingPage() {
           <div className="flex gap-6 text-sm font-semibold text-slate-500">
             <Link href="/privacy" className="hover:text-slate-900 transition-colors">Privacidad</Link>
             <Link href="/terms" className="hover:text-slate-900 transition-colors">Términos</Link>
-            <a href="mailto:hola@atendia.app" className="hover:text-slate-900 transition-colors">Contacto</a>
+            <Link href="/contact" className="hover:text-slate-900 transition-colors">Contacto</Link>
           </div>
           <p className="text-sm text-slate-400 font-medium">© 2026 AtendIA. Todos los derechos reservados.</p>
         </div>
