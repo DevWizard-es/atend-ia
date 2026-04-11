@@ -12,9 +12,10 @@ export async function sendVerificationEmail({
   baseUrl: string;
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
-  const verifyUrl = `${baseUrl}/verify-email?token=${token}`;
+  // URL debe apuntar al endpoint de la API que procesa la verificación
+  const verifyUrl = `${baseUrl}/api/auth/verify?token=${token}`;
 
-  await resend.emails.send({
+  const result = await resend.emails.send({
     from: "AtendIA <onboarding@resend.dev>",
     to,
     subject: `✅ Verifica tu cuenta en AtendIA`,
@@ -72,4 +73,8 @@ export async function sendVerificationEmail({
 </html>
     `.trim(),
   });
+
+  // Log result for debugging
+  console.log("[email] Resend result:", JSON.stringify(result));
+  return result;
 }

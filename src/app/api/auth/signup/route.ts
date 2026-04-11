@@ -68,15 +68,18 @@ export async function POST(request: Request) {
 
     // Send verification email (non-blocking — don't fail signup if email fails)
     const baseUrl = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://atend-ia-ashy.vercel.app';
+    let emailError: string | null = null;
     try {
-      await sendVerificationEmail({
+      const emailResult = await sendVerificationEmail({
         to: email.toLowerCase(),
         businessName,
         token: verificationToken,
         baseUrl,
       });
-    } catch (emailError) {
-      console.error('Email send failed (non-fatal):', emailError);
+      console.log('[signup] Email result:', JSON.stringify(emailResult));
+    } catch (err: any) {
+      emailError = err?.message || String(err);
+      console.error('[signup] Email send failed:', emailError, err);
     }
 
     // Create session (user can use the app immediately, verification just unlocks full features)
@@ -90,7 +93,8 @@ export async function POST(request: Request) {
       success: true, 
       orgId, 
       slug,
-      emailSent: true,
+      emailSent: !emailError,
+      emailError: emailError || null,
     });
     response.cookies.set('atendia_session', token, {
       httpOnly: true,
