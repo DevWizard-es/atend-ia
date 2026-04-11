@@ -28,6 +28,7 @@ export async function GET(
     slug: business.slug,
     whatsapp_phone: business.whatsapp_phone,
     google_maps_url: business.google_maps_url,
+    agent_tone: business.agent_tone || "Pro",
     products: products
   });
 }

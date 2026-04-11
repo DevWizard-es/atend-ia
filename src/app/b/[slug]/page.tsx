@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { MessageCircle, Star, MapPin, Menu as MenuIcon, ChevronRight, Check, Phone } from "lucide-react";
 import AdSlot from "@/components/AdSlot";
+import AIChatWidget from "@/components/AIChatWidget";
 
 export default function PublicLanding({ params }: { params: { slug: string } }) {
   const [business, setBusiness] = useState<any>(null);
@@ -289,6 +290,12 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
           </p>
         </div>
       </div>
+
+      {/* AI Chat Widget */}
+      <AIChatWidget 
+        businessName={business.name} 
+        agentTone={business.agent_tone} 
+      />
     </div>
   );
 }
