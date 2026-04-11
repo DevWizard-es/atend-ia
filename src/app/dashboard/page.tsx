@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
   ArrowUpRight,
@@ -10,7 +11,8 @@ import {
   Search,
   ExternalLink,
   QrCode,
-  X
+  X,
+  ChevronRight
 } from "lucide-react";
 
 import QRCode from "react-qr-code";

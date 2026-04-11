@@ -58,7 +58,11 @@ export async function POST(request: Request) {
     );
 
     // Create session
-    const token = await createSession({ userId, orgId, email: email.toLowerCase() });
+    const token = await createSession({ 
+      userId: userId as string, 
+      orgId: orgId as string, 
+      email: (email as string).toLowerCase() 
+    });
 
     const response = NextResponse.json({ success: true, orgId, slug });
     response.cookies.set('atendia_session', token, {
