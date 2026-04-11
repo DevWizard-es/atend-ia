@@ -212,12 +212,12 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
             {!leadSent ? (
               <div className="space-y-5">
                 <div>
-                  <div className="text-2xl mb-2">🎁</div>
+                  <div className="text-2xl mb-2">{business.promo_emoji || "🎁"}</div>
                   <h3 className="text-xl font-black text-white tracking-tight leading-tight">
-                    ¡10% de descuento en tu próxima visita!
+                    {business.promo_title || "¡10% de descuento en tu próxima visita!"}
                   </h3>
                   <p className="text-slate-400 text-sm mt-1 font-medium">
-                    Déjanos tu WhatsApp y te enviamos el cupón al instante.
+                    {business.promo_description || "Déjanos tu WhatsApp y te enviamos el cupón al instante."}
                   </p>
                 </div>
                 <form onSubmit={submitLead} className="space-y-3">

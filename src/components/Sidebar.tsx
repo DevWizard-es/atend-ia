@@ -110,10 +110,14 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
               <div className="text-[10px] text-blue-600 uppercase tracking-wider font-black">Plan Premium</div>
             </div>
           </div>
-          <button className="w-full flex items-center justify-center gap-2 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800 transition-colors">
+          <Link 
+            href="/campaign"
+            onClick={() => onClose?.()}
+            className="w-full flex items-center justify-center gap-2 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-blue-600 transition-colors"
+          >
             <PlusCircle className="w-3.5 h-3.5" />
             Nueva Campaña
-          </button>
+          </Link>
         </div>
 
         {/* Logout */}

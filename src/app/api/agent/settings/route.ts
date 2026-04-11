@@ -16,10 +16,13 @@ export async function GET() {
   try { await db.exec(`ALTER TABLE organizations ADD COLUMN google_maps_url TEXT DEFAULT ''`); } catch (_) {}
   try { await db.exec(`ALTER TABLE organizations ADD COLUMN agent_tone TEXT DEFAULT 'Pro'`); } catch (_) {}
   try { await db.exec(`ALTER TABLE organizations ADD COLUMN agent_instructions TEXT DEFAULT ''`); } catch (_) {}
+  try { await db.exec(`ALTER TABLE organizations ADD COLUMN promo_emoji TEXT DEFAULT '🎁'`); } catch (_) {}
+  try { await db.exec(`ALTER TABLE organizations ADD COLUMN promo_title TEXT DEFAULT ''`); } catch (_) {}
+  try { await db.exec(`ALTER TABLE organizations ADD COLUMN promo_description TEXT DEFAULT ''`); } catch (_) {}
   
   try {
     const settings = await db.get(
-      "SELECT name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions FROM organizations WHERE id = ?",
+      "SELECT name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions, promo_emoji, promo_title, promo_description FROM organizations WHERE id = ?",
       [ORG_ID]
     );
     return NextResponse.json(settings || {});
@@ -38,7 +41,7 @@ export async function POST(request: Request) {
   const ORG_ID = session.orgId;
   const body = await request.json();
   
-  const { name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions } = body;
+  const { name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions, promo_emoji, promo_title, promo_description } = body;
 
   try {
     await db.run(
@@ -48,9 +51,17 @@ export async function POST(request: Request) {
            whatsapp_phone = COALESCE(?, whatsapp_phone),
            google_maps_url = COALESCE(?, google_maps_url),
            agent_tone = COALESCE(?, agent_tone),
-           agent_instructions = COALESCE(?, agent_instructions)
+           agent_instructions = COALESCE(?, agent_instructions),
+           promo_emoji = COALESCE(?, promo_emoji),
+           promo_title = COALESCE(?, promo_title),
+           promo_description = COALESCE(?, promo_description)
        WHERE id = ?`,
-      [name || null, slug || null, whatsapp_phone || null, google_maps_url || null, agent_tone || null, agent_instructions || null, ORG_ID]
+      [
+        name || null, slug || null, whatsapp_phone || null, google_maps_url || null,
+        agent_tone || null, agent_instructions || null,
+        promo_emoji || null, promo_title || null, promo_description || null,
+        ORG_ID
+      ]
     );
     return NextResponse.json({ success: true });
   } catch (error) {
