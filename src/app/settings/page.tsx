@@ -20,6 +20,7 @@ export default function SettingsPage() {
     slug: "",
     whatsapp_phone: "",
     google_maps_url: "",
+    google_review_url: "",
     profile_emoji: "",
   });
 
@@ -33,6 +34,7 @@ export default function SettingsPage() {
           slug: data.slug || "",
           whatsapp_phone: data.whatsapp_phone || "",
           google_maps_url: data.google_maps_url || "",
+          google_review_url: data.google_review_url || "",
           profile_emoji: data.profile_emoji || "",
         });
       } catch (e) {}
@@ -227,6 +229,19 @@ export default function SettingsPage() {
                         onChange={(e) => setForm({ ...form, google_maps_url: e.target.value })}
                         placeholder="https://maps.app.goo.gl/..."
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <label className="block text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <Smile className="w-4 h-4 text-amber-500" /> Enlace de Reseñas Google
+                      </label>
+                      <input
+                        type="url"
+                        value={form.google_review_url}
+                        onChange={(e) => setForm({ ...form, google_review_url: e.target.value })}
+                        placeholder="https://search.google.com/local/writereview?placeid=..."
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all"
                       />
                     </div>
                   </div>

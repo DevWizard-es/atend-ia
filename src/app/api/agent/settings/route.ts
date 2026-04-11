@@ -14,6 +14,7 @@ export async function GET() {
   // Safe migration for columns (if not exist)
   try { await db.exec(`ALTER TABLE organizations ADD COLUMN whatsapp_phone TEXT DEFAULT ''`); } catch (_) {}
   try { await db.exec(`ALTER TABLE organizations ADD COLUMN google_maps_url TEXT DEFAULT ''`); } catch (_) {}
+  try { await db.exec(`ALTER TABLE organizations ADD COLUMN google_review_url TEXT DEFAULT ''`); } catch (_) {}
   try { await db.exec(`ALTER TABLE organizations ADD COLUMN agent_tone TEXT DEFAULT 'Pro'`); } catch (_) {}
   try { await db.exec(`ALTER TABLE organizations ADD COLUMN agent_instructions TEXT DEFAULT ''`); } catch (_) {}
   try { await db.exec(`ALTER TABLE organizations ADD COLUMN promo_emoji TEXT DEFAULT '🎁'`); } catch (_) {}
@@ -24,7 +25,7 @@ export async function GET() {
   
   try {
     const settings = await db.get(
-      "SELECT name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions, promo_emoji, promo_title, promo_description, profile_emoji, profile_color FROM organizations WHERE id = ?",
+      "SELECT name, slug, whatsapp_phone, google_maps_url, google_review_url, agent_tone, agent_instructions, promo_emoji, promo_title, promo_description, profile_emoji, profile_color FROM organizations WHERE id = ?",
       [ORG_ID]
     );
     return NextResponse.json(settings || {});
@@ -43,7 +44,7 @@ export async function POST(request: Request) {
   const ORG_ID = session.orgId;
   const body = await request.json();
   
-  const { name, slug, whatsapp_phone, google_maps_url, agent_tone, agent_instructions, promo_emoji, promo_title, promo_description, profile_emoji, profile_color } = body;
+  const { name, slug, whatsapp_phone, google_maps_url, google_review_url, agent_tone, agent_instructions, promo_emoji, promo_title, promo_description, profile_emoji, profile_color } = body;
 
   try {
     await db.run(
@@ -52,6 +53,7 @@ export async function POST(request: Request) {
            slug = COALESCE(?, slug),
            whatsapp_phone = COALESCE(?, whatsapp_phone),
            google_maps_url = COALESCE(?, google_maps_url),
+           google_review_url = COALESCE(?, google_review_url),
            agent_tone = COALESCE(?, agent_tone),
            agent_instructions = COALESCE(?, agent_instructions),
            promo_emoji = COALESCE(?, promo_emoji),
@@ -61,7 +63,7 @@ export async function POST(request: Request) {
            profile_color = COALESCE(?, profile_color)
        WHERE id = ?`,
       [
-        name || null, slug || null, whatsapp_phone || null, google_maps_url || null,
+        name || null, slug || null, whatsapp_phone || null, google_maps_url || null, google_review_url || null,
         agent_tone || null, agent_instructions || null,
         promo_emoji || null, promo_title || null, promo_description || null,
         profile_emoji || null, profile_color || null,

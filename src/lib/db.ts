@@ -47,6 +47,7 @@ export async function getDb() {
       slug TEXT UNIQUE NOT NULL,
       whatsapp_phone TEXT DEFAULT '',
       google_maps_url TEXT DEFAULT '',
+      google_review_url TEXT DEFAULT '',
       agent_tone TEXT DEFAULT 'Pro',
       agent_instructions TEXT DEFAULT '',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP

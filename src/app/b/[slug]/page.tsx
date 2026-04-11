@@ -40,7 +40,11 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
         "_blank"
       );
     } else if (type === "review") {
-      window.open("https://search.google.com/local/writereview?placeid=demo_id", "_blank");
+      if (business.google_review_url) {
+        window.open(business.google_review_url, "_blank");
+      } else {
+        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(business.name + " reseñas")}`, "_blank");
+      }
     } else if (type === "location") {
       if (business.google_maps_url) {
         window.open(business.google_maps_url, "_blank");
