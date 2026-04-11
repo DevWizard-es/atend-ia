@@ -1,0 +1,14 @@
+{
+  "framework": "nextjs",
+  "environments": {
+    "TURSO_DATABASE_URL": {
+      "target": ["production", "preview", "development"]
+    },
+    "TURSO_DATABASE_TOKEN": {
+      "target": ["production", "preview", "development"]
+    },
+    "JWT_SECRET": {
+      "target": ["production", "preview", "development"]
+    }
+  }
+}

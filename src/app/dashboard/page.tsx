@@ -28,8 +28,9 @@ export default function Dashboard() {
       .then((r) => r.json())
       .then((d) => {
         if (d.slug) setSlug(d.slug);
+        else setSlug("atendia-demo"); // Fallback para la demo
       })
-      .catch(() => {});
+      .catch(() => setSlug("atendia-demo"));
   }, []);
 
   const handleDownloadQR = () => {
@@ -73,6 +74,9 @@ export default function Dashboard() {
               className="pl-10 pr-4 py-2 bg-slate-100/50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all w-64"
             />
           </div>
+          <Link href="/b/atendia-demo" target="_blank" className="flex items-center gap-2 px-8 py-4 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold text-lg hover:border-blue-300 hover:bg-blue-50/30 transition-all">
+            Ver demo en vivo <ChevronRight className="w-5 h-5 text-slate-400" />
+          </Link>
           <button className="p-2.5 bg-white border border-slate-200 rounded-xl text-slate-500 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50/50 transition-all shadow-sm">
             <Bell className="w-5 h-5" />
           </button>
