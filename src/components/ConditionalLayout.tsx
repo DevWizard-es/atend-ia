@@ -7,7 +7,7 @@ import EmailVerificationBanner from "./EmailVerificationBanner";
 import { Menu } from "lucide-react";
 
 // Rutas que NO muestran el sidebar de administración
-const PUBLIC_ROUTES = ["/", "/login", "/signup", "/privacy", "/terms", "/contact", "/verify-email"];
+const PUBLIC_ROUTES = ["/", "/login", "/signup", "/privacy", "/terms", "/contact", "/verify-email", "/forgot-password", "/reset-password"];
 
 function isPublicRoute(pathname: string) {
   if (PUBLIC_ROUTES.includes(pathname)) return true;

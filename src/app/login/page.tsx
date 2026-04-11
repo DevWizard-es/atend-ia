@@ -5,6 +5,9 @@ import { useState } from "react";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+// Rutas que NO muestran el sidebar de administración
+const PUBLIC_ROUTES = ["/", "/login", "/signup", "/privacy", "/terms", "/contact", "/verify-email", "/forgot-password", "/reset-password"];
+
 export default function LoginPage() {
   const router = useRouter();
   const [showPass, setShowPass] = useState(false);
@@ -69,7 +72,7 @@ export default function LoginPage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-xs font-black text-slate-700 uppercase tracking-widest">Contraseña</label>
-                <a href="#" className="text-xs font-bold text-blue-600 hover:underline">¿La olvidaste?</a>
+                <Link href="/forgot-password" title="Recuperar contraseña" className="text-xs font-bold text-blue-600 hover:underline">¿La olvidaste?</Link>
               </div>
               <div className="relative">
                 <input
