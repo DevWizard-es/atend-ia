@@ -260,6 +260,7 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {howItWorks.map((step) => (
               <motion.div 
                 key={step.step}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -271,7 +272,7 @@ export default function LandingPage() {
                 <div className="text-xs font-black text-emerald-600 uppercase tracking-widest mb-2">Paso {step.step}</div>
                 <h3 className="text-base font-black text-slate-900 mb-2 tracking-tight">{step.title}</h3>
                 <p className="text-slate-500 text-sm leading-relaxed font-medium">{step.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
 
