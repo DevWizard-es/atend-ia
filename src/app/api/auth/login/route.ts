@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     });
 
     const response = NextResponse.json({ success: true });
-    response.cookies.set('atendia_session', token, {
+    response.cookies.set('guarapoia_session', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

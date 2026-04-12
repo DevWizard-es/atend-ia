@@ -79,7 +79,7 @@ export default function SettingsPage() {
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-black tracking-tight text-slate-900 flex items-center gap-3">
-            <Settings className="w-8 h-8 text-blue-600" /> Perfil Comercial
+            <Settings className="w-8 h-8 text-emerald-600" /> Perfil Comercial
           </h1>
           <p className="text-slate-500 font-medium leading-relaxed mt-1">
             Configura el nombre, icono, Bio-link y canales de contacto.
@@ -93,7 +93,7 @@ export default function SettingsPage() {
           <div className="p-8 lg:p-10 space-y-10">
             {loading ? (
               <div className="h-64 flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin"></div>
+                <div className="w-8 h-8 border-4 border-slate-200 border-t-emerald-600 rounded-full animate-spin"></div>
               </div>
             ) : (
               <>
@@ -111,7 +111,7 @@ export default function SettingsPage() {
 
                   <div className="flex items-center gap-6">
                     {/* Preview */}
-                    <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg shadow-blue-500/20 flex items-center justify-center text-3xl border-4 border-slate-50 shrink-0">
+                    <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-lg shadow-emerald-500/20 flex items-center justify-center text-3xl border-4 border-slate-50 shrink-0">
                       {form.profile_emoji || initials}
                     </div>
 
@@ -139,7 +139,7 @@ export default function SettingsPage() {
                             key={i}
                             type="button"
                             onClick={() => { setForm({ ...form, profile_emoji: emoji }); setShowEmojiPicker(false); }}
-                            className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl hover:bg-white transition-all hover:scale-110 hover:shadow-md ${form.profile_emoji === emoji ? "bg-blue-100 border-2 border-blue-500" : "border-2 border-transparent"}`}
+                            className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl hover:bg-white transition-all hover:scale-110 hover:shadow-md ${form.profile_emoji === emoji ? "bg-emerald-100 border-2 border-emerald-500" : "border-2 border-transparent"}`}
                             title={emoji || "Usar iniciales"}
                           >
                             {emoji || <span className="text-[9px] font-black text-slate-400">AB</span>}
@@ -155,7 +155,7 @@ export default function SettingsPage() {
                 {/* Branding Section */}
                 <section>
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
+                    <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
                       <Building2 className="w-5 h-5" />
                     </div>
                     <div>
@@ -173,14 +173,14 @@ export default function SettingsPage() {
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
                         placeholder="Ej. Pizzería Roma"
                         required
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
                       />
                     </div>
                     
                     <div className="space-y-3">
                       <label className="block text-sm font-bold text-slate-700">Identificador Bio-Link (Slug)</label>
                       <div className="relative flex items-center group">
-                        <span className="absolute left-4 text-slate-400 font-medium text-sm group-focus-within:text-blue-500 transition-colors">
+                        <span className="absolute left-4 text-slate-400 font-medium text-sm group-focus-within:text-emerald-500 transition-colors">
                           /b/
                         </span>
                         <input
@@ -189,7 +189,7 @@ export default function SettingsPage() {
                           onChange={(e) => setForm({ ...form, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "") })}
                           placeholder="pizzeria-roma"
                           required
-                          className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
+                          className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
                         />
                       </div>
                       <p className="text-xs text-slate-400 font-medium">Solo letras minúsculas, números y guiones.</p>
@@ -227,14 +227,14 @@ export default function SettingsPage() {
                     
                     <div className="space-y-3">
                       <label className="block text-sm font-bold text-slate-700 flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-blue-500" /> Enlace Google Maps
+                        <MapPin className="w-4 h-4 text-emerald-500" /> Enlace Google Maps
                       </label>
                       <input
                         type="url"
                         value={form.google_maps_url}
                         onChange={(e) => setForm({ ...form, google_maps_url: e.target.value })}
                         placeholder="https://maps.app.goo.gl/..."
-                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
                       />
                     </div>
 
@@ -258,7 +258,7 @@ export default function SettingsPage() {
                 {/* Inbox Configuration Section */}
                 <section>
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
+                    <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
                       <Link2 className="w-5 h-5" />
                     </div>
                     <div>
@@ -270,7 +270,7 @@ export default function SettingsPage() {
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {[
-                        { id: "internal", label: "Interno (AtendIA)", desc: "Usa la bandeja de mensajes propia." },
+                        { id: "internal", label: "Interno (GuarapoIA)", desc: "Usa la bandeja de mensajes propia." },
                         { id: "whatsapp", label: "WhatsApp", desc: "Redirige los mensajes a tu WhatsApp." },
                         { id: "google", label: "Google Questions", desc: "Enlaza a las preguntas de Google Maps." },
                       ].map((mode) => (
@@ -281,11 +281,11 @@ export default function SettingsPage() {
                           className={cn(
                             "p-4 rounded-2xl border-2 text-left transition-all",
                             form.inbox_mode === mode.id
-                              ? "border-blue-500 bg-blue-50/50 shadow-md"
+                              ? "border-emerald-500 bg-emerald-50/50 shadow-md"
                               : "border-slate-100 bg-slate-50 hover:bg-white hover:border-slate-200"
                           )}
                         >
-                          <div className={cn("text-sm font-black mb-1", form.inbox_mode === mode.id ? "text-blue-600" : "text-slate-900")}>
+                          <div className={cn("text-sm font-black mb-1", form.inbox_mode === mode.id ? "text-emerald-600" : "text-slate-900")}>
                             {mode.label}
                           </div>
                           <p className="text-[11px] font-medium text-slate-500 leading-tight">{mode.desc}</p>
@@ -302,7 +302,7 @@ export default function SettingsPage() {
                           onChange={(e) => setForm({ ...form, google_questions_url: e.target.value })}
                           placeholder="https://www.google.com/maps/questions/..."
                           required
-                          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
+                          className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
                         />
                       </div>
                     )}

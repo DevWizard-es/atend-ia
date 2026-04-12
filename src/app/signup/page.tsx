@@ -46,7 +46,7 @@ function SignupForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 flex items-center justify-center px-4 py-16">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50/30 flex items-center justify-center px-4 py-16">
       <div className="w-full max-w-md">
         {/* Back link */}
         <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors mb-8">
@@ -56,7 +56,7 @@ function SignupForm() {
         <div className="bg-white rounded-3xl shadow-xl shadow-slate-900/5 border border-slate-200 p-8">
           {/* Logo */}
           <div className="text-2xl font-black mb-6">
-            Atend<span className="text-blue-600">IA</span>
+            Guarapo<span className="text-emerald-600">IA</span>
           </div>
 
           {/* Free badge */}
@@ -66,7 +66,7 @@ function SignupForm() {
           </div>
 
           <h1 className="text-3xl font-black tracking-tight mb-2">Crea tu cuenta</h1>
-          <p className="text-slate-500 font-medium mb-8">Tu negocio en AtendIA en menos de 5 minutos.</p>
+          <p className="text-slate-500 font-medium mb-8">Tu negocio en GuarapoIA en menos de 5 minutos.</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -77,7 +77,7 @@ function SignupForm() {
                 placeholder="María García"
                 value={form.name}
                 onChange={e => setForm({ ...form, name: e.target.value })}
-                className="w-full px-4 py-3.5 border border-slate-200 rounded-xl text-sm font-medium bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
+                className="w-full px-4 py-3.5 border border-slate-200 rounded-xl text-sm font-medium bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
               />
             </div>
             <div>
@@ -88,7 +88,7 @@ function SignupForm() {
                 placeholder="Pizzería Roma"
                 value={form.business}
                 onChange={e => setForm({ ...form, business: e.target.value })}
-                className="w-full px-4 py-3.5 border border-slate-200 rounded-xl text-sm font-medium bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
+                className="w-full px-4 py-3.5 border border-slate-200 rounded-xl text-sm font-medium bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
               />
             </div>
             <div>
@@ -99,7 +99,7 @@ function SignupForm() {
                 placeholder="hola@minegocio.com"
                 value={form.email}
                 onChange={e => setForm({ ...form, email: e.target.value })}
-                className="w-full px-4 py-3.5 border border-slate-200 rounded-xl text-sm font-medium bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
+                className="w-full px-4 py-3.5 border border-slate-200 rounded-xl text-sm font-medium bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
               />
             </div>
             <div>
@@ -112,7 +112,7 @@ function SignupForm() {
                   placeholder="Mínimo 8 caracteres"
                   value={form.password}
                   onChange={e => setForm({ ...form, password: e.target.value })}
-                  className="w-full px-4 py-3.5 pr-12 border border-slate-200 rounded-xl text-sm font-medium bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
+                  className="w-full px-4 py-3.5 pr-12 border border-slate-200 rounded-xl text-sm font-medium bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
                 />
                 <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                   {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -129,7 +129,7 @@ function SignupForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-blue-600 text-white rounded-xl font-black text-sm uppercase tracking-wider shadow-lg shadow-blue-500/25 hover:bg-blue-700 active:bg-blue-800 transition-all disabled:opacity-70 flex items-center justify-center gap-2"
+              className="w-full py-4 bg-emerald-600 text-white rounded-xl font-black text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/25 hover:bg-emerald-700 active:bg-emerald-800 transition-all disabled:opacity-70 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -157,7 +157,7 @@ function SignupForm() {
 
         <p className="text-center text-sm font-medium text-slate-500 mt-6">
           ¿Ya tienes cuenta?{" "}
-          <Link href="/login" className="text-blue-600 font-bold hover:underline">
+          <Link href="/login" className="text-emerald-600 font-bold hover:underline">
             Inicia sesión
           </Link>
         </p>

@@ -7,7 +7,7 @@ export async function GET() {
     {
       status: 'ok',
       timestamp: new Date().toISOString(),
-      service: 'AtendIA',
+      service: 'GuarapoIA',
     },
     { status: 200 }
   );

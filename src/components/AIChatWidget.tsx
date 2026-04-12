@@ -79,7 +79,7 @@ export default function AIChatWidget({
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="w-16 h-16 rounded-full bg-blue-600 shadow-2xl shadow-blue-500/40 flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all duration-300 group overflow-hidden relative"
+          className="w-16 h-16 rounded-full bg-emerald-600 shadow-2xl shadow-emerald-500/40 flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all duration-300 group overflow-hidden relative"
         >
           <MessageCircle className="w-8 h-8 relative z-10" />
           <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
@@ -96,7 +96,7 @@ export default function AIChatWidget({
         )}
       >
         {/* Header */}
-        <div className="p-5 bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-between text-white shrink-0">
+        <div className="p-5 bg-gradient-to-r from-emerald-600 to-teal-600 flex items-center justify-between text-white shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-md">
               <Bot className="w-6 h-6" />
@@ -128,7 +128,7 @@ export default function AIChatWidget({
                 className={cn(
                   "p-4 rounded-2xl max-w-[85%] text-sm leading-relaxed shadow-sm",
                   m.role === "user"
-                    ? "bg-blue-600 text-white rounded-tr-none font-medium"
+                    ? "bg-emerald-600 text-white rounded-tr-none font-medium"
                     : "bg-white border border-slate-100 text-slate-700 rounded-tl-none font-semibold"
                 )}
               >
@@ -139,9 +139,9 @@ export default function AIChatWidget({
           {loading && (
             <div className="flex flex-col items-start">
               <div className="p-4 bg-white border border-slate-100 rounded-2xl rounded-tl-none shadow-sm flex gap-1">
-                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" />
+                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-bounce" />
               </div>
             </div>
           )}
@@ -155,19 +155,19 @@ export default function AIChatWidget({
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Escribe tu mensaje..."
-              className="flex-1 px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all shadow-inner"
+              className="flex-1 px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5 outline-none transition-all shadow-inner"
             />
             <button
               type="submit"
               disabled={!input.trim() || loading}
-              className="p-3 bg-blue-600 text-white rounded-xl shadow-lg shadow-blue-500/20 hover:bg-blue-700 active:scale-90 transition-all disabled:bg-slate-300 disabled:shadow-none"
+              className="p-3 bg-emerald-600 text-white rounded-xl shadow-lg shadow-emerald-500/20 hover:bg-emerald-700 active:scale-90 transition-all disabled:bg-slate-300 disabled:shadow-none"
             >
               <Send className="w-4 h-4" />
             </button>
           </div>
           <div className="flex items-center justify-center gap-1.5 mt-3 opacity-30 select-none">
-            <span className="text-[9px] font-black tracking-[0.2em] text-slate-500 uppercase">Powered by AtendIA</span>
-            <Zap className="w-2.5 h-2.5 text-blue-600 fill-current" />
+            <span className="text-[9px] font-black tracking-[0.2em] text-slate-500 uppercase">Powered by GuarapoIA</span>
+            <Zap className="w-2.5 h-2.5 text-emerald-600 fill-current" />
           </div>
         </form>
       </div>

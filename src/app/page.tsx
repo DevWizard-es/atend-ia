@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle, Star, BarChart3, Users, Shield, Zap, Check,
   ArrowRight, ChevronRight, Menu, X, Globe, QrCode, Inbox, TrendingUp
@@ -9,12 +10,12 @@ import {
 import AdBanner from "@/components/AdBanner";
 
 const features = [
-  { icon: Globe, title: "Bio-Link Profesional", desc: "Una página pública con QR para que tus clientes te contacten, te dejen reseñas o vean tu menú. Todo desde un solo link.", color: "bg-blue-50 text-blue-600" },
-  { icon: Inbox, title: "Inbox Unificado", desc: "Todas las conversaciones de WhatsApp y web en un solo lugar. Responde rápido y nunca pierdas un lead.", color: "bg-indigo-50 text-indigo-600" },
+  { icon: Globe, title: "Bio-Link Profesional", desc: "Una página pública con QR para que tus clientes te contacten, te dejen reseñas o vean tu menú. Todo desde un solo link.", color: "bg-emerald-50 text-emerald-600" },
+  { icon: Inbox, title: "Inbox Unificado", desc: "Todas las conversaciones de WhatsApp y web en un solo lugar. Responde rápido y nunca pierdas un lead.", color: "bg-teal-50 text-teal-600" },
   { icon: Star, title: "Gestión de Reseñas", desc: "Solicita reseñas en Google automáticamente. Responde con IA. Eleva tu rating y atrae más clientes.", color: "bg-amber-50 text-amber-600" },
-  { icon: TrendingUp, title: "Analytics & Reportes", desc: "Métricas claras de captación, conversión y reputación. Exporta informes PDF para tus clientes.", color: "bg-emerald-50 text-emerald-600" },
-  { icon: QrCode, title: "Campañas QR", desc: "Genera QRs únicos para mesas, tarjetas y escaparates. Rastreo de clics en tiempo real.", color: "bg-purple-50 text-purple-600" },
-  { icon: Zap, title: "Respuestas con IA", desc: "La IA aprende de tu negocio y responde preguntas frecuentes automáticamente, 24/7.", color: "bg-rose-50 text-rose-600" },
+  { icon: TrendingUp, title: "Analytics & Reportes", desc: "Métricas claras de captación, conversión y reputación. Exporta informes PDF para tus clientes.", color: "bg-green-50 text-green-600" },
+  { icon: QrCode, title: "Campañas QR", desc: "Genera QRs únicos para mesas, tarjetas y escaparates. Rastreo de clics en tiempo real.", color: "bg-emerald-50 text-emerald-600" },
+  { icon: Zap, title: "Respuestas con IA", desc: "La IA aprende de tu negocio y responde preguntas frecuentes automáticamente, 24/7.", color: "bg-lime-50 text-lime-600" },
 ];
 
 const testimonials = [
@@ -49,8 +50,8 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-black tracking-tight">
-            Atend<span className="text-blue-600">IA</span>
+          <Link href="/" className="text-2xl font-black tracking-tight flex items-center gap-1">
+            Guarapo<span className="text-emerald-600">IA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <a href="#features" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Funcionalidades</a>
@@ -61,7 +62,7 @@ export default function LandingPage() {
             {authState === null ? null : authState.authenticated ? (
               <div className="flex items-center gap-3">
                 <Link href="/dashboard" className="flex items-center gap-2.5 px-4 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-black">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-xs font-black">
                     {authState.profileEmoji || (authState.businessName?.substring(0, 2).toUpperCase() ?? "MI")}
                   </div>
                   <span className="text-sm font-bold text-slate-800">{authState.businessName || "Mi Negocio"}</span>
@@ -78,7 +79,7 @@ export default function LandingPage() {
                 <Link href="/login" className="px-4 py-2 text-sm font-bold text-slate-700 hover:text-slate-900 transition-colors">
                   Iniciar sesión
                 </Link>
-                <Link href="/signup" className="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
+                <Link href="/signup" className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl font-bold text-sm hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-500/20">
                   Empezar gratis →
                 </Link>
               </>
@@ -98,18 +99,17 @@ export default function LandingPage() {
             ) : (
               <>
                 <Link href="/login" className="block py-2 text-sm font-bold text-slate-700">Iniciar sesión</Link>
-                <Link href="/signup" className="block py-2 px-4 bg-blue-600 text-white rounded-xl text-sm font-bold text-center">Empezar gratis</Link>
+                <Link href="/signup" className="block py-2 px-4 bg-emerald-600 text-white rounded-xl text-sm font-bold text-center">Empezar gratis</Link>
               </>
             )}
           </div>
         )}
       </nav>
 
-      {/* Hero */}
       <section className="pt-32 pb-24 px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/80 via-white to-indigo-50/50" />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-400/10 rounded-full blur-3xl -mr-64 -mt-32" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-400/10 rounded-full blur-3xl -ml-40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/80 via-white to-teal-50/50" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-400/10 rounded-full blur-3xl -mr-64 -mt-32" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-400/10 rounded-full blur-3xl -ml-40" />
 
         <div className="max-w-5xl mx-auto text-center relative z-10">
           {/* Free badge */}
@@ -118,12 +118,17 @@ export default function LandingPage() {
             100% Gratis — Sin tarjeta de crédito, para siempre
           </div>
 
-          <h1 className="text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6"
+          >
             Consigue más clientes.<br />
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
               Gestiona tu reputación.
             </span>
-          </h1>
+          </motion.h1>
 
           <p className="text-xl text-slate-600 font-medium max-w-2xl mx-auto leading-relaxed mb-10">
             La plataforma all-in-one para negocios locales. Captura leads por WhatsApp,
@@ -131,14 +136,19 @@ export default function LandingPage() {
             <strong className="text-slate-800"> Completamente gratis.</strong>
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/signup" className="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-2xl font-black text-lg hover:bg-blue-700 transition-all shadow-2xl shadow-blue-500/30 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98]">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <Link href="/signup" className="flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black text-lg hover:bg-emerald-700 transition-all shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98]">
               Crear mi cuenta gratis <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link href="/b/atendia-demo" target="_blank" className="flex items-center gap-2 px-8 py-4 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold text-lg hover:border-blue-300 hover:bg-blue-50/30 transition-all">
+            <Link href="/b/guarapo-demo" target="_blank" className="flex items-center gap-2 px-8 py-4 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold text-lg hover:border-emerald-300 hover:bg-emerald-50/30 transition-all">
               Ver demo en vivo <ChevronRight className="w-5 h-5 text-slate-400" />
             </Link>
-          </div>
+          </motion.div>
 
           <p className="mt-5 text-sm text-slate-400 font-medium">
             Sin tarjeta de crédito · Configuración en 5 minutos · Gratis para siempre
@@ -155,9 +165,9 @@ export default function LandingPage() {
               </div>
               <div className="grid grid-cols-4 h-[360px]">
                 <div className="col-span-1 bg-slate-50 border-r border-slate-200 p-4 space-y-2">
-                  <div className="text-lg font-black mb-4">Atend<span className="text-blue-600">IA</span></div>
+                  <div className="text-xl font-black mb-4">Guarapo<span className="text-emerald-600">IA</span></div>
                   {["Dashboard", "Inbox", "Reviews", "Contacts", "Analytics"].map(item => (
-                    <div key={item} className={`px-3 py-2 rounded-xl text-sm font-semibold ${item === "Dashboard" ? "bg-blue-50 text-blue-600" : "text-slate-500"}`}>{item}</div>
+                    <div key={item} className={`px-3 py-2 rounded-xl text-sm font-semibold ${item === "Dashboard" ? "bg-emerald-50 text-emerald-600" : "text-slate-500"}`}>{item}</div>
                   ))}
                 </div>
                 <div className="col-span-3 p-6 bg-white">
@@ -174,7 +184,7 @@ export default function LandingPage() {
                     <div className="text-sm font-black mb-2">Conversaciones recientes</div>
                     {["María García", "Juan Pérez", "Elena Rodríguez"].map((name) => (
                       <div key={name} className="flex items-center gap-2 py-1.5">
-                        <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xs font-bold">{name[0]}</div>
+                        <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-xs font-bold">{name[0]}</div>
                         <div className="text-xs text-slate-600 font-medium">{name}</div>
                         <div className="ml-auto text-xs text-slate-400">Hoy</div>
                       </div>
@@ -211,8 +221,15 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f) => (
-              <div key={f.title} className="p-8 bg-white rounded-3xl border border-slate-200 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-500/5 transition-all group">
+            {features.map((f, idx) => (
+              <motion.div 
+                key={f.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="p-8 bg-white rounded-3xl border border-slate-200 hover:border-emerald-200 hover:shadow-lg hover:shadow-emerald-500/5 transition-all group"
+              >
                 <div className={`w-12 h-12 rounded-2xl ${f.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
                   <f.icon className="w-6 h-6" />
                 </div>
@@ -238,15 +255,20 @@ export default function LandingPage() {
             </div>
             <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">Fácil de usar. Gratis de verdad.</h2>
             <p className="text-lg text-slate-500 font-medium max-w-2xl mx-auto">
-              AtendIA es gratuito para negocios. Nos financiamos mediante anuncios discretos en las páginas públicas de tus clientes,
+              GuarapoIA es gratuito para negocios. Nos financiamos mediante anuncios discretos en las páginas públicas de tus clientes,
               como hace Google o Instagram. Tú creces, nosotros crecemos contigo.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {howItWorks.map((step) => (
-              <div key={step.step} className="relative bg-white p-7 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all group">
+              <motion.div 
+                key={step.step}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="relative bg-white p-7 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all group"
+              >
                 <div className="text-3xl mb-4">{step.icon}</div>
-                <div className="text-xs font-black text-blue-600 uppercase tracking-widest mb-2">Paso {step.step}</div>
+                <div className="text-xs font-black text-emerald-600 uppercase tracking-widest mb-2">Paso {step.step}</div>
                 <h3 className="text-base font-black text-slate-900 mb-2 tracking-tight">{step.title}</h3>
                 <p className="text-slate-500 text-sm leading-relaxed font-medium">{step.desc}</p>
               </div>
@@ -284,7 +306,7 @@ export default function LandingPage() {
                 </div>
                 <p className="text-slate-700 text-sm leading-relaxed font-medium mb-5">"{t.quote}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold">
                     {t.avatar}
                   </div>
                   <div>
@@ -306,34 +328,39 @@ export default function LandingPage() {
       {/* Final CTA */}
       <section className="py-20 px-6">
         <div className="max-w-3xl mx-auto">
-          <div className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 rounded-3xl p-12 text-center overflow-hidden">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 rounded-3xl p-12 text-center overflow-hidden"
+          >
             <div className="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-            <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-indigo-400/20 rounded-full blur-3xl" />
+            <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-teal-400/20 rounded-full blur-3xl" />
             <div className="relative z-10">
               <div className="text-5xl mb-4">🚀</div>
               <h2 className="text-4xl font-black text-white tracking-tight mb-3">¿Listo para crecer gratis?</h2>
-              <p className="text-blue-100 font-medium mb-8 max-w-lg mx-auto">
-                Únete a más de 500 negocios locales que ya gestionan su captación y reputación con AtendIA. Sin pagar un euro.
+              <p className="text-emerald-100 font-medium mb-8 max-w-lg mx-auto">
+                Únete a más de 500 negocios locales que ya gestionan su captación y reputación con GuarapoIA. Sin pagar un euro.
               </p>
-              <Link href="/signup" className="inline-flex items-center gap-2 px-10 py-4 bg-white text-blue-700 rounded-2xl font-black text-lg hover:bg-blue-50 transition-all shadow-xl">
+              <Link href="/signup" className="inline-flex items-center gap-2 px-10 py-4 bg-white text-emerald-700 rounded-2xl font-black text-lg hover:bg-emerald-50 transition-all shadow-xl">
                 Crear mi cuenta gratis <ArrowRight className="w-5 h-5" />
               </Link>
-              <p className="text-blue-200 text-sm mt-4 font-medium">Sin tarjeta de crédito · Gratis para siempre · Configúrate en 5 min</p>
+              <p className="text-emerald-200 text-sm mt-4 font-medium">Sin tarjeta de crédito · Gratis para siempre · Configúrate en 5 min</p>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-slate-100 bg-slate-50/50">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-2xl font-black">Atend<span className="text-blue-600">IA</span></div>
+          <div className="text-2xl font-black flex items-center gap-1">Guarapo<span className="text-emerald-600">IA</span></div>
           <div className="flex gap-6 text-sm font-semibold text-slate-500">
             <Link href="/privacy" className="hover:text-slate-900 transition-colors">Privacidad</Link>
             <Link href="/terms" className="hover:text-slate-900 transition-colors">Términos</Link>
             <Link href="/contact" className="hover:text-slate-900 transition-colors">Contacto</Link>
           </div>
-          <p className="text-sm text-slate-400 font-medium">© 2026 AtendIA. Todos los derechos reservados.</p>
+          <p className="text-sm text-slate-400 font-medium">© 2026 GuarapoIA. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

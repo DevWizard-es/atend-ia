@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import EmailVerificationBanner from "./EmailVerificationBanner";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Rutas que NO muestran el sidebar de administración
 const PUBLIC_ROUTES = ["/", "/login", "/signup", "/privacy", "/terms", "/contact", "/verify-email", "/forgot-password", "/reset-password"];
@@ -48,32 +49,42 @@ export default function ConditionalLayout({
         <Sidebar />
       </div>
 
-      {/* Sidebar Mobile Overlay */}
-      {sidebarOpen && (
-        <div 
-          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <>
+            {/* Sidebar Mobile Overlay */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm lg:hidden"
+              onClick={() => setSidebarOpen(false)}
+            />
 
-      {/* Sidebar Mobile Drawer */}
-      <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out lg:hidden
-        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-      `}>
-        <Sidebar onClose={() => setSidebarOpen(false)} />
-      </div>
+            {/* Sidebar Mobile Drawer */}
+            <motion.div 
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed inset-y-0 left-0 z-50 w-72 lg:hidden shadow-2xl"
+            >
+              <Sidebar onClose={() => setSidebarOpen(false)} />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile Header */}
-        <header className="lg:hidden h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 flex-shrink-0">
-          <div className="text-xl font-black">
-            Atend<span className="text-blue-600">IA</span>
+        <header className="lg:hidden h-16 bg-white/80 backdrop-blur-xl border-b border-slate-200 flex items-center justify-between px-6 flex-shrink-0 sticky top-0 z-40">
+          <div className="text-xl font-black flex items-center gap-1">
+            Guarapo<span className="text-emerald-600">IA</span>
           </div>
           <button 
             onClick={() => setSidebarOpen(true)}
-            className="p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors"
+            className="p-2 text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-xl transition-all"
           >
             <Menu className="w-6 h-6" />
           </button>
@@ -85,7 +96,14 @@ export default function ConditionalLayout({
         )}
 
         <main className="flex-1 overflow-y-auto p-4 md:p-8">
-          {children}
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            {children}
+          </motion.div>
         </main>
       </div>
     </div>

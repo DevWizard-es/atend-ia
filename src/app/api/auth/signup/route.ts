@@ -67,7 +67,7 @@ export async function POST(request: Request) {
     );
 
     // Send verification email (non-blocking — don't fail signup if email fails)
-    const baseUrl = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://atend-ia-ashy.vercel.app';
+    const baseUrl = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'https://guarapoia.app';
     let emailError: string | null = null;
     try {
       const emailResult = await sendVerificationEmail({
@@ -96,7 +96,7 @@ export async function POST(request: Request) {
       emailSent: !emailError,
       emailError: emailError || null,
     });
-    response.cookies.set('atendia_session', token, {
+    response.cookies.set('guarapoia_session', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

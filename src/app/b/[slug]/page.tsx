@@ -65,8 +65,8 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center animate-pulse">
-            <span className="text-white font-black text-xl">A</span>
+          <div className="w-16 h-16 bg-emerald-600 rounded-2xl flex items-center justify-center animate-pulse">
+            <span className="text-white font-black text-xl">G</span>
           </div>
           <p className="text-slate-400 font-bold text-sm uppercase tracking-widest">Cargando...</p>
         </div>
@@ -101,8 +101,8 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
       <div className="max-w-md mx-auto px-5 pt-4 pb-16 space-y-6 relative z-10">
         
         {/* Profile Card */}
-        <div className="bg-white rounded-3xl shadow-lg shadow-slate-200/60 border border-slate-100 p-6 text-center">
-          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg shadow-blue-500/20 mx-auto flex items-center justify-center text-3xl mb-4 border-4 border-slate-50">
+        <div className="bg-white rounded-3xl shadow-lg shadow-emerald-200/60 border border-slate-100 p-6 text-center">
+          <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-lg shadow-emerald-500/20 mx-auto flex items-center justify-center text-3xl mb-4 border-4 border-slate-50">
             {business.profile_emoji || business.name?.charAt(0)?.toUpperCase() || "🏪"}
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">{business.name}</h1>
@@ -117,7 +117,7 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
           {/* WhatsApp - Primary CTA */}
           <button
             onClick={() => handleAction("whatsapp")}
-            className="w-full group flex items-center justify-between p-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 overflow-hidden relative"
+            className="w-full group flex items-center justify-between p-5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl shadow-xl shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 overflow-hidden relative"
           >
             <div className="flex items-center gap-4 relative z-10">
               <div className="p-2.5 bg-white/20 rounded-xl group-hover:rotate-6 transition-transform">
@@ -135,10 +135,10 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
           {/* AI Chat CTA */}
           <button
             onClick={() => setChatOpen(true)}
-            className="w-full group flex items-center justify-between p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-blue-300 hover:bg-blue-50/30 transition-all duration-200"
+            className="w-full group flex items-center justify-between p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-emerald-300 hover:bg-emerald-50/30 transition-all duration-200"
           >
             <div className="flex items-center gap-4">
-              <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl group-hover:scale-110 transition-transform">
+              <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl group-hover:scale-110 transition-transform">
                 <span className="text-xl">🤖</span>
               </div>
               <div className="text-left">
@@ -175,7 +175,7 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
               }}
               className="group p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-slate-300 hover:bg-slate-50 transition-all text-left"
             >
-              <MenuIcon className="w-5 h-5 text-slate-400 mb-3 group-hover:text-blue-600 transition-colors" />
+              <MenuIcon className="w-5 h-5 text-slate-400 mb-3 group-hover:text-emerald-600 transition-colors" />
               <div className="text-xs font-black uppercase tracking-widest text-slate-400 mb-0.5">Carta</div>
               <div className="text-sm font-bold text-slate-800">Ver Menú</div>
             </button>
@@ -183,7 +183,7 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
               onClick={() => handleAction("location")}
               className="group p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-slate-300 hover:bg-slate-50 transition-all text-left"
             >
-              <MapPin className="w-5 h-5 text-slate-400 mb-3 group-hover:text-blue-600 transition-colors" />
+              <MapPin className="w-5 h-5 text-slate-400 mb-3 group-hover:text-emerald-600 transition-colors" />
               <div className="text-xs font-black uppercase tracking-widest text-slate-400 mb-0.5">Ubicación</div>
               <div className="text-sm font-bold text-slate-800">Cómo llegar</div>
             </button>
@@ -193,8 +193,8 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
         {/* Lead Magnet */}
         <div className="relative bg-slate-900 rounded-3xl overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
-          <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl" />
-          <div className="absolute -left-10 -top-10 w-40 h-40 bg-indigo-600/10 rounded-full blur-2xl" />
+          <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-emerald-600/20 rounded-full blur-3xl" />
+          <div className="absolute -left-10 -top-10 w-40 h-40 bg-teal-600/10 rounded-full blur-2xl" />
 
           <div className="relative z-10 p-8">
             {!leadSent ? (
@@ -214,7 +214,7 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
                     placeholder="Tu nombre"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm font-medium focus:bg-white/10 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+                    className="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm font-medium focus:bg-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                   />
                   <input
                     type="tel"
@@ -222,11 +222,11 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
                     required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm font-medium focus:bg-white/10 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+                    className="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 text-sm font-medium focus:bg-white/10 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                   />
                   <button
                     type="submit"
-                    className="w-full py-4 bg-blue-600 text-white rounded-xl font-black text-sm uppercase tracking-widest shadow-lg shadow-blue-600/30 hover:bg-blue-500 active:bg-blue-700 transition-all"
+                    className="w-full py-4 bg-emerald-600 text-white rounded-xl font-black text-sm uppercase tracking-widest shadow-lg shadow-emerald-600/30 hover:bg-emerald-500 active:bg-emerald-700 transition-all"
                   >
                     Recibir cupón ahora →
                   </button>
@@ -292,7 +292,7 @@ export default function PublicLanding({ params }: { params: { slug: string } }) 
         {/* Footer */}
         <div className="text-center pt-4 pb-4">
           <p className="text-[11px] font-bold text-slate-300 uppercase tracking-[0.25em]">
-            ⚡ Powered by AtendIA
+            ⚡ Powered by GuarapoIA
           </p>
         </div>
       </div>

@@ -33,7 +33,7 @@ const dbWrapper = {
 export async function getDb() {
   if (internalClient) return dbWrapper;
 
-  const dbUrl = process.env.TURSO_DATABASE_URL || `file:${path.join(process.cwd(), 'atendia_v2_local_turso.db')}`;  
+  const dbUrl = process.env.TURSO_DATABASE_URL || `file:${path.join(process.cwd(), 'guarapoia_v2_local_turso.db')}`;  
   internalClient = createClient({
     url: dbUrl,
     authToken: process.env.TURSO_DATABASE_TOKEN || "",

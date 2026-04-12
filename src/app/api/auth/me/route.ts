@@ -25,7 +25,7 @@ export async function GET() {
       businessName: org?.name || "",
       slug: org?.slug || "",
       profileEmoji: org?.profile_emoji || "",
-      profileColor: org?.profile_color || "from-blue-500 to-indigo-600",
+      profileColor: org?.profile_color || "from-emerald-500 to-teal-600",
     });
   } catch {
     return NextResponse.json({ authenticated: true, email: session.email, emailVerified: false });
@@ -34,7 +34,7 @@ export async function GET() {
 
 export async function DELETE() {
   const response = NextResponse.json({ success: true });
-  response.cookies.set("atendia_session", "", {
+  response.cookies.set("guarapoia_session", "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

@@ -10,8 +10,8 @@ const inter = Inter({ subsets: ["latin"] });
 const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-5634358982750683";
 
 export const metadata: Metadata = {
-  title: "AtendIA - Plataforma Gratuita para Negocios Locales",
-  description: "Captación, Mensajería y Reputación para Negocios Locales. 100% gratis. Sin tarjeta de crédito.",
+  title: "GuarapoIA - Plataforma Gratuita para Negocios Locales",
+  description: "Captación, Mensasjería y Reputación para Negocios Locales. 100% gratis. Sin tarjeta de crédito. La solución definitiva de Guarapo.",
   other: {
     "google-adsense-account": "ca-pub-5634358982750683",
   },

@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'atendia-super-secret-key-change-in-production'
+  process.env.JWT_SECRET || 'guarapoia-super-secret-key-change-in-production'
 );
 
 export interface SessionPayload {
@@ -31,7 +31,7 @@ export async function verifySession(token: string): Promise<SessionPayload | nul
 
 export async function getSession(): Promise<SessionPayload | null> {
   const cookieStore = cookies();
-  const token = cookieStore.get('atendia_session')?.value;
+  const token = cookieStore.get('guarapoia_session')?.value;
   if (!token) return null;
   return verifySession(token);
 }

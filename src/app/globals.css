@@ -5,10 +5,17 @@
 :root {
   --background: #ffffff;
   --foreground: #0F172A;
-  --primary: #0052FF;
+  --primary: #10B981;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+  scroll-behavior: smooth;
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20;
+  }
 }

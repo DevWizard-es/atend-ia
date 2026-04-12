@@ -43,7 +43,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50/30 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors mb-8">
           <ArrowLeft className="w-4 h-4" /> Volver al inicio
@@ -51,7 +51,7 @@ export default function LoginPage() {
 
         <div className="bg-white rounded-3xl shadow-xl shadow-slate-900/5 border border-slate-200 p-8">
           <div className="text-2xl font-black mb-8">
-            Atend<span className="text-blue-600">IA</span>
+            Guarapo<span className="text-emerald-600">IA</span>
           </div>
 
           <h1 className="text-3xl font-black tracking-tight mb-2">Bienvenido de vuelta</h1>
@@ -66,13 +66,13 @@ export default function LoginPage() {
                 placeholder="hola@minegocio.com"
                 value={form.email}
                 onChange={e => setForm({ ...form, email: e.target.value })}
-                className="w-full px-4 py-3.5 border border-slate-200 rounded-xl text-sm font-medium bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
+                className="w-full px-4 py-3.5 border border-slate-200 rounded-xl text-sm font-medium bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
               />
             </div>
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-xs font-black text-slate-700 uppercase tracking-widest">Contraseña</label>
-                <Link href="/forgot-password" title="Recuperar contraseña" className="text-xs font-bold text-blue-600 hover:underline">¿La olvidaste?</Link>
+                <Link href="/forgot-password" title="Recuperar contraseña" className="text-xs font-bold text-emerald-600 hover:underline">¿La olvidaste?</Link>
               </div>
               <div className="relative">
                 <input
@@ -81,7 +81,7 @@ export default function LoginPage() {
                   placeholder="Tu contraseña"
                   value={form.password}
                   onChange={e => setForm({ ...form, password: e.target.value })}
-                  className="w-full px-4 py-3.5 pr-12 border border-slate-200 rounded-xl text-sm font-medium bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all"
+                  className="w-full px-4 py-3.5 pr-12 border border-slate-200 rounded-xl text-sm font-medium bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
                 />
                 <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                   {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -97,7 +97,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-blue-600 text-white rounded-xl font-black text-sm uppercase tracking-wider shadow-lg shadow-blue-500/25 hover:bg-blue-700 transition-all disabled:opacity-70 flex items-center justify-center gap-2"
+              className="w-full py-4 bg-emerald-600 text-white rounded-xl font-black text-sm uppercase tracking-wider shadow-lg shadow-emerald-500/25 hover:bg-emerald-700 transition-all disabled:opacity-70 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -114,7 +114,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm font-medium text-slate-500 mt-6">
           ¿No tienes cuenta?{" "}
-          <Link href="/signup" className="text-blue-600 font-bold hover:underline">
+          <Link href="/signup" className="text-emerald-600 font-bold hover:underline">
             Crea tu cuenta gratis
           </Link>
         </p>

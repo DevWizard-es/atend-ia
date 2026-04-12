@@ -42,8 +42,8 @@ export default function AnalyticsPage() {
   }, []);
 
   const kpis = [
-    { label: "Leads Totales", value: loading ? "..." : String(stats.leads), change: null, icon: Users, color: "text-blue-600", bg: "bg-blue-50" },
-    { label: "Conversaciones", value: loading ? "..." : String(stats.conversations), change: null, icon: MessageCircle, color: "text-indigo-600", bg: "bg-indigo-50" },
+    { label: "Leads Totales", value: loading ? "..." : String(stats.leads), change: null, icon: Users, color: "text-emerald-600", bg: "bg-emerald-50" },
+    { label: "Conversaciones", value: loading ? "..." : String(stats.conversations), change: null, icon: MessageCircle, color: "text-teal-600", bg: "bg-teal-50" },
     { label: "Rating Google", value: loading ? "..." : stats.rating, change: null, icon: Star, color: "text-amber-500", bg: "bg-amber-50" },
   ];
 
@@ -121,7 +121,7 @@ export default function AnalyticsPage() {
                 <span className="font-black text-slate-900">{loading ? "..." : stats.conversations}</span>
               </div>
               <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                <div className="bg-blue-600 h-full rounded-full transition-all duration-1000" style={{ width: stats.conversations > 0 ? "100%" : "0%" }} />
+                <div className="bg-emerald-600 h-full rounded-full transition-all duration-1000" style={{ width: stats.conversations > 0 ? "100%" : "0%" }} />
               </div>
             </div>
 
@@ -131,7 +131,7 @@ export default function AnalyticsPage() {
                 <span className="font-black text-slate-900">{loading ? "..." : stats.leads}</span>
               </div>
               <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                <div className="bg-indigo-500 h-full rounded-full transition-all duration-1000" style={{ width: stats.leads > 0 ? "100%" : "0%" }} />
+                <div className="bg-teal-500 h-full rounded-full transition-all duration-1000" style={{ width: stats.leads > 0 ? "100%" : "0%" }} />
               </div>
             </div>
           </div>
@@ -143,16 +143,16 @@ export default function AnalyticsPage() {
         <div className="bg-slate-900 p-8 rounded-3xl text-white shadow-xl relative overflow-hidden group">
           <div className="relative z-10">
             <h3 className="text-xl font-black mb-4 flex items-center gap-2">
-              <MousePointer2 className="w-5 h-5 text-blue-400" /> Fuentes de Tráfico
+              <MousePointer2 className="w-5 h-5 text-emerald-400" /> Fuentes de Tráfico
             </h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10">
                 <span className="text-sm font-bold">QR (mesas / escaparate)</span>
-                <span className="text-sm font-black text-blue-300">Activo</span>
+                <span className="text-sm font-black text-emerald-300">Activo</span>
               </div>
               <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10">
                 <span className="text-sm font-bold">BioLink compartido</span>
-                <span className="text-sm font-black text-blue-300">Activo</span>
+                <span className="text-sm font-black text-emerald-300">Activo</span>
               </div>
               <div className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/10">
                 <span className="text-sm font-bold">Buscadores (SEO)</span>
@@ -160,18 +160,18 @@ export default function AnalyticsPage() {
               </div>
             </div>
           </div>
-          <div className="absolute -right-32 -bottom-32 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -right-32 -bottom-32 w-64 h-64 bg-emerald-600/20 rounded-full blur-3xl pointer-events-none" />
         </div>
 
         <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-center text-center">
-          <div className="p-4 bg-blue-50 w-fit mx-auto rounded-full mb-6">
-            <Zap className="w-8 h-8 text-blue-600" />
+          <div className="p-4 bg-emerald-50 w-fit mx-auto rounded-full mb-6">
+            <Zap className="w-8 h-8 text-emerald-600" />
           </div>
-          <h3 className="text-xl font-black text-slate-900 mb-2">Tu Negocio Crece con AtendIA</h3>
+          <h3 className="text-xl font-black text-slate-900 mb-2">Tu Negocio Crece con GuarapoIA</h3>
           <p className="text-slate-500 text-sm leading-relaxed max-w-xs mx-auto mb-6">
             Cada lead captado, cada conversación respondida y cada reseña conseguida incrementa tu visibilidad local.
           </p>
-          <a href="/agent" className="px-6 py-3 bg-blue-600 text-white rounded-2xl font-bold text-sm shadow-lg shadow-blue-500/25 hover:bg-blue-700 transition-all inline-block">
+          <a href="/agent" className="px-6 py-3 bg-emerald-600 text-white rounded-2xl font-bold text-sm shadow-lg shadow-emerald-500/25 hover:bg-emerald-700 transition-all inline-block">
             Configurar Agente IA
           </a>
         </div>

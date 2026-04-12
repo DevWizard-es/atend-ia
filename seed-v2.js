@@ -4,7 +4,7 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
 async function seedDemoData() {
-  const dbPath = path.join(__dirname, 'atendia_v2.sqlite');
+  const dbPath = path.join(__dirname, 'guarapoia_v2.sqlite');
   const db = await open({
     filename: dbPath,
     driver: sqlite3.Database
@@ -142,7 +142,7 @@ async function seedDemoData() {
     }
   }
 
-  console.log('Demo Data Seeded OK - Pizzeria Roma con conversaciones y mensajes.');
+  console.log('Demo Data Seeded OK - Pizzeria Roma con conversaciones y mensajes para GuarapoIA.');
   await db.close();
 }
 
