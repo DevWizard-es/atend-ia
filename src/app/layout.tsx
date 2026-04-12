@@ -10,8 +10,29 @@ const inter = Inter({ subsets: ["latin"] });
 const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-5634358982750683";
 
 export const metadata: Metadata = {
-  title: "GuarapoIA - Plataforma Gratuita para Negocios Locales",
-  description: "Captación, Mensasjería y Reputación para Negocios Locales. 100% gratis. Sin tarjeta de crédito. La solución definitiva de Guarapo.",
+  title: "GuarapoIA — Haz crecer tu negocio local",
+  description: "Captación, Mensajería y Reputación para Negocios Locales. 100% gratis. La solución definitiva de Guarapo.",
+  openGraph: {
+    title: "GuarapoIA — Haz crecer tu negocio local",
+    description: "Captación, Mensajería y Reputación para Negocios Locales. 100% gratis.",
+    url: "https://guarapoia.com",
+    siteName: "GuarapoIA",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "es_ES",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GuarapoIA — Haz crecer tu negocio local",
+    description: "Captación, Mensajería y Reputación para Negocios Locales. 100% gratis.",
+    images: ["/og-image.png"],
+  },
   other: {
     "google-adsense-account": "ca-pub-5634358982750683",
   },
