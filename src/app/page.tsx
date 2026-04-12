@@ -36,7 +36,10 @@ export default function LandingPage() {
   const [authState, setAuthState] = useState<{authenticated: boolean; businessName?: string; email?: string; slug?: string; profileEmoji?: string;} | null>(null);
 
   useEffect(() => {
-    fetch("/api/auth/me").then(r => r.json()).then(setAuthState).catch(() => setAuthState({ authenticated: false }));
+    fetch("/api/auth/me")
+      .then(r => r.json())
+      .then(setAuthState)
+      .catch(() => setAuthState({ authenticated: false }));
   }, []);
 
   const handleLogout = async () => {
@@ -89,112 +92,112 @@ export default function LandingPage() {
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
-        {mobileMenuOpen && (
-          <div className="md:hidden px-6 pb-4 space-y-2 border-t border-slate-100 pt-4">
-            {authState?.authenticated ? (
-              <>
-                <Link href="/dashboard" className="block py-2 text-sm font-bold text-slate-700">Mi Dashboard</Link>
-                <button onClick={handleLogout} className="block py-2 text-sm font-bold text-red-500">Cerrar sesión</button>
-              </>
-            ) : (
-              <>
-                <Link href="/login" className="block py-2 text-sm font-bold text-slate-700">Iniciar sesión</Link>
-                <Link href="/signup" className="block py-2 px-4 bg-emerald-600 text-white rounded-xl text-sm font-bold text-center">Empezar gratis</Link>
-              </>
-            )}
-          </div>
-        )}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="md:hidden px-6 pb-6 space-y-4 border-t border-slate-100 pt-4 overflow-hidden bg-white"
+            >
+              <div className="flex flex-col gap-4">
+                <a href="#features" onClick={() => setMobileMenuOpen(false)} className="text-sm font-bold text-slate-600">Funcionalidades</a>
+                <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)} className="text-sm font-bold text-slate-600">Cómo funciona</a>
+                <a href="#testimonials" onClick={() => setMobileMenuOpen(false)} className="text-sm font-bold text-slate-600">Testimonios</a>
+              </div>
+              <div className="pt-4 border-t border-slate-50 flex flex-col gap-3">
+                {authState?.authenticated ? (
+                  <>
+                    <Link href="/dashboard" className="w-full py-3 bg-slate-50 text-slate-900 rounded-xl text-center font-bold">Panel de Control</Link>
+                    <button onClick={handleLogout} className="w-full py-3 text-red-500 font-bold">Cerrar sesión</button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login" className="w-full py-3 text-slate-900 rounded-xl text-center font-bold border border-slate-200">Iniciar sesión</Link>
+                    <Link href="/signup" className="w-full py-3 bg-emerald-600 text-white rounded-xl text-center font-bold shadow-lg">Empezar gratis</Link>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
-      <section className="pt-32 pb-24 px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/80 via-white to-teal-50/50" />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-emerald-400/10 rounded-full blur-3xl -mr-64 -mt-32" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-teal-400/10 rounded-full blur-3xl -ml-40" />
-
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          {/* Free badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full text-emerald-700 text-sm font-black mb-8 shadow-sm">
-            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            100% Gratis — Sin tarjeta de crédito, para siempre
-          </div>
-
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
+      {/* Hero Section */}
+      <section className="pt-40 pb-20 px-6 relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-emerald-50/50 to-transparent rounded-full blur-3xl -z-10" />
+        <div className="max-w-6xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-6xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6"
+            transition={{ duration: 0.6 }}
           >
-            Consigue más clientes.<br />
-            <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-              Gestiona tu reputación.
-            </span>
-          </motion.h1>
-
-          <p className="text-xl text-slate-600 font-medium max-w-2xl mx-auto leading-relaxed mb-10">
-            La plataforma all-in-one para negocios locales. Captura leads por WhatsApp,
-            mejora tus reseñas en Google y gestiona todos tus mensajes desde un único lugar.
-            <strong className="text-slate-800"> Completamente gratis.</strong>
-          </p>
-
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <Link href="/signup" className="flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black text-lg hover:bg-emerald-700 transition-all shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98]">
-              Crear mi cuenta gratis <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link href="/b/guarapo-demo" target="_blank" className="flex items-center gap-2 px-8 py-4 bg-white border-2 border-slate-200 text-slate-900 rounded-2xl font-bold text-lg hover:border-emerald-300 hover:bg-emerald-50/30 transition-all">
-              Ver demo en vivo <ChevronRight className="w-5 h-5 text-slate-400" />
-            </Link>
-          </motion.div>
-
-          <p className="mt-5 text-sm text-slate-400 font-medium">
-            Sin tarjeta de crédito · Configuración en 5 minutos · Gratis para siempre
-          </p>
-
-          {/* Hero Dashboard Preview */}
-          <div className="mt-16 relative">
-            <div className="rounded-3xl overflow-hidden shadow-2xl shadow-slate-900/20 border border-slate-200 bg-slate-50">
-              <div className="h-8 bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-400" />
-                <div className="w-3 h-3 rounded-full bg-yellow-400" />
-                <div className="w-3 h-3 rounded-full bg-green-400" />
-                <div className="ml-4 flex-1 bg-white rounded-md h-4 max-w-xs" />
-              </div>
-              <div className="grid grid-cols-4 h-[360px]">
-                <div className="col-span-1 bg-slate-50 border-r border-slate-200 p-4 space-y-2">
-                  <div className="text-xl font-black mb-4">Guarapo<span className="text-emerald-600">IA</span></div>
-                  {["Dashboard", "Inbox", "Reviews", "Contacts", "Analytics"].map(item => (
-                    <div key={item} className={`px-3 py-2 rounded-xl text-sm font-semibold ${item === "Dashboard" ? "bg-emerald-50 text-emerald-600" : "text-slate-500"}`}>{item}</div>
-                  ))}
-                </div>
-                <div className="col-span-3 p-6 bg-white">
-                  <div className="text-2xl font-black mb-4">Dashboard</div>
-                  <div className="grid grid-cols-2 gap-3 mb-4">
-                    {[["1,280", "Leads Totales"], ["4.9★", "Google Rating"], ["482", "Mensajes"], ["18.4%", "Conversión"]].map(([v, l]) => (
-                      <div key={l} className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <div className="text-xl font-black text-slate-900">{v}</div>
-                        <div className="text-xs text-slate-500 font-semibold">{l}</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                    <div className="text-sm font-black mb-2">Conversaciones recientes</div>
-                    {["María García", "Juan Pérez", "Elena Rodríguez"].map((name) => (
-                      <div key={name} className="flex items-center gap-2 py-1.5">
-                        <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-xs font-bold">{name[0]}</div>
-                        <div className="text-xs text-slate-600 font-medium">{name}</div>
-                        <div className="ml-auto text-xs text-slate-400">Hoy</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-100 rounded-full text-emerald-700 text-sm font-black mb-8">
+              <span className="flex h-2 w-2 rounded-full bg-emerald-500" />
+              100% Gratis — Sin tarjeta de crédito, para siempre
             </div>
-            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent" />
-          </div>
+            <h1 className="text-6xl md:text-8xl font-black tracking-tight text-slate-900 mb-8 leading-[0.9]">
+              Consigue más clientes.<br />
+              <span className="text-emerald-600">Gestiona tu reputación.</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto mb-10 leading-relaxed">
+              La plataforma todo-en-uno que conecta tu negocio con clientes locales,
+              mejora tus reseñas en Google y gestiona todos tus mensajes desde un único lugar.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/signup" className="w-full sm:w-auto px-10 py-5 bg-emerald-600 text-white rounded-2xl font-black text-lg shadow-2xl shadow-emerald-500/40 hover:bg-emerald-700 hover:scale-105 transition-all">
+                Empezar gratis ahora
+              </Link>
+              <Link href="/b/guarapo-demo" target="_blank" className="w-full sm:w-auto px-10 py-5 bg-white text-slate-900 border-2 border-slate-200 rounded-2xl font-black text-lg hover:border-emerald-500 transition-all flex items-center justify-center gap-2">
+                Ver demo en vivo <ArrowRight className="w-5 h-5 text-slate-400" />
+              </Link>
+            </div>
+            <p className="mt-5 text-sm text-slate-400 font-medium">
+              Sin tarjeta de crédito · Configuración en 5 minutos · Gratis para siempre
+            </p>
+
+            {/* Hero Dashboard Preview */}
+            <div className="mt-16 relative">
+              <div className="rounded-3xl overflow-hidden shadow-2xl shadow-slate-900/20 border border-slate-200 bg-slate-50">
+                <div className="h-8 bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-400" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400" />
+                  <div className="w-3 h-3 rounded-full bg-green-400" />
+                  <div className="ml-4 flex-1 bg-white rounded-md h-4 max-w-xs" />
+                </div>
+                <div className="grid grid-cols-4 h-[360px]">
+                  <div className="col-span-1 bg-slate-50 border-r border-slate-200 p-4 space-y-2">
+                    <div className="text-xl font-black mb-4">Guarapo<span className="text-emerald-600">IA</span></div>
+                    {["Dashboard", "Inbox", "Reviews", "Contacts", "Analytics"].map(item => (
+                      <div key={item} className={`px-3 py-2 rounded-xl text-sm font-semibold ${item === "Dashboard" ? "bg-emerald-50 text-emerald-600" : "text-slate-500"}`}>{item}</div>
+                    ))}
+                  </div>
+                  <div className="col-span-3 p-6 bg-white">
+                    <div className="text-2xl font-black mb-4">Dashboard</div>
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                      {[["1,280", "Leads Totales"], ["4.9★", "Google Rating"], ["482", "Mensajes"], ["18.4%", "Conversión"]].map(([v, l]) => (
+                        <div key={l} className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                          <div className="text-xl font-black text-slate-900">{v}</div>
+                          <div className="text-xs text-slate-500 font-semibold">{l}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                      <div className="text-sm font-black mb-2">Conversaciones recientes</div>
+                      {["María García", "Juan Pérez", "Elena Rodríguez"].map((name) => (
+                        <div key={name} className="flex items-center gap-2 py-1.5">
+                          <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-xs font-bold">{name[0]}</div>
+                          <div className="text-xs text-slate-600 font-medium">{name}</div>
+                          <div className="ml-auto text-xs text-slate-400">Hoy</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent" />
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -235,7 +238,7 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-xl font-black mb-2 tracking-tight">{f.title}</h3>
                 <p className="text-slate-500 text-sm leading-relaxed font-medium">{f.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -328,24 +331,28 @@ export default function LandingPage() {
 
       {/* Final CTA */}
       <section className="py-20 px-6">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="relative bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 rounded-3xl p-12 text-center overflow-hidden"
+            className="bg-slate-900 rounded-[3rem] p-12 text-center relative overflow-hidden shadow-2xl shadow-emerald-900/20"
           >
-            <div className="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-            <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-teal-400/20 rounded-full blur-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/20 via-transparent to-teal-600/10" />
             <div className="relative z-10">
               <div className="text-5xl mb-4">🚀</div>
               <h2 className="text-4xl font-black text-white tracking-tight mb-3">¿Listo para crecer gratis?</h2>
-              <p className="text-emerald-100 font-medium mb-8 max-w-lg mx-auto">
+              <p className="text-slate-400 text-lg max-w-xl mx-auto font-medium">
                 Únete a más de 500 negocios locales que ya gestionan su captación y reputación con GuarapoIA. Sin pagar un euro.
               </p>
-              <Link href="/signup" className="inline-flex items-center gap-2 px-10 py-4 bg-white text-emerald-700 rounded-2xl font-black text-lg hover:bg-emerald-50 transition-all shadow-xl">
-                Crear mi cuenta gratis <ArrowRight className="w-5 h-5" />
-              </Link>
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link href="/signup" className="w-full sm:w-auto px-8 py-4 bg-white text-slate-900 rounded-2xl font-black hover:bg-emerald-50 transition-all">
+                  Crear mi cuenta gratis ahora
+                </Link>
+                <a href="mailto:hola@guarapoia.com" className="w-full sm:w-auto px-8 py-4 bg-white/10 text-white border border-white/20 rounded-2xl font-black hover:bg-white/20 transition-all">
+                  Contactar con ventas
+                </a>
+              </div>
               <p className="text-emerald-200 text-sm mt-4 font-medium">Sin tarjeta de crédito · Gratis para siempre · Configúrate en 5 min</p>
             </div>
           </motion.div>
