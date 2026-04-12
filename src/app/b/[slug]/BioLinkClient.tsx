@@ -15,14 +15,14 @@ export default function BioLinkClient({ slug, initialData }: { slug: string, ini
 
   useEffect(() => {
     if (!initialData) {
-      async function load() {
+      const load = async () => {
         try {
           const res = await fetch(`/api/public/business/${slug}`);
           const data = await res.json();
           setBusiness(data);
         } catch (e) {}
         setLoading(false);
-      }
+      };
       load();
     }
   }, [slug, initialData]);
