@@ -141,7 +141,7 @@ export async function sendPasswordResetEmail({
     </div>
     <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:20px 40px;text-align:center;">
       <p style="margin:0;font-size:11px;color:#94a3b8;">
-        ⚡ <strong>AtendIA</strong> · Plataforma 100% gratuita para negocios locales<br/>
+        ⚡ <strong>GuarapoIA</strong> · Plataforma 100% gratuita para negocios locales<br/>
         Creado por <a href="mailto:yordandearmas@gmail.com" style="color:#2563eb;">Yordan de Armas</a>
       </p>
     </div>
